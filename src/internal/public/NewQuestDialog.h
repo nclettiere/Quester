@@ -6,6 +6,7 @@
 #endif
 
 #include <iostream>
+#include "Utils.h"
 
 class NewQuestDialog : public wxDialog
 {

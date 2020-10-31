@@ -5,6 +5,7 @@
 #include <Poco/JSON/JSON.h>
 #include <Poco/JSON/Parser.h>
 #include <Poco/Dynamic/Var.h>
+#include <Poco/Path.h>
 
 using namespace std;
 using namespace Poco::JSON;
@@ -121,6 +122,7 @@ NewQuestDialog::NewQuestDialog()
 
   panel->SetSizer(vbox);
   
+  Utils::GenerateCache();
 
   string lsJson;
     Parser loParser;

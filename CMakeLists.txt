@@ -6,7 +6,7 @@ project(Quester)
 include_directories(${CMAKE_SOURCE_DIR})
 
 # Add all classes in the internal folder
-file(GLOB_RECURSE source_list "src/internal/private/*.cpp")
+file(GLOB_RECURSE source_list "src/internal/private/*.cpp" "src/internal/public/*.h")
 
 add_executable(Quester src/App.cpp ${source_list})
 
