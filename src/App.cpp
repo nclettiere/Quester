@@ -2,9 +2,18 @@
 
 bool MyApp::OnInit()
 {
+    Utils::OpenConsole();
+
     MyFrame *frame = new MyFrame();
     frame->Centre();
     frame->Show(true);
+
+    // Generate Cache & check for first app launch ;
+    if (Utils::GenerateCache()) {
+        wxMessageDialog* dial = new wxMessageDialog(NULL,
+            wxT("First use detected"), wxT("Info"), wxOK);
+        dial->ShowModal();
+    }
 
     return true;
 }
