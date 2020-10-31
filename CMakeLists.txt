@@ -5,11 +5,12 @@ project(Quester)
 
 include_directories(${CMAKE_SOURCE_DIR})
 
+# Add all classes in the internal folder
 file(GLOB_RECURSE source_list "src/internal/private/*.cpp")
 
 add_executable(Quester src/App.cpp ${source_list})
 
-# Note that for MinGW users the order of libs is important!
+# Find POCO and WxWidgets libraries
 find_package(wxWidgets REQUIRED COMPONENTS net gl core base)
 find_package(Poco REQUIRED COMPONENTS Foundation Net Zip JSON)
 if(wxWidgets_FOUND)
