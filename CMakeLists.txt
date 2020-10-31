@@ -18,7 +18,7 @@ ENDIF()
 
 
 # Find POCO and WxWidgets libraries
-find_package(wxWidgets REQUIRED COMPONENTS net gl core base png tiff jpeg zlib regex expat)
+find_package(wxWidgets REQUIRED COMPONENTS net gl core base)
 find_package(Poco REQUIRED COMPONENTS Foundation Net JSON)
 if(wxWidgets_FOUND)
   include(${wxWidgets_USE_FILE})

@@ -12,4 +12,15 @@ class NewQuestDialog : public wxDialog
 {
 public:
     NewQuestDialog();
+    
+private:
+    wxTextCtrl *QuestNameText;
+    wxButton *OkButton;
+    void OnQuestNameChange(wxCommandEvent& event);
 };
+
+enum
+{
+    ID_QuestName = 1
+};
+
