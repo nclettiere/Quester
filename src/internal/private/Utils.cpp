@@ -5,6 +5,8 @@ bool Utils::GenerateCache() {
 
     Poco::File FileCache ( Utils::GetCacheFilePath() );
 
+    Utils::GenerateStructure();
+
     if ( !FileCache.exists() ) {
         // file does not exist
 
@@ -16,12 +18,9 @@ bool Utils::GenerateCache() {
 
         cout << "Generating Structure" << endl;
 
-        Utils::GenerateStructure();
-
         return true;
     }
 
-    cout << "File already exist" << endl;
 
     return false;
 }
@@ -42,18 +41,36 @@ std::string Utils::GetCacheFilePath() {
 }
 
 void Utils::GenerateStructure() {
+    Poco::Path QuestFolderPath = Poco::Path ( Poco::Path::dataHome() ).append ( Poco::Path ( "Quester/Quests/" ) );
+
     Poco::Path QuestMainFilePath = Poco::Path ( Poco::Path::dataHome() ).append ( Poco::Path ( "Quester/Quests/Base.json" ) );
 
-    auto QuestFolder = Poco::File ( QuestMainFilePath );
+    auto QuestFolder = Poco::File ( QuestFolderPath );
+    auto QuestDefaultFile = Poco::File ( QuestMainFilePath );
     if ( !QuestFolder.exists() ) {
         try {
             //ensures directory exist
             QuestFolder.createDirectories();
-            cout << "Created Path: " << QuestMainFilePath.toString() << endl;
         } catch ( Poco::FileException ex ) {
             cout << ex.displayText() << endl;
         }
     }
+
+    if ( !QuestDefaultFile.exists() ) {
+        try {
+            cout << "Creating..." << QuestMainFilePath.toString() << "\n";
+            QuestDefaultFile.createFile();
+
+            // Write default json value
+            Poco::FileOutputStream fout ( QuestMainFilePath.toString(), std::ios::out );
+            fout << "[]";
+            fout.close();
+        } catch ( Poco::FileException ex ) {
+            cout << ex.displayText() << endl;
+        }
+    }
+    
+    cout << "Created Path: " << QuestMainFilePath.toString() << endl;
 }
 
 std::string Utils::GetEssentialFile ( FileKind Kind ) {
@@ -77,12 +94,12 @@ std::string Utils::GetEssentialFile ( FileKind Kind ) {
     return "";
 }
 
-std::string Utils::GetDefaultWorldsAsList ( std::string Context ) {
+wxString * Utils::GetDefaultWorldsAsList ( std::string Context ) {
     Poco::Path DefaultWorldsPath = Poco::Path ( Context )
                                    .parent()
                                    .append ( "/Public/Default/Worlds.json" );
-
     std::tuple<Poco::File, bool> t = GetFileFrom ( DefaultWorldsPath );
+    wxString * WorldList;
 
     // if file exists
     try {
@@ -90,29 +107,60 @@ std::string Utils::GetDefaultWorldsAsList ( std::string Context ) {
         string JSONString;
         Poco::FileInputStream fis ( DefaultWorldsPath.toString(), std::ios::out );
         while ( getline ( fis, buffer ) ) {
-            cout << buffer << '\n';
-            
-            JSONString += buffer;
+            JSONString += buffer + '\n';
         }
-        
-        
-        
+        fis.close();
+
+        try {
+            // Parse JSON String
+            Poco::JSON::Parser Parser;
+            Poco::Dynamic::Var result = Parser.parse ( JSONString );
+            Poco::JSON::Array::Ptr arr = result.extract<Poco::JSON::Array::Ptr>();
+
+            WorldList = new wxString[arr->size()];
+
+            uint8_t i;
+            for ( Poco::JSON::Array::ConstIterator it= arr->begin(); it != arr->end(); ++it ) {
+                Poco::JSON::Object::Ptr object = arr->getObject ( i );
+                WorldList[i] = wxString ( object->getValue<std::string> ( "name" ) );
+                i++;
+            }
+        } catch ( Poco::Exception ex ) {
+            cout << ex.displayText() << endl;
+        }
+
     } catch ( Poco::FileNotFoundException ex ) {
         cout << ex.displayText() << endl;
     }
 
-    return Utils::GetEssentialFile ( FileKind::DefaultWorlds );
+    return WorldList;
 }
 
 std::tuple<Poco::File, bool> Utils::GetFileFrom ( std::string FilePath ) {
     Poco::File f ( FilePath );
     return std::tuple<Poco::File, bool> {f, f.exists() };
 }
+
 std::tuple<Poco::File, bool> Utils::GetFileFrom ( Poco::File FilePath ) {
     Poco::File f ( FilePath );
     return std::tuple<Poco::File, bool> {f, f.exists() };
 }
 
+std::string Utils::GetValue ( Poco::JSON::Object::Ptr JSONObject, const char *Key ) {
+    Poco::Dynamic::Var Variable;
+    string ReturnString;
+    string lsKey ( Key );
+
+    // Get the member Variable
+    //
+    Variable = JSONObject->get ( Key );
+
+    // Get the Value from the Variable
+    //
+    ReturnString = Variable.convert<std::string>();
+
+    return ReturnString;
+}
 
 // Windows Only
 void Utils::OpenConsole() {

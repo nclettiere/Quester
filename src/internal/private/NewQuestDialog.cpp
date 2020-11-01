@@ -1,35 +1,12 @@
 #include "../public/NewQuestDialog.h"
 
-#include <iostream>
-#include <string>
-#include <Poco/JSON/JSON.h>
-#include <Poco/JSON/Parser.h>
-#include <Poco/Dynamic/Var.h>
-#include <Poco/Path.h>
-
-using namespace std;
-using namespace Poco::JSON;
-
-string GetValue ( Object::Ptr aoJsonObject, const char *aszKey ) {
-    Poco::Dynamic::Var loVariable;
-    string lsReturn;
-    string lsKey ( aszKey );
-
-    // Get the member Variable
-    //
-    loVariable = aoJsonObject->get ( lsKey );
-
-    // Get the Value from the Variable
-    //
-    lsReturn = loVariable.convert<std::string>();
-
-    return lsReturn;
-}
-
-NewQuestDialog::NewQuestDialog(wxString (*Values)[64])
+NewQuestDialog::NewQuestDialog(wxString * Values)
     : wxDialog ( NULL, -1, "Create New Quest", wxDefaultPosition, wxSize ( 450, 450 ) ) {
     
     ComboWorldValues = Values;
+    IsMain = true;
+    IsFailable = false;
+    IsOptional = false;
     
     wxPanel *panel = new wxPanel ( this, -1 );
 
@@ -49,7 +26,7 @@ NewQuestDialog::NewQuestDialog(wxString (*Values)[64])
     wxStaticText *stCombo =  new wxStaticText ( panel, wxID_ANY, wxT ( "Select World" ) );
 
     hboxCombo->Add ( stCombo, 0, wxRIGHT, 8 );
-    ComboWorlds = new wxComboBox ( panel, ID_ComboWorld, wxT("DEFAULT"), wxDefaultPosition, wxSize ( 240, -1 ), 3, **&ComboWorldValues, wxCB_DROPDOWN |wxCB_READONLY );
+    ComboWorlds = new wxComboBox ( panel, ID_ComboWorld, wxT("DEFAULT"), wxDefaultPosition, wxSize ( 240, -1 ), 3, ComboWorldValues, wxCB_DROPDOWN |wxCB_READONLY );
     
     ComboWorlds->SetSelection(0);
     
@@ -92,30 +69,30 @@ NewQuestDialog::NewQuestDialog(wxString (*Values)[64])
     vbox->Add ( -1, 10 );
 
     wxBoxSizer *hbox4 = new wxBoxSizer ( wxHORIZONTAL );
-    wxRadioButton *cb1 = new wxRadioButton ( panel, wxID_ANY,
+    MainRadio = new wxRadioButton ( panel, ID_Flags_Radio,
             wxT ( "Main" ) );
 
-    hbox4->Add ( cb1 );
-    wxRadioButton *cb2 = new wxRadioButton ( panel, wxID_ANY,
+    hbox4->Add ( MainRadio );
+    SideRadio = new wxRadioButton ( panel, ID_Flags_Radio,
             wxT ( "Side" ) );
 
-    hbox4->Add ( cb2, 0, wxLEFT, 10 );
-    wxCheckBox *cb3 = new wxCheckBox ( panel, wxID_ANY,
+    hbox4->Add ( SideRadio, 0, wxLEFT, 10 );
+    FailableCheck = new wxCheckBox ( panel, ID_Flags_Check,
                                        wxT ( "Failable" ) );
 
-    hbox4->Add ( cb3, 0, wxLEFT, 10 );
+    hbox4->Add ( FailableCheck, 0, wxLEFT, 10 );
 
-    wxCheckBox *cb4 = new wxCheckBox ( panel, wxID_ANY,
+    OptionalCheck = new wxCheckBox ( panel, ID_Flags_Check,
                                        wxT ( "Optional" ) );
 
-    hbox4->Add ( cb4, 0, wxLEFT, 10 );
+    hbox4->Add ( OptionalCheck, 0, wxLEFT, 10 );
 
     vbox->Add ( hbox4, 0, wxLEFT, 10 );
 
     vbox->Add ( -1, 25 );
 
     wxBoxSizer *hbox5 = new wxBoxSizer ( wxHORIZONTAL );
-    OkButton = new wxButton ( panel, wxID_ANY, wxT ( "Ok" ) );
+    OkButton = new wxButton ( panel, ID_OkButton, wxT ( "Ok" ) );
     OkButton->Enable(false);
     hbox5->Add ( OkButton, 0 );
     wxButton *btn2 = new wxButton ( panel, wxID_ANY, wxT ( "Close" ) );
@@ -126,43 +103,19 @@ NewQuestDialog::NewQuestDialog(wxString (*Values)[64])
     Bind( wxEVT_TEXT, &NewQuestDialog::OnQuestNameChange, this, ID_QuestName );
     Bind( wxEVT_COMBOBOX, &NewQuestDialog::OnQuestNameChange, this, ID_ComboWorld );
     Bind( wxEVT_BUTTON, &NewQuestDialog::OnButtonClearPressed, this, ID_ButtonClear );
+    Bind( wxEVT_BUTTON, &NewQuestDialog::OnOkButtonPressed, this, ID_OkButton );
+    Bind( wxEVT_RADIOBUTTON, &NewQuestDialog::OnFlagsChanged, this, ID_Flags_Radio );
+    Bind( wxEVT_CHECKBOX, &NewQuestDialog::OnFlagsChanged, this, ID_Flags_Check );
 
     panel->SetSizer ( vbox );
     
     Utils::GenerateCache();
 
-    string lsJson;
-    Parser loParser;
-
-    lsJson = "{\"TransactionCode\":\"000000\",\"FileRecordSequenceNumber\":\"111111\",\"TcrSequenceNumber\":\"222222\",\"TransactionRouteIndicator\":\"ABCDE\",\"MerchantEstablishmentNumber\":\"00000000000\",\"MerchantName\":\"BBBBBBBBB\",\"MerchantCity\":\"CCCCCCCC\"}";
-
-    cout << lsJson << endl;
-
-    // Parse the JSON and get the Results
-    //
-    Poco::Dynamic::Var loParsedJson = loParser.parse ( lsJson );
-    Poco::Dynamic::Var loParsedJsonResult = loParser.result();
-
-    // Get the JSON Object
-    //
-    Object::Ptr loJsonObject = loParsedJsonResult.extract<Object::Ptr>();
-
-    // Get the values for the member variables
-    //
-    //
-    cout << "TransactionCode             " << GetValue ( loJsonObject, "TransactionCode" )               << endl;
-    cout << "FileRecordSequenceNumber    " << GetValue ( loJsonObject, "FileRecordSequenceNumber" )      << endl;
-    cout << "TcrSequenceNumber           " << GetValue ( loJsonObject, "TcrSequenceNumber" )             << endl;
-    cout << "TransactionRouteIndicator   " << GetValue ( loJsonObject, "TransactionRouteIndicator" )     << endl;
-    cout << "MerchantEstablishmentNumber " << GetValue ( loJsonObject, "MerchantEstablishmentNumber" )   << endl;
-    cout << "MerchantName                " << GetValue ( loJsonObject, "MerchantName" )                  << endl;
-    cout << "MerchantCity                " << GetValue ( loJsonObject, "MerchantCity" )                  << endl;
-
-
     Centre();
     
-    
     ShowModal();
+    
+    
 
     Destroy();
 }
@@ -176,7 +129,30 @@ void NewQuestDialog::OnQuestNameChange(wxCommandEvent& event ) {
     }
 }
 
-
 void NewQuestDialog::OnButtonClearPressed(wxCommandEvent& event ) {
     ListBoxQuest->SetSelection(wxNOT_FOUND);
+}
+
+void NewQuestDialog::OnOkButtonPressed(wxCommandEvent& event ) {
+    std::string QuestName = QuestNameText->GetValue().ToStdString();
+    std::string ComboSelectionString = ComboWorlds->GetStringSelection().ToStdString();
+    int ComboIntSelection = ComboWorlds->GetSelection();
+    int ParentQuest = ListBoxQuest->GetSelection();
+    
+    cout << 
+    "Name: " << QuestName << '\n' <<
+    "World: " << ComboWorlds->GetStringSelection() << '\n' <<
+    "Parent Quest: " << ListBoxQuest->GetSelection() << '\n' <<
+    "IsMain: " << IsMain << '\n' <<
+    "IsFailable: " << IsFailable << '\n' <<
+    "IsOptional: " << IsOptional << '\n' <<
+    endl;
+    
+    
+}
+
+void NewQuestDialog::OnFlagsChanged(wxCommandEvent& event ) {
+    MainRadio->GetValue() ? IsMain = true : IsMain = false;
+    IsFailable = FailableCheck->GetValue();
+    IsOptional = OptionalCheck->GetValue();
 }

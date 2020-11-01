@@ -3,8 +3,6 @@
 bool MyApp::OnInit() {
 
     Utils::OpenConsole();
-    
-    Utils::GetDefaultWorldsAsList(wxGetApp().argv[0].ToStdString());
 
     MyFrame *frame = new MyFrame();
     frame->Centre();
@@ -48,8 +46,8 @@ void MyFrame::OnAbout ( wxCommandEvent& event ) {
 }
 
 void MyFrame::OnNewQuest ( wxCommandEvent& event ) {
-    wxString Values[64] = {wxT ( "Valhalla" ), wxT ( "Midgaard" ), wxT ( "Persia" ) };
+    wxString * Worlds = Utils::GetDefaultWorldsAsList(wxGetApp().argv[0].ToStdString());
 
-    NewQuestDialog *custom = new NewQuestDialog ( &Values );
+    NewQuestDialog *custom = new NewQuestDialog ( Worlds );
     custom->Show ( true );
 }
