@@ -10,8 +10,6 @@
 using namespace std;
 using namespace Poco::JSON;
 
-#define IDC_COMBO_DATEOPT 21015
-
 string GetValue ( Object::Ptr aoJsonObject, const char *aszKey ) {
     Poco::Dynamic::Var loVariable;
     string lsReturn;
@@ -28,9 +26,11 @@ string GetValue ( Object::Ptr aoJsonObject, const char *aszKey ) {
     return lsReturn;
 }
 
-NewQuestDialog::NewQuestDialog()
-    : wxDialog ( NULL, -1, "Create New Quest", wxDefaultPosition, wxSize ( 450, 400 ) ) {
-
+NewQuestDialog::NewQuestDialog(wxString (*Values)[64])
+    : wxDialog ( NULL, -1, "Create New Quest", wxDefaultPosition, wxSize ( 450, 450 ) ) {
+    
+    ComboWorldValues = Values;
+    
     wxPanel *panel = new wxPanel ( this, -1 );
 
     wxBoxSizer *vbox = new wxBoxSizer ( wxVERTICAL );
@@ -49,13 +49,11 @@ NewQuestDialog::NewQuestDialog()
     wxStaticText *stCombo =  new wxStaticText ( panel, wxID_ANY, wxT ( "Select World" ) );
 
     hboxCombo->Add ( stCombo, 0, wxRIGHT, 8 );
-    wxString m_pComboCtrlDateOptStrings[] = {
-        wxT ( "Valhalla" ),
-        wxT ( "Midgaard" ),
-        wxT ( "Persia" )
-    };
-    wxComboBox *cboWorlds = new wxComboBox ( panel, IDC_COMBO_DATEOPT, wxT ( "Modification Date" ), wxDefaultPosition, wxSize ( 240, -1 ), 3, m_pComboCtrlDateOptStrings, wxCB_DROPDOWN |wxCB_READONLY );
-    hboxCombo->Add ( cboWorlds, 1 );
+    ComboWorlds = new wxComboBox ( panel, ID_ComboWorld, wxT("DEFAULT"), wxDefaultPosition, wxSize ( 240, -1 ), 3, **&ComboWorldValues, wxCB_DROPDOWN |wxCB_READONLY );
+    
+    ComboWorlds->SetSelection(0);
+    
+    hboxCombo->Add ( ComboWorlds, 1 );
 
     vbox->Add ( hbox1, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 10 );
     vbox->Add ( hboxCombo, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 10 );
@@ -75,13 +73,17 @@ NewQuestDialog::NewQuestDialog()
     strings.Add ( wxT ( "Sixth string" ) );
 
     // Create a ListBox with Single-selection list.
-    wxListBox* ListBox = new wxListBox ( panel, wxID_ANY, wxPoint ( 150, 100 ), wxSize ( 180, 150 ), strings, wxLB_SINGLE );
+    ListBoxQuest = new wxListBox ( panel, wxID_ANY, wxPoint ( 150, 100 ), wxSize ( 180, 150 ), strings, wxLB_SINGLE );
 
     //ListBox->Connect(wxEVT_RIGHT_DOWN, wxMouseEventHandler(MyFrame::OnListboxRDown), NULL, this);
 
-    vboxList->Add ( ListBox, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 10 );
-
-    vbox->Add ( vboxList, 0, wxEXPAND | wxTOP, 10 );
+    vboxList->Add ( ListBoxQuest, ID_QuestList, wxEXPAND | wxLEFT | wxRIGHT | wxTOP, 10 );
+    
+    ButtonClear = new wxButton ( panel, ID_ButtonClear, wxT ( "Clear" ) );
+    
+    vboxList->Add ( ButtonClear, 0, wxALIGN_RIGHT | wxRIGHT | wxTOP, 10 );
+    
+    vbox->Add ( vboxList, 0, wxEXPAND | wxRIGHT | wxTOP, 10 );
 
     wxBoxSizer *hbox2 = new wxBoxSizer ( wxHORIZONTAL );
 
@@ -119,10 +121,13 @@ NewQuestDialog::NewQuestDialog()
     wxButton *btn2 = new wxButton ( panel, wxID_ANY, wxT ( "Close" ) );
     hbox5->Add ( btn2, 0, wxLEFT | wxBOTTOM, 5 );
     vbox->Add ( hbox5, 0, wxALIGN_RIGHT | wxRIGHT, 10 );
+    
+    
+    Bind( wxEVT_TEXT, &NewQuestDialog::OnQuestNameChange, this, ID_QuestName );
+    Bind( wxEVT_COMBOBOX, &NewQuestDialog::OnQuestNameChange, this, ID_ComboWorld );
+    Bind( wxEVT_BUTTON, &NewQuestDialog::OnButtonClearPressed, this, ID_ButtonClear );
 
     panel->SetSizer ( vbox );
-
-    Bind( wxEVT_TEXT, &NewQuestDialog::OnQuestNameChange, this, ID_QuestName );
     
     Utils::GenerateCache();
 
@@ -154,7 +159,6 @@ NewQuestDialog::NewQuestDialog()
     cout << "MerchantCity                " << GetValue ( loJsonObject, "MerchantCity" )                  << endl;
 
 
-
     Centre();
     
     
@@ -165,5 +169,15 @@ NewQuestDialog::NewQuestDialog()
 
 
 void NewQuestDialog::OnQuestNameChange(wxCommandEvent& event ) {
-    QuestNameText->GetValue().IsEmpty() ? OkButton->Enable(false) : OkButton->Enable();    
+    Utils::GetDefaultWorldsAsList();
+    if(!QuestNameText->GetValue().IsEmpty() && ComboWorlds->GetSelection() > -1) {
+        OkButton->Enable(true);
+    }else {
+        OkButton->Enable(false);
+    }
+}
+
+
+void NewQuestDialog::OnButtonClearPressed(wxCommandEvent& event ) {
+    ListBoxQuest->SetSelection(wxNOT_FOUND);
 }

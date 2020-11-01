@@ -76,12 +76,20 @@ std::string Utils::GetEssentialFile(FileKind Kind)
         case FileKind::Quests:
             return QuesterDataPath.append(Poco::Path("Quester/Quests/Base.json")).toString();
         break;
+        case FileKind::DefaultWorlds:
+            return Poco::Path::current();
+        break;
         case FileKind::Swap:
             return "";
         break;
     }
     
     return "";
+}
+
+string Utils::GetDefaultWorldsAsList() {
+    cout << wxGetApp().argv[0] << endl;
+    return Utils::GetEssentialFile(FileKind::DefaultWorlds);
 }
 
 

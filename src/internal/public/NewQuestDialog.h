@@ -2,25 +2,31 @@
 
 #include <wx/wxprec.h>
 #ifndef WX_PRECOMP
-    #include <wx/wx.h>
+#include <wx/wx.h>
 #endif
 
 #include <iostream>
 #include "Utils.h"
 
-class NewQuestDialog : public wxDialog
-{
-public:
-    NewQuestDialog();
-    
+class NewQuestDialog : public wxDialog {
+    wxString (*ComboWorldValues)[64];
 private:
-    wxTextCtrl *QuestNameText;
-    wxButton *OkButton;
-    void OnQuestNameChange(wxCommandEvent& event);
+    wxTextCtrl * QuestNameText;
+    wxButton   * OkButton;
+    wxComboBox * ComboWorlds;
+    wxButton   * ButtonClear;
+    wxListBox  * ListBoxQuest;
+
+    void OnQuestNameChange ( wxCommandEvent& event );
+    void OnButtonClearPressed ( wxCommandEvent& event );
+public:
+    NewQuestDialog(wxString (*Values)[64]);
 };
 
-enum
-{
-    ID_QuestName = 1
+enum {
+    ID_QuestName = 1,
+    ID_ComboWorld,
+    ID_QuestList,
+    ID_ButtonClear
 };
 

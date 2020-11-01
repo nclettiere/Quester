@@ -25,3 +25,9 @@ if(wxWidgets_FOUND)
   # and for each of your dependent executable/library targets:
   target_link_libraries(Quester PUBLIC ${wxWidgets_LIBRARIES} Poco::Foundation Poco::Net Poco::JSON)
 endif()
+
+file(GLOB Public_Files
+  "Public/*"
+)
+file(COPY ${Public_Files} DESTINATION ${CMAKE_BINARY_DIR}/Public/)
+

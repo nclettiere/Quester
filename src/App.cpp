@@ -3,6 +3,8 @@
 bool MyApp::OnInit() {
 
     Utils::OpenConsole();
+    
+    cout << wxGetApp().argv[0] << endl;
 
     MyFrame *frame = new MyFrame();
     frame->Centre();
@@ -39,11 +41,15 @@ MyFrame::MyFrame()
 void MyFrame::OnExit ( wxCommandEvent& event ) {
     Close ( true );
 }
+
 void MyFrame::OnAbout ( wxCommandEvent& event ) {
     wxMessageBox ( "This is a wxWidgets Hello World example",
                    "About Hello World", wxOK | wxICON_INFORMATION );
 }
+
 void MyFrame::OnNewQuest ( wxCommandEvent& event ) {
-    NewQuestDialog *custom = new NewQuestDialog();
+    wxString Values[64] = {wxT ( "Valhalla" ), wxT ( "Midgaard" ), wxT ( "Persia" ) };
+
+    NewQuestDialog *custom = new NewQuestDialog ( &Values );
     custom->Show ( true );
 }
