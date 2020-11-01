@@ -169,7 +169,6 @@ NewQuestDialog::NewQuestDialog(wxString (*Values)[64])
 
 
 void NewQuestDialog::OnQuestNameChange(wxCommandEvent& event ) {
-    Utils::GetDefaultWorldsAsList();
     if(!QuestNameText->GetValue().IsEmpty() && ComboWorlds->GetSelection() > -1) {
         OkButton->Enable(true);
     }else {

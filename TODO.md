@@ -9,5 +9,5 @@
 
 # NEED FIX
 
-	- Get main executable directory in Utils::GetDefaultWorldsAsList
-
+	- [DONE] Get main executable directory in Utils::GetDefaultWorldsAsList
+	- Retreive JSON Object from FileStream

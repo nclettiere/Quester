@@ -4,7 +4,7 @@ bool MyApp::OnInit() {
 
     Utils::OpenConsole();
     
-    cout << wxGetApp().argv[0] << endl;
+    Utils::GetDefaultWorldsAsList(wxGetApp().argv[0].ToStdString());
 
     MyFrame *frame = new MyFrame();
     frame->Centre();
