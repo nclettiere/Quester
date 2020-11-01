@@ -12,6 +12,7 @@ _deps
 
 apidocs
 .kdev4
+*.kdev4
 build
 *~
 *.orig
