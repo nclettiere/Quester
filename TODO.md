@@ -11,4 +11,5 @@
 
 	- [DONE] Get main executable directory in Utils::GetDefaultWorldsAsList
 	- [DONE] Retreive JSON Object from FileStream
-	- Insert data into JSON file
+	- [DONE] Insert data into JSON file
+	- Show quest metadata in QuesterApp

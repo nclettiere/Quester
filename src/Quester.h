@@ -6,21 +6,22 @@
 #ifndef WX_PRECOMP
     #include <wx/wx.h>
 #endif
+#include <wx/dataview.h>
 
 #include "internal/public/Messages.h"
 #include "internal/public/Utils.h"
 #include "internal/public/NewQuestDialog.h"
 
-class MyApp : public wxApp
+class QuesterApp : public wxApp
 {
 public:
     virtual bool OnInit();
 };
 
-class MyFrame : public wxFrame
+class QuesterFrame : public wxFrame
 {
 public:
-    MyFrame();
+    QuesterFrame();
 private:
     void OnNewQuest(wxCommandEvent& event);
     void OnExit(wxCommandEvent& event);
@@ -31,4 +32,4 @@ enum
     ID_New = 1
 };
 
-wxIMPLEMENT_APP(MyApp);
+wxIMPLEMENT_APP(QuesterApp);

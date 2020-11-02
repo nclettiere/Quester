@@ -92,11 +92,9 @@ NewQuestDialog::NewQuestDialog(wxString * Values)
     vbox->Add ( -1, 25 );
 
     wxBoxSizer *hbox5 = new wxBoxSizer ( wxHORIZONTAL );
-    OkButton = new wxButton ( panel, ID_OkButton, wxT ( "Ok" ) );
+    OkButton = new wxButton ( panel, ID_OkButton, wxT ( "Create" ) );
     OkButton->Enable(false);
     hbox5->Add ( OkButton, 0 );
-    wxButton *btn2 = new wxButton ( panel, wxID_ANY, wxT ( "Close" ) );
-    hbox5->Add ( btn2, 0, wxLEFT | wxBOTTOM, 5 );
     vbox->Add ( hbox5, 0, wxALIGN_RIGHT | wxRIGHT, 10 );
     
     
@@ -136,18 +134,26 @@ void NewQuestDialog::OnButtonClearPressed(wxCommandEvent& event ) {
 void NewQuestDialog::OnOkButtonPressed(wxCommandEvent& event ) {
     std::string QuestName = QuestNameText->GetValue().ToStdString();
     std::string ComboSelectionString = ComboWorlds->GetStringSelection().ToStdString();
-    int ComboIntSelection = ComboWorlds->GetSelection();
+    uint8_t ComboIntSelection = ComboWorlds->GetSelection();
     int ParentQuest = ListBoxQuest->GetSelection();
     
-    cout << 
-    "Name: " << QuestName << '\n' <<
-    "World: " << ComboWorlds->GetStringSelection() << '\n' <<
-    "Parent Quest: " << ListBoxQuest->GetSelection() << '\n' <<
-    "IsMain: " << IsMain << '\n' <<
-    "IsFailable: " << IsFailable << '\n' <<
-    "IsOptional: " << IsOptional << '\n' <<
-    endl;
-    
+    struct QuestData Data = {QuestName, 
+                             ComboIntSelection, 
+                             ParentQuest, 
+                             IsMain, 
+                             IsFailable, 
+                             IsOptional};
+                             
+    std::tuple<bool, std::string> Result = Utils::CreateNewQuest(&Data);
+
+    if(std::get<bool>(Result)) {
+        wxMessageDialog* dial = new wxMessageDialog ( NULL,
+                wxT ( "Quest Created Successfully!" ), wxT ( "Success" ), wxCENTRE | wxOK );
+        dial->ShowModal();
+        this->Destroy();
+    }else {
+        
+    }
     
 }
 

@@ -8,8 +8,10 @@
 #include <Poco/JSON/JSON.h>
 #include <Poco/JSON/Parser.h>
 #include <Poco/Dynamic/Var.h>
+#include <Poco/Dynamic/Struct.h>
 #include <Poco/Exception.h>
 #include <Poco/FileStream.h>
+#include <Poco/JSON/Stringifier.h>
 
 #include <wx/wxprec.h>
 #ifndef WX_PRECOMP
@@ -25,6 +27,16 @@ using namespace std;
 
 enum class FileKind { Cache, Quests, DefaultWorlds, Swap };
 
+struct QuestData
+{
+  std::string Name;
+  uint8_t WorldId;
+  int ParentQuest;
+  bool IsMain;
+  bool IsFailable;
+  bool IsOptional;
+};
+
 class Utils {
 public:
     static std::string GetCacheFilePath();
@@ -35,6 +47,10 @@ public:
     static std::tuple<Poco::File, bool> GetFileFrom ( Poco::File FilePath );
     static wxString * GetDefaultWorldsAsList ( std::string Context );
     static void GenerateStructure();
+    
+    static std::tuple<bool, std::string> CreateNewQuest(QuestData * Data);
+    
+    static Poco::JSON::Array::Ptr GetQuestAsJSON();
 
     // Windows Only
     static void OpenConsole();

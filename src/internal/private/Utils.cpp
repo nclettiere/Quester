@@ -69,7 +69,7 @@ void Utils::GenerateStructure() {
             cout << ex.displayText() << endl;
         }
     }
-    
+
     cout << "Created Path: " << QuestMainFilePath.toString() << endl;
 }
 
@@ -98,7 +98,6 @@ wxString * Utils::GetDefaultWorldsAsList ( std::string Context ) {
     Poco::Path DefaultWorldsPath = Poco::Path ( Context )
                                    .parent()
                                    .append ( "/Public/Default/Worlds.json" );
-    std::tuple<Poco::File, bool> t = GetFileFrom ( DefaultWorldsPath );
     wxString * WorldList;
 
     // if file exists
@@ -134,6 +133,56 @@ wxString * Utils::GetDefaultWorldsAsList ( std::string Context ) {
     }
 
     return WorldList;
+}
+
+std::tuple<bool, std::string> Utils::CreateNewQuest ( QuestData * Data ) {
+    Poco::JSON::Object::Ptr JSONDataQuest = new Poco::JSON::Object;
+    JSONDataQuest->set ( "Name", Data->Name );
+    JSONDataQuest->set ( "World", Data->WorldId );
+    JSONDataQuest->set ( "ParentQuest", Data->ParentQuest );
+    JSONDataQuest->set ( "IsMain", Data->IsMain );
+    JSONDataQuest->set ( "IsFailable", Data->IsFailable );
+    JSONDataQuest->set ( "IsOptional", Data->IsOptional );
+    
+    Poco::JSON::Array::Ptr QuestList = Utils::GetQuestAsJSON();
+
+    QuestList->add(JSONDataQuest);
+        
+    Poco::Dynamic::Var Dynamic ( QuestList );
+    Poco::FileOutputStream fout ( Utils::GetEssentialFile ( FileKind::Quests ) );
+
+    try {
+        Poco::JSON::Stringifier::stringify ( Dynamic, fout, 1, 1, Poco::JSON_ESCAPE_UNICODE );
+        return std::tuple<bool, std::string> {true, "Success" };
+    } catch ( Poco::Exception ex ) {
+        return std::tuple<bool, std::string> {false, ex.displayText() };
+    }
+}
+
+Poco::JSON::Array::Ptr Utils::GetQuestAsJSON() {
+    std::tuple<Poco::File, bool> ResultFile = Utils::GetFileFrom(Utils::GetEssentialFile(FileKind::Quests));
+    
+    // if file exists
+    if(std::get<bool>(ResultFile)) {
+        string buffer;
+        string JSONString;
+        Poco::FileInputStream fis ( GetEssentialFile(FileKind::Quests), std::ios::out );
+        while ( getline ( fis, buffer ) ) {
+            JSONString += buffer + '\n';
+        }
+        fis.close();
+        
+        try {
+            Poco::JSON::Parser Parser;
+            Poco::Dynamic::Var result = Parser.parse ( JSONString );
+            return result.extract<Poco::JSON::Array::Ptr>();
+        }catch(Poco::Exception ex) {
+            cout << ex.displayText() << endl;
+            return nullptr;
+        }
+    }
+    
+    return nullptr;
 }
 
 std::tuple<Poco::File, bool> Utils::GetFileFrom ( std::string FilePath ) {
