@@ -18,7 +18,7 @@ bool QuesterApp::OnInit() {
     return true;
 }
 QuesterFrame::QuesterFrame()
-    : wxFrame ( NULL, wxID_ANY, "Quester", wxDefaultPosition, wxDefaultSize, wxICONIZE ) {
+    : wxFrame ( NULL, wxID_ANY, "Quester", wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE ) {
     wxMenu *menuFile = new wxMenu;
     menuFile->Append ( ID_New, "&New...\tCtrl-N",
                        "Create a new quest file" );
@@ -30,18 +30,39 @@ QuesterFrame::QuesterFrame()
     menuBar->Append ( menuFile, "&File" );
     menuBar->Append ( menuHelp, "&Help" );
 
-    wxDataViewListCtrl *listctrl = new wxDataViewListCtrl ( this, wxID_ANY );
+    wxPanel *panel = new wxPanel ( this, wxID_ANY);
+
+    wxBoxSizer *vbox1 = new wxBoxSizer ( wxVERTICAL );
+    wxBoxSizer *vbox2 = new wxBoxSizer ( wxVERTICAL );
+    wxBoxSizer *hbox1 = new wxBoxSizer ( wxHORIZONTAL );
+
+    wxDataViewListCtrl *listctrl = new wxDataViewListCtrl ( panel, wxID_ANY, wxDefaultPosition, wxSize(-1,10000));
     listctrl->AppendToggleColumn ( "Name" );
     listctrl->AppendTextColumn ( "World" );
     wxVector<wxVariant> data;
     data.push_back ( wxVariant ( true ) );
     data.push_back ( wxVariant ( "row 1" ) );
     listctrl->AppendItem ( data );
-    data.clear();
-    data.push_back ( wxVariant ( false ) );
-    data.push_back ( wxVariant ( "row 3" ) );
-    listctrl->AppendItem ( data );
+    for(int i = 2; i < 70; i++) {
+        data.clear();
+        data.push_back ( wxVariant ( false ) );
+        data.push_back ( wxVariant ( "row " ) );
+        listctrl->AppendItem ( data );
+    }
     
+    wxSizerFlags flagsExpand(1);
+    flagsExpand.Align(1).Expand().Border(wxRIGHT, 8);
+    hbox1->Add ( listctrl, flagsExpand);
+    wxButton * CreateNewQuestButton = new wxButton ( panel, ID_OkButton, wxT ( "New Quest   " ) );
+    wxButton * DeleteQuestButton = new wxButton ( panel, ID_OkButton,    wxT ( "Delete Quest" ) );
+    vbox2->Add(CreateNewQuestButton, 1);
+    vbox2->Add(DeleteQuestButton, 1);
+    hbox1->Add ( vbox2, 0, 0, 5 );
+
+    vbox1->Add ( hbox1, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP | wxBOTTOM, 8 );
+
+    panel->SetSizerAndFit( vbox1 );
+
     SetMenuBar ( menuBar );
     CreateStatusBar();
 

@@ -6,6 +6,7 @@
 #ifndef WX_PRECOMP
     #include <wx/wx.h>
 #endif
+#include <wx/sizer.h>
 #include <wx/dataview.h>
 
 #include "internal/public/Messages.h"
