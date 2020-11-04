@@ -72,6 +72,8 @@ NewQuestDialog::NewQuestDialog(wxString * Values)
     MainRadio = new wxRadioButton ( panel, ID_Flags_Radio,
             wxT ( "Main" ) );
 
+    MainRadio->SetValue(true);
+
     hbox4->Add ( MainRadio );
     SideRadio = new wxRadioButton ( panel, ID_Flags_Radio,
             wxT ( "Side" ) );
@@ -107,7 +109,7 @@ NewQuestDialog::NewQuestDialog(wxString * Values)
 
     panel->SetSizer ( vbox );
     
-    Utils::GenerateCache();
+    //Utils::GenerateCache();
 
     Centre();
     

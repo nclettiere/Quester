@@ -18,7 +18,7 @@ bool QuesterApp::OnInit() {
     return true;
 }
 QuesterFrame::QuesterFrame()
-    : wxFrame ( NULL, wxID_ANY, "Quester", wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE ) {
+    : wxFrame ( NULL, wxID_ANY, "Quester", wxDefaultPosition, wxSize(500, 450), wxDEFAULT_FRAME_STYLE ) {
     wxMenu *menuFile = new wxMenu;
     menuFile->Append ( ID_New, "&New...\tCtrl-N",
                        "Create a new quest file" );
@@ -37,17 +37,25 @@ QuesterFrame::QuesterFrame()
     wxBoxSizer *hbox1 = new wxBoxSizer ( wxHORIZONTAL );
 
     wxDataViewListCtrl *listctrl = new wxDataViewListCtrl ( panel, wxID_ANY, wxDefaultPosition, wxSize(-1,10000));
+
+    wxDataViewCtrl* musicCtrl = new wxDataViewCtrl(this, wxID_ANY);
+    Quest* QuestModel = new Quest;
+    listctrl->AssociateModel(QuestModel);
+    QuestModel->DecRef();  // avoid memory leak !!
+    // add columns now
+
     listctrl->AppendToggleColumn ( "Name" );
     listctrl->AppendTextColumn ( "World" );
     wxVector<wxVariant> data;
-    data.push_back ( wxVariant ( true ) );
-    data.push_back ( wxVariant ( "row 1" ) );
-    listctrl->AppendItem ( data );
-    for(int i = 2; i < 70; i++) {
+
+    std::tuple<wxString*, int> ResultQuestList = Utils::GetQuestsAsList();
+    int ResultLenght = std::get<int>(ResultQuestList);
+
+    for (int i = 0; i < ResultLenght; i++) {
         data.clear();
-        data.push_back ( wxVariant ( false ) );
-        data.push_back ( wxVariant ( "row " ) );
-        listctrl->AppendItem ( data );
+        data.push_back(wxVariant(false));
+        data.push_back(wxVariant(std::get<wxString*>(ResultQuestList)[i]));
+        listctrl->AppendItem(data);
     }
     
     wxSizerFlags flagsExpand(1);
@@ -81,6 +89,7 @@ void QuesterFrame::OnAbout ( wxCommandEvent& event ) {
 }
 
 void QuesterFrame::OnNewQuest ( wxCommandEvent& event ) {
+    cout << "Main Executable Path: " << wxGetApp().argv[0].ToStdString() << endl;
     wxString * Worlds = Utils::GetDefaultWorldsAsList ( wxGetApp().argv[0].ToStdString() );
 
     NewQuestDialog *custom = new NewQuestDialog ( Worlds );

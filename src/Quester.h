@@ -12,6 +12,7 @@
 #include "internal/public/Messages.h"
 #include "internal/public/Utils.h"
 #include "internal/public/NewQuestDialog.h"
+#include "internal/public/Quest.h"
 
 class QuesterApp : public wxApp
 {

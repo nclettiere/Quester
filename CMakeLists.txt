@@ -8,7 +8,7 @@ include_directories(${CMAKE_SOURCE_DIR})
 # Add all classes in the internal folder
 file(GLOB_RECURSE source_list "src/internal/private/*.cpp" "src/internal/public/*.h")
 
-add_executable(Quester src/Quester.cpp ${source_list})
+add_executable(Quester src/Quester.cpp src/Quester.h ${source_list})
 
 IF (WIN32)
   set_target_properties(Quester PROPERTIES LINK_FLAGS /SUBSYSTEM:WINDOWS)
@@ -30,4 +30,3 @@ file(GLOB Public_Files
   "Public/*"
 )
 file(COPY ${Public_Files} DESTINATION ${CMAKE_BINARY_DIR}/Public/)
-

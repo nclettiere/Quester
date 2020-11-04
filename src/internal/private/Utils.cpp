@@ -98,12 +98,16 @@ wxString * Utils::GetDefaultWorldsAsList ( std::string Context ) {
     Poco::Path DefaultWorldsPath = Poco::Path ( Context )
                                    .parent()
                                    .append ( "/Public/Default/Worlds.json" );
+
+    cout << "DefaultWorldsPath: " << DefaultWorldsPath.toString() << endl;
+
     wxString * WorldList;
 
     // if file exists
     try {
         string buffer;
         string JSONString;
+
         Poco::FileInputStream fis ( DefaultWorldsPath.toString(), std::ios::out );
         while ( getline ( fis, buffer ) ) {
             JSONString += buffer + '\n';
@@ -119,13 +123,18 @@ wxString * Utils::GetDefaultWorldsAsList ( std::string Context ) {
             WorldList = new wxString[arr->size()];
 
             uint8_t i;
-            for ( Poco::JSON::Array::ConstIterator it= arr->begin(); it != arr->end(); ++it ) {
-                Poco::JSON::Object::Ptr object = arr->getObject ( i );
-                WorldList[i] = wxString ( object->getValue<std::string> ( "name" ) );
-                i++;
+            for (i = 0; i < arr->size(); i++) {
+                try {
+                    cout << i << endl;
+                    Poco::JSON::Object::Ptr object = arr->getObject ( i );
+                    WorldList[i] = wxString ( object->getValue<std::string> ( "name" ) );
+                }
+                catch (Poco::Exception ex) {
+                    cout << "3 " << ex.message() << endl;
+                }
             }
         } catch ( Poco::Exception ex ) {
-            cout << ex.displayText() << endl;
+            cout << "2 " << ex.displayText() << endl;
         }
 
     } catch ( Poco::FileNotFoundException ex ) {
@@ -133,6 +142,56 @@ wxString * Utils::GetDefaultWorldsAsList ( std::string Context ) {
     }
 
     return WorldList;
+}
+
+std::tuple<wxString*, int> Utils::GetQuestsAsList() {
+    Poco::Path QuestsListPath = Poco::Path(Utils::GetEssentialFile(FileKind::Quests));
+
+    wxString* QuestsList;
+    int QuestLength;
+
+    // if file exists
+    try {
+        string buffer;
+        string JSONString;
+
+        Poco::FileInputStream fis(QuestsListPath.toString(), std::ios::out);
+        while (getline(fis, buffer)) {
+            JSONString += buffer + '\n';
+        }
+        fis.close();
+
+        try {
+            // Parse JSON String
+            Poco::JSON::Parser Parser;
+            Poco::Dynamic::Var result = Parser.parse(JSONString);
+            Poco::JSON::Array::Ptr arr = result.extract<Poco::JSON::Array::Ptr>();
+
+            QuestLength = arr->size();
+            QuestsList = new wxString[QuestLength];
+
+            uint8_t i;
+            for (i = 0; i < arr->size(); i++) {
+                try {
+                    cout << i << endl;
+                    Poco::JSON::Object::Ptr object = arr->getObject(i);
+                    QuestsList[i] = wxString(object->getValue<std::string>("Name"));
+                }
+                catch (Poco::Exception ex) {
+                    cout << "3 " << ex.message() << endl;
+                }
+            }
+        }
+        catch (Poco::Exception ex) {
+            cout << "2 " << ex.displayText() << endl;
+        }
+
+    }
+    catch (Poco::FileNotFoundException ex) {
+        cout << ex.displayText() << endl;
+    }
+
+    return std::tuple<wxString*, int> { QuestsList, QuestLength };
 }
 
 std::tuple<bool, std::string> Utils::CreateNewQuest ( QuestData * Data ) {
@@ -166,6 +225,7 @@ Poco::JSON::Array::Ptr Utils::GetQuestAsJSON() {
     if(std::get<bool>(ResultFile)) {
         string buffer;
         string JSONString;
+
         Poco::FileInputStream fis ( GetEssentialFile(FileKind::Quests), std::ios::out );
         while ( getline ( fis, buffer ) ) {
             JSONString += buffer + '\n';
@@ -177,7 +237,7 @@ Poco::JSON::Array::Ptr Utils::GetQuestAsJSON() {
             Poco::Dynamic::Var result = Parser.parse ( JSONString );
             return result.extract<Poco::JSON::Array::Ptr>();
         }catch(Poco::Exception ex) {
-            cout << ex.displayText() << endl;
+            cout << "1 " << ex.displayText() << endl;
             return nullptr;
         }
     }
