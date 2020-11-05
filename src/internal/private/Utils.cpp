@@ -42,11 +42,12 @@ std::string Utils::GetCacheFilePath() {
 
 void Utils::GenerateStructure() {
     Poco::Path QuestFolderPath = Poco::Path ( Poco::Path::dataHome() ).append ( Poco::Path ( "Quester/Quests/" ) );
+    Poco::Path QuestMainFilePath = Poco::Path (Utils::GetEssentialFile(FileKind::Quests));
+    Poco::File QuestFolder = Poco::File(QuestFolderPath);
+    Poco::File QuestDefaultFile = Poco::File(QuestMainFilePath);
 
-    Poco::Path QuestMainFilePath = Poco::Path ( Poco::Path::dataHome() ).append ( Poco::Path ( "Quester/Quests/Base.json" ) );
+    cout << "QuestMainFilePath: " << QuestMainFilePath.toString() << endl;
 
-    auto QuestFolder = Poco::File ( QuestFolderPath );
-    auto QuestDefaultFile = Poco::File ( QuestMainFilePath );
     if ( !QuestFolder.exists() ) {
         try {
             //ensures directory exist
@@ -56,21 +57,27 @@ void Utils::GenerateStructure() {
         }
     }
 
-    if ( !QuestDefaultFile.exists() ) {
+    Poco::FileOutputStream fout(QuestMainFilePath.toString());
+    if ( !QuestDefaultFile.exists()) {
+        cout << "Attempting -> Creating..." << QuestMainFilePath.toString() << "\n";
         try {
-            cout << "Creating..." << QuestMainFilePath.toString() << "\n";
             QuestDefaultFile.createFile();
 
-            // Write default json value
-            Poco::FileOutputStream fout ( QuestMainFilePath.toString(), std::ios::out );
             fout << "[]";
-            fout.close();
+            cout << "Created Path: " << QuestMainFilePath.toString() << endl;   
         } catch ( Poco::FileException ex ) {
-            cout << ex.displayText() << endl;
+            cout << "Unexpected: " << ex.displayText() << endl;
         }
     }
+    else {
+        Poco::FileInputStream fis(QuestMainFilePath.toString());
+        if (fis.peek() == std::ifstream::traits_type::eof()) {
+            fout << "[]";
+        }
+        fis.close();
+    }
 
-    cout << "Created Path: " << QuestMainFilePath.toString() << endl;
+    fout.close();
 }
 
 std::string Utils::GetEssentialFile ( FileKind Kind ) {
@@ -144,10 +151,10 @@ wxString * Utils::GetDefaultWorldsAsList ( std::string Context ) {
     return WorldList;
 }
 
-wxArrayString Utils::GetQuestsAsList() {
+std::vector<Quest*> Utils::GetQuestsAsList() {
     Poco::Path QuestsListPath = Poco::Path(Utils::GetEssentialFile(FileKind::Quests));
 
-    wxArrayString QuestsList;
+    std::vector<Quest*> QuestList;
 
     // if file exists
     try {
@@ -171,7 +178,15 @@ wxArrayString Utils::GetQuestsAsList() {
                 try {
                     cout << i << endl;
                     Poco::JSON::Object::Ptr object = arr->getObject(i);
-                    QuestsList.Add(wxString(object->getValue<std::string>("Name")));
+
+                    Quest * quest = new Quest();
+                    quest->Name = object->getValue<std::string>("Name");
+                    quest->World = object->getValue<int>("World");
+                    quest->ParentQuest = object->getValue<int>("ParentQuest");
+                    quest->IsFailable = object->getValue<bool>("IsFailable");
+                    quest->IsOptional = object->getValue<bool>("IsOptional");
+
+                    QuestList.push_back(quest);
                 }
                 catch (Poco::Exception ex) {
                     cout << "3 " << ex.message() << endl;
@@ -187,17 +202,19 @@ wxArrayString Utils::GetQuestsAsList() {
         cout << ex.displayText() << endl;
     }
 
-    return QuestsList;
+    return QuestList;
 }
 
-std::tuple<bool, std::string> Utils::CreateNewQuest ( QuestData * Data ) {
+std::tuple<bool, std::string> Utils::CreateNewQuest (Quest* QuestData) {
     Poco::JSON::Object::Ptr JSONDataQuest = new Poco::JSON::Object;
-    JSONDataQuest->set ( "Name", Data->Name );
-    JSONDataQuest->set ( "World", Data->WorldId );
-    JSONDataQuest->set ( "ParentQuest", Data->ParentQuest );
-    JSONDataQuest->set ( "IsMain", Data->IsMain );
-    JSONDataQuest->set ( "IsFailable", Data->IsFailable );
-    JSONDataQuest->set ( "IsOptional", Data->IsOptional );
+    JSONDataQuest->set ( "Name", QuestData->Name );
+    JSONDataQuest->set("World", QuestData->World);
+    JSONDataQuest->set("WorldName", QuestData->WorldName);
+    JSONDataQuest->set ( "ParentQuest", QuestData->ParentQuest );
+    JSONDataQuest->set ( "ParentQuestName", QuestData->ParentQuestName );
+    JSONDataQuest->set ( "IsMain", QuestData->IsMain );
+    JSONDataQuest->set ( "IsFailable", QuestData->IsFailable );
+    JSONDataQuest->set ( "IsOptional", QuestData->IsOptional );
     
     Poco::JSON::Array::Ptr QuestList = Utils::GetQuestAsJSON();
 

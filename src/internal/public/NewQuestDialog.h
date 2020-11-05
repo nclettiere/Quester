@@ -5,6 +5,8 @@
 #include <wx/wx.h>
 #endif
 
+#include <wx/listctrl.h>
+
 #include <iostream>
 #include "Utils.h"
 
@@ -15,11 +17,15 @@ private:
     wxButton      * OkButton;
     wxComboBox    * ComboWorlds;
     wxButton      * ButtonClear;
-    wxListBox     * ListBoxQuest;
+    wxListCtrl     * ListBoxQuest;
     wxRadioButton * MainRadio;
     wxRadioButton * SideRadio;
     wxCheckBox    * FailableCheck;
     wxCheckBox    * OptionalCheck;
+
+    std::vector<Quest*> ResultQuestList;
+    Quest * SelectedQuest;
+    long SelectedQuestIndex;
     
     bool IsMain;
     bool IsFailable;
@@ -29,6 +35,9 @@ private:
     void OnButtonClearPressed ( wxCommandEvent& event );
     void OnOkButtonPressed ( wxCommandEvent& event );
     void OnFlagsChanged ( wxCommandEvent& event );
+    void OnQuestListSelection(wxCommandEvent& event);
+    void OnQuestListDeselection(wxCommandEvent& event);
+
 public:
     NewQuestDialog ( wxString * Values );
 };

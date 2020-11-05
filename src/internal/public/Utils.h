@@ -23,19 +23,11 @@
 #include <corecrt_io.h>
 #endif
 
+#include "Quest.h"
+
 using namespace std;
 
 enum class FileKind { Cache, Quests, DefaultWorlds, Swap };
-
-struct QuestData
-{
-  std::string Name;
-  uint8_t WorldId;
-  int ParentQuest;
-  bool IsMain;
-  bool IsFailable;
-  bool IsOptional;
-};
 
 class Utils {
 public:
@@ -46,10 +38,10 @@ public:
     static std::tuple<Poco::File, bool> GetFileFrom ( std::string FilePath );
     static std::tuple<Poco::File, bool> GetFileFrom ( Poco::File FilePath );
     static wxString * GetDefaultWorldsAsList ( std::string Context );
-    static wxArrayString GetQuestsAsList();
+    static std::vector<Quest*> GetQuestsAsList();
     static void GenerateStructure();
     
-    static std::tuple<bool, std::string> CreateNewQuest(QuestData * Data);
+    static std::tuple<bool, std::string> CreateNewQuest(Quest * QuestData);
     
     static Poco::JSON::Array::Ptr GetQuestAsJSON();
 

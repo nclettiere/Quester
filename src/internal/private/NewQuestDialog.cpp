@@ -41,16 +41,24 @@ NewQuestDialog::NewQuestDialog(wxString * Values)
 
     vboxList->Add ( stParent, 0, wxEXPAND | wxLEFT | wxTOP, 10 );
 
-    wxArrayString strings;
-    strings.Add ( wxT ( "First string" ) );
-    strings.Add ( wxT ( "Second string" ) );
-    strings.Add ( wxT ( "Third string" ) );
-    strings.Add ( wxT ( "Fourth string" ) );
-    strings.Add ( wxT ( "Fifth string" ) );
-    strings.Add ( wxT ( "Sixth string" ) );
+    ListBoxQuest = new wxListCtrl(panel, ID_QuestList, wxPoint(150, 100), wxSize(180, 150), wxLC_REPORT);
 
-    // Create a ListBox with Single-selection list.
-    ListBoxQuest = new wxListBox ( panel, wxID_ANY, wxPoint ( 150, 100 ), wxSize ( 180, 150 ), strings, wxLB_SINGLE );
+    ListBoxQuest->InsertColumn(0, _("Name"), wxLIST_FORMAT_LEFT, 100);
+    ListBoxQuest->InsertColumn(1, _("World"), wxLIST_FORMAT_LEFT, 100);
+    ListBoxQuest->InsertColumn(2, _("Parent Quest"), wxLIST_FORMAT_LEFT, 100);
+
+    ResultQuestList = Utils::GetQuestsAsList();
+    //int ResultLenght = std::get<int>(ResultQuestList);
+
+    //data.push_back(wxVariant(std::get<wxString*>(ResultQuestList)[i]));
+
+    for (int i = 0; i < ResultQuestList.size(); i++) {
+        ListBoxQuest->InsertItem(i, wxEmptyString);
+
+        ListBoxQuest->SetItem(i, 0, ResultQuestList[i]->Name);
+        ListBoxQuest->SetItem(i, 1, std::to_string(ResultQuestList[i]->World));
+        ListBoxQuest->SetItem(i, 2, std::to_string(ResultQuestList[i]->ParentQuest));
+    }
 
     //ListBox->Connect(wxEVT_RIGHT_DOWN, wxMouseEventHandler(MyFrame::OnListboxRDown), NULL, this);
 
@@ -105,7 +113,8 @@ NewQuestDialog::NewQuestDialog(wxString * Values)
     Bind( wxEVT_BUTTON, &NewQuestDialog::OnButtonClearPressed, this, ID_ButtonClear );
     Bind( wxEVT_BUTTON, &NewQuestDialog::OnOkButtonPressed, this, ID_OkButton );
     Bind( wxEVT_RADIOBUTTON, &NewQuestDialog::OnFlagsChanged, this, ID_Flags_Radio );
-    Bind( wxEVT_CHECKBOX, &NewQuestDialog::OnFlagsChanged, this, ID_Flags_Check );
+    Bind( wxEVT_LIST_ITEM_SELECTED, &NewQuestDialog::OnQuestListSelection, this, ID_QuestList);
+    Bind( wxEVT_LIST_ITEM_DESELECTED, &NewQuestDialog::OnQuestListDeselection, this, ID_QuestList);
 
     panel->SetSizer ( vbox );
     
@@ -130,24 +139,39 @@ void NewQuestDialog::OnQuestNameChange(wxCommandEvent& event ) {
 }
 
 void NewQuestDialog::OnButtonClearPressed(wxCommandEvent& event ) {
-    ListBoxQuest->SetSelection(wxNOT_FOUND);
+    ListBoxQuest->SetItemState(-1, 0, wxLIST_STATE_SELECTED);
 }
 
 void NewQuestDialog::OnOkButtonPressed(wxCommandEvent& event ) {
     std::string QuestName = QuestNameText->GetValue().ToStdString();
     std::string ComboSelectionString = ComboWorlds->GetStringSelection().ToStdString();
     uint8_t ComboIntSelection = ComboWorlds->GetSelection();
-    int ParentQuest = ListBoxQuest->GetSelection();
-    
-    struct QuestData Data = {QuestName, 
-                             ComboIntSelection, 
-                             ParentQuest, 
-                             IsMain, 
-                             IsFailable, 
-                             IsOptional};
-                             
-    std::tuple<bool, std::string> Result = Utils::CreateNewQuest(&Data);
 
+    Quest* Data;
+
+    if (SelectedQuest != nullptr) {
+        Data = new Quest(QuestName,
+            ComboIntSelection,
+            ComboSelectionString,
+            SelectedQuestIndex,
+            SelectedQuest->Name,
+            IsMain,
+            IsFailable,
+            IsOptional);
+    }
+    else {
+        Data = new Quest(QuestName,
+            ComboIntSelection,
+            ComboSelectionString,
+            -1,
+            "",
+            IsMain,
+            IsFailable,
+            IsOptional);
+    }
+
+    std::tuple<bool, std::string> Result = Utils::CreateNewQuest(Data);
+    
     if(std::get<bool>(Result)) {
         wxMessageDialog* dial = new wxMessageDialog ( NULL,
                 wxT ( "Quest Created Successfully!" ), wxT ( "Success" ), wxCENTRE | wxOK );
@@ -157,11 +181,37 @@ void NewQuestDialog::OnOkButtonPressed(wxCommandEvent& event ) {
         wxMessageDialog* dial = new wxMessageDialog ( NULL, std::get<string>(Result), wxT ( "Error" ), wxCENTRE | wxOK );
         dial->ShowModal();
     }
-    
 }
 
 void NewQuestDialog::OnFlagsChanged(wxCommandEvent& event ) {
     MainRadio->GetValue() ? IsMain = true : IsMain = false;
     IsFailable = FailableCheck->GetValue();
     IsOptional = OptionalCheck->GetValue();
+}
+
+void NewQuestDialog::OnQuestListSelection(wxCommandEvent& event)
+{
+    long item = -1;
+    for ( ;; )
+    {
+        item = ListBoxQuest->GetNextItem(item,
+            wxLIST_NEXT_ALL,
+            wxLIST_STATE_SELECTED);
+        if (item == -1)
+            break;
+        // this item is selected - do whatever is needed with it
+        Quest* quest = ResultQuestList[item];
+
+        if (quest != nullptr) {
+            SelectedQuest = quest;
+            SelectedQuestIndex = item;
+        }
+        //wxLogMessage("Item %s is selected.", quest->Name);
+    }
+}
+
+void NewQuestDialog::OnQuestListDeselection(wxCommandEvent& event)
+{
+    SelectedQuest = nullptr;
+    SelectedQuestIndex = -1;
 }

@@ -42,36 +42,27 @@ QuesterFrame::QuesterFrame()
 	m_item_list->InsertColumn(1,_("World"),wxLIST_FORMAT_LEFT,100);
 	m_item_list->InsertColumn(2,_("Parent Quest"),wxLIST_FORMAT_LEFT,100);
 	
-	int itemIndex = 0;
-    int itemIndex2 = 1;
-	m_item_list->InsertItem(itemIndex,_("col1ItemText"));
-    m_item_list->InsertItem(itemIndex2,_("col2ItemText"));
-	
-	// use this function to add text
-	// long SetItem(long index, int col, const wxString& label, int imageId = -1)
-
-	m_item_list->SetItem(itemIndex,0,_("col1ItemText"));	
-	m_item_list->SetItem(itemIndex,1,_("col2ItemText")); 
-	m_item_list->SetItem(itemIndex,2,_("col3ItemText"));
-    
-    m_item_list->SetItem(itemIndex2,0,_("col1ItemText"));	
-	m_item_list->SetItem(itemIndex2,1,_("col2ItemText")); 
-	m_item_list->SetItem(itemIndex2,2,_("col3ItemText"));
- 
-
-    //std::tuple<wxString*, int> ResultQuestList = GetQuestsAsList();
+    std::vector<Quest*> ResultQuestList = Utils::GetQuestsAsList();
     //int ResultLenght = std::get<int>(ResultQuestList);
-    
+
     //data.push_back(wxVariant(std::get<wxString*>(ResultQuestList)[i]));
+
+    for (int i = 0; i < ResultQuestList.size(); i++) {
+        m_item_list->InsertItem(i, wxEmptyString);
+
+        m_item_list->SetItem(i, 0, ResultQuestList[i]->Name);
+        m_item_list->SetItem(i, 1, std::to_string(ResultQuestList[i]->World));
+        m_item_list->SetItem(i, 2, std::to_string(ResultQuestList[i]->ParentQuest));
+    }
 
     
     wxSizerFlags flagsExpand(1);
     flagsExpand.Align(1).Expand().Border(wxRIGHT, 8);
     hbox1->Add ( m_item_list, flagsExpand);
-    wxButton * CreateNewQuestButton = new wxButton ( panel, ID_OkButton, wxT ( "New Quest   " ) );
+    wxButton * CreateNewQuestButton = new wxButton ( panel, ID_OkButton, wxT ( "New Quest" ) );
     wxButton * DeleteQuestButton = new wxButton ( panel, ID_OkButton,    wxT ( "Delete Quest" ) );
-    vbox2->Add(CreateNewQuestButton, 1);
-    vbox2->Add(DeleteQuestButton, 1);
+    vbox2->Add(CreateNewQuestButton, 1, wxEXPAND);
+    vbox2->Add(DeleteQuestButton, 1, wxEXPAND);
     hbox1->Add ( vbox2, 0, 0, 5 );
 
     vbox1->Add ( hbox1, 0, wxEXPAND | wxLEFT | wxRIGHT | wxTOP | wxBOTTOM, 8 );
