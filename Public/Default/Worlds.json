@@ -1,6 +1,7 @@
 [ 
     {
-        "name":"Valhalla!"
+        "name":"Valhalla!",
+        "guid": ""
     },
     {
         "name":"Midgaard"

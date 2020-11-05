@@ -46,7 +46,7 @@ public:
     static std::tuple<Poco::File, bool> GetFileFrom ( std::string FilePath );
     static std::tuple<Poco::File, bool> GetFileFrom ( Poco::File FilePath );
     static wxString * GetDefaultWorldsAsList ( std::string Context );
-    static std::tuple<wxString*, int> Utils::GetQuestsAsList();
+    static wxArrayString GetQuestsAsList();
     static void GenerateStructure();
     
     static std::tuple<bool, std::string> CreateNewQuest(QuestData * Data);

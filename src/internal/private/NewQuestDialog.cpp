@@ -154,7 +154,8 @@ void NewQuestDialog::OnOkButtonPressed(wxCommandEvent& event ) {
         dial->ShowModal();
         this->Destroy();
     }else {
-        
+        wxMessageDialog* dial = new wxMessageDialog ( NULL, std::get<string>(Result), wxT ( "Error" ), wxCENTRE | wxOK );
+        dial->ShowModal();
     }
     
 }

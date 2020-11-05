@@ -7,7 +7,7 @@
     #include <wx/wx.h>
 #endif
 #include <wx/sizer.h>
-#include <wx/dataview.h>
+#include <wx/listctrl.h>
 
 #include "internal/public/Messages.h"
 #include "internal/public/Utils.h"

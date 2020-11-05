@@ -36,31 +36,38 @@ QuesterFrame::QuesterFrame()
     wxBoxSizer *vbox2 = new wxBoxSizer ( wxVERTICAL );
     wxBoxSizer *hbox1 = new wxBoxSizer ( wxHORIZONTAL );
 
-    wxDataViewListCtrl *listctrl = new wxDataViewListCtrl ( panel, wxID_ANY, wxDefaultPosition, wxSize(-1,10000));
+    wxListCtrl * m_item_list = new wxListCtrl(panel, wxID_ANY, wxDefaultPosition, wxSize(-1, 10000), wxLC_REPORT);
+    
+    m_item_list->InsertColumn(0,_("Name"),wxLIST_FORMAT_LEFT,100);
+	m_item_list->InsertColumn(1,_("World"),wxLIST_FORMAT_LEFT,100);
+	m_item_list->InsertColumn(2,_("Parent Quest"),wxLIST_FORMAT_LEFT,100);
+	
+	int itemIndex = 0;
+    int itemIndex2 = 1;
+	m_item_list->InsertItem(itemIndex,_("col1ItemText"));
+    m_item_list->InsertItem(itemIndex2,_("col2ItemText"));
+	
+	// use this function to add text
+	// long SetItem(long index, int col, const wxString& label, int imageId = -1)
 
-    wxDataViewCtrl* musicCtrl = new wxDataViewCtrl(this, wxID_ANY);
-    Quest* QuestModel = new Quest;
-    listctrl->AssociateModel(QuestModel);
-    QuestModel->DecRef();  // avoid memory leak !!
-    // add columns now
+	m_item_list->SetItem(itemIndex,0,_("col1ItemText"));	
+	m_item_list->SetItem(itemIndex,1,_("col2ItemText")); 
+	m_item_list->SetItem(itemIndex,2,_("col3ItemText"));
+    
+    m_item_list->SetItem(itemIndex2,0,_("col1ItemText"));	
+	m_item_list->SetItem(itemIndex2,1,_("col2ItemText")); 
+	m_item_list->SetItem(itemIndex2,2,_("col3ItemText"));
+ 
 
-    listctrl->AppendToggleColumn ( "Name" );
-    listctrl->AppendTextColumn ( "World" );
-    wxVector<wxVariant> data;
+    //std::tuple<wxString*, int> ResultQuestList = GetQuestsAsList();
+    //int ResultLenght = std::get<int>(ResultQuestList);
+    
+    //data.push_back(wxVariant(std::get<wxString*>(ResultQuestList)[i]));
 
-    std::tuple<wxString*, int> ResultQuestList = Utils::GetQuestsAsList();
-    int ResultLenght = std::get<int>(ResultQuestList);
-
-    for (int i = 0; i < ResultLenght; i++) {
-        data.clear();
-        data.push_back(wxVariant(false));
-        data.push_back(wxVariant(std::get<wxString*>(ResultQuestList)[i]));
-        listctrl->AppendItem(data);
-    }
     
     wxSizerFlags flagsExpand(1);
     flagsExpand.Align(1).Expand().Border(wxRIGHT, 8);
-    hbox1->Add ( listctrl, flagsExpand);
+    hbox1->Add ( m_item_list, flagsExpand);
     wxButton * CreateNewQuestButton = new wxButton ( panel, ID_OkButton, wxT ( "New Quest   " ) );
     wxButton * DeleteQuestButton = new wxButton ( panel, ID_OkButton,    wxT ( "Delete Quest" ) );
     vbox2->Add(CreateNewQuestButton, 1);

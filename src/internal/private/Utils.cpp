@@ -144,11 +144,10 @@ wxString * Utils::GetDefaultWorldsAsList ( std::string Context ) {
     return WorldList;
 }
 
-std::tuple<wxString*, int> Utils::GetQuestsAsList() {
+wxArrayString Utils::GetQuestsAsList() {
     Poco::Path QuestsListPath = Poco::Path(Utils::GetEssentialFile(FileKind::Quests));
 
-    wxString* QuestsList;
-    int QuestLength;
+    wxArrayString QuestsList;
 
     // if file exists
     try {
@@ -167,15 +166,12 @@ std::tuple<wxString*, int> Utils::GetQuestsAsList() {
             Poco::Dynamic::Var result = Parser.parse(JSONString);
             Poco::JSON::Array::Ptr arr = result.extract<Poco::JSON::Array::Ptr>();
 
-            QuestLength = arr->size();
-            QuestsList = new wxString[QuestLength];
-
             uint8_t i;
             for (i = 0; i < arr->size(); i++) {
                 try {
                     cout << i << endl;
                     Poco::JSON::Object::Ptr object = arr->getObject(i);
-                    QuestsList[i] = wxString(object->getValue<std::string>("Name"));
+                    QuestsList.Add(wxString(object->getValue<std::string>("Name")));
                 }
                 catch (Poco::Exception ex) {
                     cout << "3 " << ex.message() << endl;
@@ -191,7 +187,7 @@ std::tuple<wxString*, int> Utils::GetQuestsAsList() {
         cout << ex.displayText() << endl;
     }
 
-    return std::tuple<wxString*, int> { QuestsList, QuestLength };
+    return QuestsList;
 }
 
 std::tuple<bool, std::string> Utils::CreateNewQuest ( QuestData * Data ) {
