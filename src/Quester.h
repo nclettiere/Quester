@@ -24,14 +24,27 @@ class QuesterFrame : public wxFrame
 {
 public:
     QuesterFrame();
+    
+    std::vector<Quest*> ResultQuestList;
+    Quest * SelectedQuest = nullptr;
+    long SelectedQuestIndex = -1;
+    
 private:
+    wxButton   * ViewButton;
+    wxButton   * NewQuestButton;
+    wxButton   * DeleteQuestButton;
+    wxListCtrl * ListBoxQuest;
+    
     void OnNewQuest(wxCommandEvent& event);
     void OnExit(wxCommandEvent& event);
     void OnAbout(wxCommandEvent& event);
+    void OnQuestListSelection ( wxCommandEvent& event );
+    void OnQuestListDeselection ( wxCommandEvent& event );
 };
 enum
 {
-    ID_New = 1
+    ID_New = 1,
+    ID_ListQuest
 };
 
 wxIMPLEMENT_APP(QuesterApp);
