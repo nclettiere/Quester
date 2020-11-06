@@ -8,6 +8,7 @@
 #include <wx/listctrl.h>
 
 #include <iostream>
+#include <Poco/UUIDGenerator.h>
 #include "Utils.h"
 
 class NewQuestDialog : public wxDialog {
@@ -24,8 +25,8 @@ private:
     wxCheckBox    * OptionalCheck;
 
     std::vector<Quest*> ResultQuestList;
-    Quest * SelectedQuest;
-    long SelectedQuestIndex;
+    Quest * SelectedQuest = nullptr;
+    long SelectedQuestIndex = -1;
     
     bool IsMain;
     bool IsFailable;

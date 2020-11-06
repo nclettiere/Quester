@@ -7,10 +7,12 @@
 #include <wx/dataview.h>
 
 #include <iostream>
+#include <Poco/UUID.h>
 
 class Quest
 {
 public:
+    Poco::UUID Id;
 	std::string Name;
 	bool IsMain;
 	int World;
@@ -22,7 +24,9 @@ public:
 
 public:
 	Quest();
-	Quest(std::string Name, 
+	Quest(
+        Poco::UUID Id,
+        std::string Name, 
 		int World, 
 		std::string WorldName, 
 		int ParentQuest, 

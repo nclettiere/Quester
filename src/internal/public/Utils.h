@@ -12,6 +12,8 @@
 #include <Poco/Exception.h>
 #include <Poco/FileStream.h>
 #include <Poco/JSON/Stringifier.h>
+#include <Poco/UUIDGenerator.h>
+#include <Poco/UUID.h>
 
 #include <wx/wxprec.h>
 #ifndef WX_PRECOMP

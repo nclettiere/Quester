@@ -42,42 +42,31 @@ std::string Utils::GetCacheFilePath() {
 
 void Utils::GenerateStructure() {
     Poco::Path QuestFolderPath = Poco::Path ( Poco::Path::dataHome() ).append ( Poco::Path ( "Quester/Quests/" ) );
-    Poco::Path QuestMainFilePath = Poco::Path (Utils::GetEssentialFile(FileKind::Quests));
-    Poco::File QuestFolder = Poco::File(QuestFolderPath);
-    Poco::File QuestDefaultFile = Poco::File(QuestMainFilePath);
+    Poco::Path QuestMainFilePath = Poco::Path ( Utils::GetEssentialFile ( FileKind::Quests ) );
+    Poco::File QuestFolder = Poco::File ( QuestFolderPath );
+    Poco::File QuestDefaultFile = Poco::File ( QuestMainFilePath );
 
     cout << "QuestMainFilePath: " << QuestMainFilePath.toString() << endl;
 
-    if ( !QuestFolder.exists() ) {
+    cout << "QuestFolder found: " << QuestFolder.exists() << endl;
+    cout << "QuestDefaultFile found: " << QuestDefaultFile.exists() << endl;
+
+    if ( !QuestFolder.exists() )
+        QuestFolder.createDirectories();
+
+    if ( !QuestDefaultFile.exists() ) {
+        QuestFolder.createFile();
+        Poco::Dynamic::Var Dynamic ( "[]" );
+
         try {
-            //ensures directory exist
-            QuestFolder.createDirectories();
-        } catch ( Poco::FileException ex ) {
+            Poco::FileOutputStream fout ( Utils::GetEssentialFile ( FileKind::Quests ) );
+            Poco::JSON::Stringifier::stringify ( Dynamic, fout, 1, 1, Poco::JSON_ESCAPE_UNICODE );
+            fout.close();
+        }catch(Poco::Exception ex) {
             cout << ex.displayText() << endl;
         }
     }
 
-    Poco::FileOutputStream fout(QuestMainFilePath.toString());
-    if ( !QuestDefaultFile.exists()) {
-        cout << "Attempting -> Creating..." << QuestMainFilePath.toString() << "\n";
-        try {
-            QuestDefaultFile.createFile();
-
-            fout << "[]";
-            cout << "Created Path: " << QuestMainFilePath.toString() << endl;   
-        } catch ( Poco::FileException ex ) {
-            cout << "Unexpected: " << ex.displayText() << endl;
-        }
-    }
-    else {
-        Poco::FileInputStream fis(QuestMainFilePath.toString());
-        if (fis.peek() == std::ifstream::traits_type::eof()) {
-            fout << "[]";
-        }
-        fis.close();
-    }
-
-    fout.close();
 }
 
 std::string Utils::GetEssentialFile ( FileKind Kind ) {
@@ -130,13 +119,12 @@ wxString * Utils::GetDefaultWorldsAsList ( std::string Context ) {
             WorldList = new wxString[arr->size()];
 
             uint8_t i;
-            for (i = 0; i < arr->size(); i++) {
+            for ( i = 0; i < arr->size(); i++ ) {
                 try {
                     cout << i << endl;
                     Poco::JSON::Object::Ptr object = arr->getObject ( i );
                     WorldList[i] = wxString ( object->getValue<std::string> ( "name" ) );
-                }
-                catch (Poco::Exception ex) {
+                } catch ( Poco::Exception ex ) {
                     cout << "3 " << ex.message() << endl;
                 }
             }
@@ -152,7 +140,7 @@ wxString * Utils::GetDefaultWorldsAsList ( std::string Context ) {
 }
 
 std::vector<Quest*> Utils::GetQuestsAsList() {
-    Poco::Path QuestsListPath = Poco::Path(Utils::GetEssentialFile(FileKind::Quests));
+    Poco::Path QuestsListPath = Poco::Path ( Utils::GetEssentialFile ( FileKind::Quests ) );
 
     std::vector<Quest*> QuestList;
 
@@ -161,8 +149,8 @@ std::vector<Quest*> Utils::GetQuestsAsList() {
         string buffer;
         string JSONString;
 
-        Poco::FileInputStream fis(QuestsListPath.toString(), std::ios::out);
-        while (getline(fis, buffer)) {
+        Poco::FileInputStream fis ( QuestsListPath.toString(), std::ios::out );
+        while ( getline ( fis, buffer ) ) {
             JSONString += buffer + '\n';
         }
         fis.close();
@@ -170,61 +158,63 @@ std::vector<Quest*> Utils::GetQuestsAsList() {
         try {
             // Parse JSON String
             Poco::JSON::Parser Parser;
-            Poco::Dynamic::Var result = Parser.parse(JSONString);
+            Poco::Dynamic::Var result = Parser.parse ( JSONString );
             Poco::JSON::Array::Ptr arr = result.extract<Poco::JSON::Array::Ptr>();
 
             uint8_t i;
-            for (i = 0; i < arr->size(); i++) {
+            for ( i = 0; i < arr->size(); i++ ) {
                 try {
                     cout << i << endl;
-                    Poco::JSON::Object::Ptr object = arr->getObject(i);
+                    Poco::JSON::Object::Ptr object = arr->getObject ( i );
 
                     Quest * quest = new Quest();
-                    quest->Name = object->getValue<std::string>("Name");
-                    quest->World = object->getValue<int>("World");
-                    quest->ParentQuest = object->getValue<int>("ParentQuest");
-                    quest->IsFailable = object->getValue<bool>("IsFailable");
-                    quest->IsOptional = object->getValue<bool>("IsOptional");
+                    quest->Id = Poco::UUID ( object->getValue<std::string> ( "ID" ) );
+                    quest->Name = object->getValue<std::string> ( "Name" );
+                    quest->World = object->getValue<int> ( "World" );
+                    quest->WorldName = object->getValue<std::string> ( "WorldName" );
+                    quest->ParentQuest = object->getValue<int> ( "ParentQuest" );
+                    quest->ParentQuestName = object->getValue<std::string> ( "ParentQuestName" );
+                    quest->IsFailable = object->getValue<bool> ( "IsFailable" );
+                    quest->IsOptional = object->getValue<bool> ( "IsOptional" );
 
-                    QuestList.push_back(quest);
-                }
-                catch (Poco::Exception ex) {
+                    QuestList.push_back ( quest );
+                } catch ( Poco::Exception ex ) {
                     cout << "3 " << ex.message() << endl;
                 }
             }
-        }
-        catch (Poco::Exception ex) {
+        } catch ( Poco::Exception ex ) {
             cout << "2 " << ex.displayText() << endl;
         }
 
-    }
-    catch (Poco::FileNotFoundException ex) {
+    } catch ( Poco::FileNotFoundException ex ) {
         cout << ex.displayText() << endl;
     }
 
     return QuestList;
 }
 
-std::tuple<bool, std::string> Utils::CreateNewQuest (Quest* QuestData) {
+std::tuple<bool, std::string> Utils::CreateNewQuest ( Quest* QuestData ) {
     Poco::JSON::Object::Ptr JSONDataQuest = new Poco::JSON::Object;
+    JSONDataQuest->set ( "ID", QuestData->Id.toString() );
     JSONDataQuest->set ( "Name", QuestData->Name );
-    JSONDataQuest->set("World", QuestData->World);
-    JSONDataQuest->set("WorldName", QuestData->WorldName);
+    JSONDataQuest->set ( "World", QuestData->World );
+    JSONDataQuest->set ( "WorldName", QuestData->WorldName );
     JSONDataQuest->set ( "ParentQuest", QuestData->ParentQuest );
     JSONDataQuest->set ( "ParentQuestName", QuestData->ParentQuestName );
     JSONDataQuest->set ( "IsMain", QuestData->IsMain );
     JSONDataQuest->set ( "IsFailable", QuestData->IsFailable );
     JSONDataQuest->set ( "IsOptional", QuestData->IsOptional );
-    
+
     Poco::JSON::Array::Ptr QuestList = Utils::GetQuestAsJSON();
 
-    QuestList->add(JSONDataQuest);
-        
+    QuestList->add ( JSONDataQuest );
+
     Poco::Dynamic::Var Dynamic ( QuestList );
-    Poco::FileOutputStream fout ( Utils::GetEssentialFile ( FileKind::Quests ) );
 
     try {
+        Poco::FileOutputStream fout ( Utils::GetEssentialFile ( FileKind::Quests ) );
         Poco::JSON::Stringifier::stringify ( Dynamic, fout, 1, 1, Poco::JSON_ESCAPE_UNICODE );
+        fout.close();
         return std::tuple<bool, std::string> {true, "Success" };
     } catch ( Poco::Exception ex ) {
         return std::tuple<bool, std::string> {false, ex.displayText() };
@@ -232,29 +222,36 @@ std::tuple<bool, std::string> Utils::CreateNewQuest (Quest* QuestData) {
 }
 
 Poco::JSON::Array::Ptr Utils::GetQuestAsJSON() {
-    std::tuple<Poco::File, bool> ResultFile = Utils::GetFileFrom(Utils::GetEssentialFile(FileKind::Quests));
-    
+    std::tuple<Poco::File, bool> ResultFile = Utils::GetFileFrom ( Utils::GetEssentialFile ( FileKind::Quests ) );
+
     // if file exists
-    if(std::get<bool>(ResultFile)) {
+    if ( std::get<bool> ( ResultFile ) ) {
         string buffer;
         string JSONString;
-
-        Poco::FileInputStream fis ( GetEssentialFile(FileKind::Quests), std::ios::out );
-        while ( getline ( fis, buffer ) ) {
-            JSONString += buffer + '\n';
-        }
-        fis.close();
-        
         try {
+            Poco::FileInputStream fis ( GetEssentialFile ( FileKind::Quests ) );
+            while ( getline ( fis, buffer ) ) {
+                JSONString += buffer + '\n';
+            }
+            fis.close();
+        } catch ( Poco::Exception ex ) {
+            cout << "&alpha " << ex.displayText() << endl;
+        }
+
+        try {
+            if ( JSONString.size() == 0 ) {
+                cout << "0 size" << endl;
+                return Poco::JSON::Array::Ptr();
+            }
             Poco::JSON::Parser Parser;
             Poco::Dynamic::Var result = Parser.parse ( JSONString );
             return result.extract<Poco::JSON::Array::Ptr>();
-        }catch(Poco::Exception ex) {
+        } catch ( Poco::Exception ex ) {
             cout << "1 " << ex.displayText() << endl;
             return nullptr;
         }
     }
-    
+
     return nullptr;
 }
 

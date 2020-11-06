@@ -43,19 +43,16 @@ QuesterFrame::QuesterFrame()
 	m_item_list->InsertColumn(2,_("Parent Quest"),wxLIST_FORMAT_LEFT,100);
 	
     std::vector<Quest*> ResultQuestList = Utils::GetQuestsAsList();
-    //int ResultLenght = std::get<int>(ResultQuestList);
-
-    //data.push_back(wxVariant(std::get<wxString*>(ResultQuestList)[i]));
 
     for (int i = 0; i < ResultQuestList.size(); i++) {
         m_item_list->InsertItem(i, wxEmptyString);
 
         m_item_list->SetItem(i, 0, ResultQuestList[i]->Name);
-        m_item_list->SetItem(i, 1, std::to_string(ResultQuestList[i]->World));
-        m_item_list->SetItem(i, 2, std::to_string(ResultQuestList[i]->ParentQuest));
+        m_item_list->SetItem(i, 1, ResultQuestList[i]->WorldName);
+        m_item_list->SetItem(i, 2, ResultQuestList[i]->ParentQuestName);
     }
 
-    
+
     wxSizerFlags flagsExpand(1);
     flagsExpand.Align(1).Expand().Border(wxRIGHT, 8);
     hbox1->Add ( m_item_list, flagsExpand);
