@@ -38,7 +38,7 @@ QuesterFrame::QuesterFrame()
 
     NewQuestButton = new wxButton(panel, ID_NewQuestButton, wxT("New Quest"));
     DeleteQuestButton = new wxButton(panel, ID_DeleteQuestButton, wxT("Delete Quest"));
-    ViewButton = new wxButton(panel, ID_OkButton, wxT("View"));
+    ViewButton = new wxButton(panel, ID_ViewQuest, wxT("View"));
 
     DeleteQuestButton->Enable(false);
     ViewButton->Enable(false);
@@ -67,6 +67,7 @@ QuesterFrame::QuesterFrame()
     Bind(wxEVT_MENU, &QuesterFrame::OnNewQuest, this, ID_New);
     Bind(wxEVT_BUTTON, &QuesterFrame::OnNewQuest, this, ID_NewQuestButton);
     Bind(wxEVT_BUTTON, &QuesterFrame::OnDeleteQuest, this, ID_DeleteQuestButton);
+    Bind(wxEVT_BUTTON, &QuesterFrame::OnViewQuest, this, ID_ViewQuest);
     Bind ( wxEVT_MENU, &QuesterFrame::OnAbout, this, wxID_ABOUT );
     Bind ( wxEVT_MENU, &QuesterFrame::OnExit, this, wxID_EXIT );    
     Bind ( wxEVT_LIST_ITEM_SELECTED, &QuesterFrame::OnQuestListSelection, this, ID_ListQuest );
@@ -162,4 +163,11 @@ void QuesterFrame::OnQuestListDeselection ( wxCommandEvent& event ) {
     
     DeleteQuestButton->Enable(false);
     ViewButton->Enable(false);
+}
+
+void QuesterFrame::OnViewQuest(wxCommandEvent& event)
+{
+    QuestEditor* Editor = new QuestEditor();
+
+    Editor->ShowWithEffect(wxShowEffect::wxSHOW_EFFECT_EXPAND);
 }

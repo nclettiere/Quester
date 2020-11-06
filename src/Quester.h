@@ -13,6 +13,8 @@
 #include "internal/public/Utils.h"
 #include "internal/public/NewQuestDialog.h"
 #include "internal/public/Quest.h"
+#include "internal/public/QuestEditor.h"
+
 
 class QuesterApp : public wxApp
 {
@@ -43,13 +45,16 @@ private:
     void OnAbout(wxCommandEvent& event);
     void OnQuestListSelection ( wxCommandEvent& event );
     void OnQuestListDeselection(wxCommandEvent& event);
+    void OnViewQuest(wxCommandEvent& event);
 };
+
 enum
 {
     ID_New = 1,
     ID_ListQuest,
     ID_NewQuestButton,
-    ID_DeleteQuestButton
+    ID_DeleteQuestButton,
+    ID_ViewQuest
 };
 
 wxIMPLEMENT_APP(QuesterApp);
