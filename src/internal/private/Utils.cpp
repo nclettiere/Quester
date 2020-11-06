@@ -5,6 +5,7 @@ bool Utils::GenerateCache() {
 
     Poco::File FileCache ( Utils::GetCacheFilePath() );
 
+    cout << "Inspecting integrity of local files..." << endl;
     Utils::GenerateStructure();
 
     if ( !FileCache.exists() ) {
@@ -15,8 +16,6 @@ bool Utils::GenerateCache() {
         } catch ( Poco::FileException ex ) {
             cout << ex.displayText() << endl;
         }
-
-        cout << "Generating Structure" << endl;
 
         return true;
     }
@@ -46,22 +45,28 @@ void Utils::GenerateStructure() {
     Poco::File QuestFolder = Poco::File ( QuestFolderPath );
     Poco::File QuestDefaultFile = Poco::File ( QuestMainFilePath );
 
-    cout << "QuestMainFilePath: " << QuestMainFilePath.toString() << endl;
-
     cout << "QuestFolder found: " << QuestFolder.exists() << endl;
     cout << "QuestDefaultFile found: " << QuestDefaultFile.exists() << endl;
 
-    if ( !QuestFolder.exists() )
+    if (!QuestFolder.exists()) {
+        cout << "Creating: " << QuestFolderPath.toString() << endl;
         QuestFolder.createDirectories();
-
+    }
+    
     if ( !QuestDefaultFile.exists() ) {
-        QuestFolder.createFile();
-        Poco::Dynamic::Var Dynamic ( "[]" );
-
         try {
-            Poco::FileOutputStream fout ( Utils::GetEssentialFile ( FileKind::Quests ) );
-            Poco::JSON::Stringifier::stringify ( Dynamic, fout, 1, 1, Poco::JSON_ESCAPE_UNICODE );
-            fout.close();
+            cout << "Creating: " << QuestMainFilePath.toString() << endl;
+            if (QuestDefaultFile.createFile()) {
+
+                Poco::Dynamic::Var Dynamic("[]");
+
+                Poco::FileOutputStream fout(Utils::GetEssentialFile(FileKind::Quests));
+                Poco::JSON::Stringifier::stringify(Dynamic, fout, 1, 1, Poco::JSON_ESCAPE_UNICODE);
+                fout.close();
+            }
+            else {
+                wxLogMessage("Couldnt create %s", Utils::GetEssentialFile(FileKind::Quests));
+            }
         }catch(Poco::Exception ex) {
             cout << ex.displayText() << endl;
         }
@@ -191,6 +196,63 @@ std::vector<Quest*> Utils::GetQuestsAsList() {
     }
 
     return QuestList;
+}
+
+std::vector<Quest*> Utils::GetQuestsAsList(Poco::JSON::Array::Ptr Quests)
+{
+    std::vector<Quest*> QuestList;
+
+    for (int i = 0; i < Quests->size(); i++) {
+        try {
+            cout << i << endl;
+            Poco::JSON::Object::Ptr object = Quests->getObject(i);
+
+            Quest* quest = new Quest();
+            quest->Id = Poco::UUID(object->getValue<std::string>("ID"));
+            quest->Name = object->getValue<std::string>("Name");
+            quest->World = object->getValue<int>("World");
+            quest->WorldName = object->getValue<std::string>("WorldName");
+            quest->ParentQuest = object->getValue<int>("ParentQuest");
+            quest->ParentQuestName = object->getValue<std::string>("ParentQuestName");
+            quest->IsFailable = object->getValue<bool>("IsFailable");
+            quest->IsOptional = object->getValue<bool>("IsOptional");
+
+            QuestList.push_back(quest);
+        }
+        catch (Poco::Exception ex) {
+            cout << "Utils::GetQuestsAsList(Poco::JSON::Array::Ptr Quests) " << ex.displayText() << endl;
+        }
+    }
+
+    return QuestList;
+}
+
+bool Utils::RemoveQuest(Poco::UUID Id)
+{
+    Poco::JSON::Array::Ptr QuestList = Utils::GetQuestAsJSON();
+
+    for (int i = 0; i < QuestList->size(); i++) {
+        Poco::JSON::Object::Ptr object = QuestList->getObject(i);
+        Poco::UUID ObjectId = Poco::UUID(object->getValue<std::string>("ID"));
+
+        if (Id == ObjectId) {
+            QuestList->remove(i);
+            break;
+        }
+    }
+
+    Poco::Dynamic::Var Dynamic(QuestList);
+
+    try {
+        Poco::FileOutputStream fout(Utils::GetEssentialFile(FileKind::Quests));
+        Poco::JSON::Stringifier::stringify(Dynamic, fout, 1, 1, Poco::JSON_ESCAPE_UNICODE);
+        fout.close();
+        return true;
+    }
+    catch (Poco::Exception ex) {
+        cout << "Utils::RemoveQuest(Poco::UUID Id) " << ex.displayText() << endl;
+        return false;
+    }
 }
 
 std::tuple<bool, std::string> Utils::CreateNewQuest ( Quest* QuestData ) {

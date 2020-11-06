@@ -34,17 +34,22 @@ private:
     wxButton   * NewQuestButton;
     wxButton   * DeleteQuestButton;
     wxListCtrl * ListBoxQuest;
+
+    void UpdateQuestList();
     
     void OnNewQuest(wxCommandEvent& event);
+    void OnDeleteQuest(wxCommandEvent& event);
     void OnExit(wxCommandEvent& event);
     void OnAbout(wxCommandEvent& event);
     void OnQuestListSelection ( wxCommandEvent& event );
-    void OnQuestListDeselection ( wxCommandEvent& event );
+    void OnQuestListDeselection(wxCommandEvent& event);
 };
 enum
 {
     ID_New = 1,
-    ID_ListQuest
+    ID_ListQuest,
+    ID_NewQuestButton,
+    ID_DeleteQuestButton
 };
 
 wxIMPLEMENT_APP(QuesterApp);
