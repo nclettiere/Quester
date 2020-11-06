@@ -6,9 +6,13 @@ project(Quester)
 include_directories(${CMAKE_SOURCE_DIR})
 
 # Add all classes in the internal folder
-file(GLOB_RECURSE source_list "src/internal/private/*.cpp" "src/internal/public/*.h")
+file(GLOB_RECURSE internal_source "src/internal/private/*.cpp" "src/internal/public/*.h")
+# Add VENDOR imgui | imgui-node-editor
+file(GLOB_RECURSE imgui_source "vendor/imgui/*.cpp" "vendor/imgui/*.h")
+file(GLOB_RECURSE imgui_backend_source "vendor/imgui/backends/imgui_impl_opengl3.cpp" "vendor/imgui/backends/imgui_impl_opengl3.h")
+file(GLOB_RECURSE imgui_node_editor_source "vendor/imgui-node-editor/*.cpp" "vendor/imgui-node-editor/*.h")
 
-add_executable(Quester src/Quester.cpp src/Quester.h ${source_list})
+add_executable(Quester src/Quester.cpp src/Quester.h ${internal_source} ${imgui_source} ${imgui_backend_source} ${imgui_node_editor_source})
 
 IF (WIN32)
   set_target_properties(Quester PROPERTIES LINK_FLAGS /SUBSYSTEM:WINDOWS)
