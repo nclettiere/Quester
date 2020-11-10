@@ -7,6 +7,8 @@
 #include <wx/sizer.h>
 #include <wx/listctrl.h>
 
+#include <GL/glew.h>
+
 class QuestEditor : public wxFrame
 {
 public:
