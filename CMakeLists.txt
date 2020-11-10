@@ -13,7 +13,7 @@ file(GLOB imgui_node_editor_source "vendor/imgui-node-editor/*.cpp" "vendor/imgu
 
 set(SOURCES src/Quester.cpp src/Quester.h ${internal_source} ${imgui_source} "vendor/imgui/backends/imgui_impl_opengl3.cpp" "vendor/imgui/backends/imgui_impl_opengl3.h" ${imgui_node_editor_source})
 add_executable(Quester ${SOURCES})
-target_include_directories(Quester PRIVATE "vendor/imgui/")
+target_include_directories(Quester PRIVATE "vendor/imgui/", "vendor/imgui/backends")
 
 IF (WIN32)
   set_target_properties(Quester PROPERTIES LINK_FLAGS /SUBSYSTEM:WINDOWS)
