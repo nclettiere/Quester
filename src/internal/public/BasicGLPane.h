@@ -3,6 +3,7 @@
 #ifndef _glpane_
 #define _glpane_
 
+
 #include "wx/wx.h"
 #include "wx/glcanvas.h"
 

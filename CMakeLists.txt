@@ -42,10 +42,11 @@ if (GLEW_FOUND)
 
     IF (WIN32)
         include_directories("C:\\Program Files (x86)\\glew\\include")
+        target_link_libraries(Quester PUBLIC ${wxWidgets_LIBRARIES} ${GLEW_LIBRARIES} GLEW::GLEW opengl32 Poco::Foundation Poco::Net Poco::JSON)
+    ELSE()
+        target_link_libraries(Quester PUBLIC ${wxWidgets_LIBRARIES} GL  ${GLEW_LIBRARIES} GLEW::GLEW Poco::Foundation Poco::Net Poco::JSON)
     ENDIF()
-    
-    message( "MEp ${GLEW_INCLUDE_DIRS}")
-    target_link_libraries(Quester PUBLIC ${wxWidgets_LIBRARIES} ${GLEW_LIBRARIES} GLEW::GLEW opengl32 Poco::Foundation Poco::Net Poco::JSON)
+
 endif()
 
 file(GLOB Public_Files
