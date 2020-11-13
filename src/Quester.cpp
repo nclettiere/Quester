@@ -167,7 +167,7 @@ void QuesterFrame::OnQuestListDeselection ( wxCommandEvent& event ) {
 
 void QuesterFrame::OnViewQuest(wxCommandEvent& event)
 {
-    QuestEditor* Editor = new QuestEditor();
+    QuestEditor* Editor = new QuestEditor(this, "Nice Title");
 
     Editor->ShowWithEffect(wxShowEffect::wxSHOW_EFFECT_EXPAND);
 }

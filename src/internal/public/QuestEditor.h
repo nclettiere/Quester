@@ -5,15 +5,6 @@
 #include <imgui_impl_opengl3.h>
 #include <stdio.h>
 
-// include OpenGL
-#ifdef __WXMAC__
-#include "OpenGL/glu.h"
-#include "OpenGL/gl.h"
-#else
-#include <GL/glew.h>
-#include <GL/gl.h>
-#endif
-
 #include <wx/wxprec.h>
 #ifndef WX_PRECOMP
 #include <wx/wx.h>
@@ -24,17 +15,18 @@
 #include "wx/sizer.h"
 #include "wx/glcanvas.h"
 
-#include "BasicGLPane.h"
+#include "NodeCanvas.h"
 
 #include <iostream>
 
 class QuestEditor : public wxFrame
 {
 public:
-	QuestEditor();
-
-private:
-	wxFrame* frame;
-	BasicGLPane* glPane;
+	QuestEditor(wxWindow* parent, const std::string title, const wxPoint& pos = wxDefaultPosition,
+		const wxSize& size = wxDefaultSize);
+	virtual ~QuestEditor();
+	QuestEditor(const QuestEditor& tw) = delete;
+	QuestEditor(QuestEditor&& tw) = delete;
+	QuestEditor& operator=(const QuestEditor& tw) = delete;
+	QuestEditor& operator=(QuestEditor&&) = delete;
 };
-
