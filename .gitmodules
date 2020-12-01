@@ -1,9 +1,3 @@
-[submodule "vendor/imgui-node-editor"]
-	path = vendor/imgui-node-editor
-	url = https://github.com/thedmd/imgui-node-editor.git
-[submodule "vendor/imgui"]
-	path = vendor/imgui
-	url = https://github.com/ocornut/imgui.git
-[submodule "vendor/glew-cmake"]
-	path = vendor/glew-cmake
-	url = https://github.com/Perlmint/glew-cmake.git
+[submodule "vendor/vendor/nodeeditor"]
+	path = vendor/vendor/nodeeditor
+	url = https://github.com/paceholder/nodeeditor.git

@@ -1,55 +1,49 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.5)
 
-#set the project name
-project(Quester)
+project(Quester LANGUAGES CXX)
 
-include_directories(${CMAKE_SOURCE_DIR})
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# QtCreator supports the following variables for Android, which are identical to qmake Android variables.
+# Check http://doc.qt.io/qt-5/deployment-android.html for more information.
+# They need to be set before the find_package(Qt5 ...) call.
+
+#if(ANDROID)
+#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
+#    if (ANDROID_ABI STREQUAL "armeabi-v7a")
+#        set(ANDROID_EXTRA_LIBS
+#            ${CMAKE_CURRENT_SOURCE_DIR}/path/to/libcrypto.so
+#            ${CMAKE_CURRENT_SOURCE_DIR}/path/to/libssl.so)
+#    endif()
+#endif()
+
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 
 # Add all classes in the internal folder
-file(GLOB_RECURSE internal_source "src/internal/private/*.cpp" "src/internal/public/*.h")
-# Add VENDOR: imgui | imgui-node-editor
-file(GLOB imgui_source "vendor/imgui/*.cpp" "vendor/imgui/*.h")
-file(GLOB imgui_node_editor_source "vendor/imgui-node-editor/*.cpp" "vendor/imgui-node-editor/*.h")
+file(GLOB_RECURSE internal_source "src/internal/private/*.cpp" "src/internal/public/*.hpp" "src/internal/public/*.h" "src/internal/private/*.ui")
+set(SOURCES src/main.cpp ${internal_source})
 
-set(SOURCES src/Quester.cpp src/Quester.h ${internal_source} ${imgui_source} "vendor/imgui/backends/imgui_impl_opengl3.cpp" "vendor/imgui/backends/imgui_impl_opengl3.h" ${imgui_node_editor_source})
-add_executable(Quester ${SOURCES})
-target_include_directories(Quester PRIVATE "vendor/imgui/", "vendor/imgui/backends")
-
-IF (WIN32)
-  set_target_properties(Quester PROPERTIES LINK_FLAGS /SUBSYSTEM:WINDOWS)
-ELSE()
-  # set stuff for other systems
-ENDIF()
-
-
-# Find POCO and WxWidgets libraries
-find_package(wxWidgets REQUIRED COMPONENTS net gl core base)
-find_package(OpenGL REQUIRED)
-find_package(Poco REQUIRED COMPONENTS Foundation Net JSON)
-if(wxWidgets_FOUND)
-  include(${wxWidgets_USE_FILE})
-  message( "MEp ${GLEW_VERSION}")
-  # and for each of your dependent executable/library targets:
+if(ANDROID)
+  add_library(Quester SHARED
+    main.cpp
+    mainwindow.cpp
+    mainwindow.h
+    mainwindow.ui
+  )
+else()
+  add_executable(Quester
+    ${SOURCES}
+  )
 endif()
 
-IF (WIN32)
-  list(APPEND CMAKE_PREFIX_PATH "C:/Program Files (x86)/glew")
-ENDIF()
-
-find_package(GLEW REQUIRED)
-if (GLEW_FOUND)
-    include_directories(${GLEW_INCLUDE_DIRS})
-
-    IF (WIN32)
-        include_directories("C:\\Program Files (x86)\\glew\\include")
-        target_link_libraries(Quester PUBLIC ${wxWidgets_LIBRARIES} ${GLEW_LIBRARIES} GLEW::GLEW opengl32 Poco::Foundation Poco::Net Poco::JSON)
-    ELSE()
-        target_link_libraries(Quester PUBLIC ${wxWidgets_LIBRARIES} GL  ${GLEW_LIBRARIES} GLEW::GLEW Poco::Foundation Poco::Net Poco::JSON)
-    ENDIF()
-
-endif()
-
-file(GLOB Public_Files
-  "Public/*"
-)
-file(COPY ${Public_Files} DESTINATION ${CMAKE_BINARY_DIR}/Public/)
+add_subdirectory("vendor/nodeeditor")
+target_link_libraries(Quester PRIVATE Qt${QT_VERSION_MAJOR}::Widgets nodes)
+include_directories("src/internal")
