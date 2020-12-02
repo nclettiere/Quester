@@ -29,7 +29,7 @@ find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 
 # Add all classes in the internal folder
-file(GLOB_RECURSE internal_source "src/internal/private/*.cpp" "src/internal/public/*.hpp" "src/internal/public/*.h" "src/internal/private/*.ui")
+file(GLOB_RECURSE internal_source "src/internal/private/*.cpp" "src/internal/public/*.hpp" "src/internal/public/*.h" "src/internal/private/*.ui" "src/internal/private/*.qml")
 set(SOURCES src/main.cpp ${internal_source})
 
 if(ANDROID)

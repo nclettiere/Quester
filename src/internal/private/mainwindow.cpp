@@ -18,7 +18,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_findButton_clicked()
 {
-    QMessageBox::information(this, tr("Empty Search Field"),
-                                 tr("The search field is empty. "
-                                    "Please enter a word and click Find."));
+    //QMessageBox::information(this, tr("Empty Search Field"),
+    //                             tr("The search field is empty. "
+    //                                "Please enter a word and click Find."));
+
+    QDialog *openVobDialog = new NewQuest(this);
+    openVobDialog->show();
 }
