@@ -1,5 +1,4 @@
 #include <public/mainwindow.h>
-#include <nodes/NodeData>
 #include <QApplication>
 
 int main(int argc, char *argv[])
