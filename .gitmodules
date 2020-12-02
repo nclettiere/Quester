@@ -1,6 +1,3 @@
-[submodule "vendor/vendor/nodeeditor"]
-	path = vendor/vendor/nodeeditor
-	url = https://github.com/paceholder/nodeeditor.git
 [submodule "vendor/nodeeditor"]
 	path = vendor/nodeeditor
 	url = https://github.com/paceholder/nodeeditor.git
