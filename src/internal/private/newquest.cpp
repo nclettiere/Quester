@@ -15,12 +15,23 @@ NewQuest::NewQuest(QWidget *parent) :
 
 void NewQuest::PrepareUI() {
     DB::ManagerTest::RetrieveAllQuests(&QuestList);
-    QuestTableModel questModel;
 
     letName  = findChild<QLineEdit*>("letName");
-    tblQuest = findChild<QTableView*>("tblQuests");
+    lstQuest = findChild<QListWidget*>("tblQuests");
 
-    tblQuest->setModel(&questModel);
+    QListWidgetItem * item = new QListWidgetItem();
+    item->setText("PENE");
+    item->setData(0, QVariant("this is ID"));
+
+    lstQuest->addItem(item);
+    connect(lstQuest, &QListWidget::itemSelectionChanged, this, NewQuest::OnListQuestSelectionChanged(lstQuest->selectedItems()[0]));
+
+}
+
+void NewQuest::OnListQuestSelectionChanged(QListWidgetItem * item) {
+    QVariant v = item->data(0);
+    QString id = v.toString();
+    QMessageBox::information(this, tr("Empty Search Field"), id);
 }
 
 NewQuest::~NewQuest()

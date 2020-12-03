@@ -1,8 +1,10 @@
 #ifndef NEWQUEST_H
 #define NEWQUEST_H
 
+#include "ui_newquest.h"
+
 #include <QDialog>
-#include <QTableView>
+#include <QListWidget>
 #include <QLineEdit>
 
 #include <public/DB/Manager.h>
@@ -28,10 +30,11 @@ private:
 
     std::vector<Quest> QuestList;
 
-    QTableView * tblQuest;
+    QListWidget * lstQuest;
     QLineEdit * letName;
 
     void PrepareUI();
+    void OnListQuestSelectionChanged(QListWidgetItem * item);
 };
 
 #endif // NEWQUEST_H
