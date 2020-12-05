@@ -1,8 +1,6 @@
 #ifndef NEWQUEST_H
 #define NEWQUEST_H
 
-#include "ui_newquest.h"
-
 #include <QDialog>
 #include <QListWidget>
 #include <QLineEdit>

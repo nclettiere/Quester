@@ -24,7 +24,7 @@ void NewQuest::PrepareUI() {
     item->setData(0, QVariant("this is ID"));
 
     lstQuest->addItem(item);
-    connect(lstQuest, &QListWidget::itemSelectionChanged, this, NewQuest::OnListQuestSelectionChanged(lstQuest->selectedItems()[0]));
+    //connect(lstQuest, &QListWidget::itemSelectionChanged, this, NewQuest::OnListQuestSelectionChanged(lstQuest->selectedItems()[0]));
 
 }
 
