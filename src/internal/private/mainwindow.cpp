@@ -22,6 +22,7 @@ void MainWindow::on_findButton_clicked()
     //                             tr("The search field is empty. "
     //                                "Please enter a word and click Find."));
 
-    QDialog *openVobDialog = new NewQuest(this);
+    QDialog *openVobDialog = new newQuestDialog(this);
     openVobDialog->show();
 }
+

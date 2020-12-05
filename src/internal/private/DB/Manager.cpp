@@ -3,6 +3,7 @@
 void DB::ManagerTest::CreateContext() {
     try {
         // Ensures basic structure of database
+        std::cout <<  Utils::GetDBStructure() << std::endl;
         *Utils::session << Utils::GetDBStructure(), now;
     }catch( Poco::Exception ex ) {
         cout << ex.displayText() << endl;

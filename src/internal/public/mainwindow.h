@@ -5,6 +5,7 @@
 #include <QMessageBox>
 
 #include <public/newquest.h>
+#include <public/newquestdialog.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

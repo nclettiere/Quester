@@ -91,8 +91,7 @@ std::string Utils::GetEssentialFile ( FileKind Kind ) {
 }
 
 std::vector<std::string> Utils::GetDefaultWorldsAsList ( ) {
-    Poco::Path DefaultWorldsPath = Poco::Path ( GetExecutablePath().toString() )
-        .parent()
+    Poco::Path DefaultWorldsPath = Poco::Path ( Context )
         .append ( "/Public/Default/Worlds.json" );
     std::vector<std::string> WorldList;
 
@@ -370,8 +369,7 @@ std::string Utils::GetValue ( Poco::JSON::Object::Ptr JSONObject, const char *Ke
 }
 
 std::string Utils::GetDBStructure() {
-    Poco::Path DBStructurePath = Poco::Path ( GetExecutablePath().toString() )
-        .parent()
+    Poco::Path DBStructurePath = Poco::Path ( Context )
         .append ( "/Public/Default/CreateStructure.db" );
     
     std::string buffer;
@@ -388,22 +386,6 @@ std::string Utils::GetDBStructure() {
     }
     
     return DBString;
-}
-
-Poco::Path Utils::GetExecutablePath() {
-    try {
-#ifdef _WIN32
-    wchar_t path[MAX_PATH] = { 0 };
-    GetModuleFileNameW(NULL, path, MAX_PATH);
-    return Poco::Path(path);
-#else
-    char result[PATH_MAX];
-    ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
-    return Poco::Path(std::string(result, (count > 0) ? count : 0));
-#endif
-    }catch(Poco::NotFoundException ex) {
-        cout << ex.displayText();
-    }
 }
 
 // Windows Only

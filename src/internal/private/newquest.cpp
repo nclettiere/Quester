@@ -1,14 +1,14 @@
 #include <public/mainwindow.h>
-#include "ui_newquest.h"
+#include "./ui_newquest.h"
 
 NewQuest::NewQuest(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::NewQuest)
 {
     ui->setupUi(this);
+    QMetaObject::connectSlotsByName(this);
     setWindowFlag(Qt::Dialog, true);
     setWindowModality(Qt::WindowModal);
-    QMetaObject::connectSlotsByName(this);
 
     PrepareUI();
 }
@@ -20,16 +20,18 @@ void NewQuest::PrepareUI() {
     lstQuest = findChild<QListWidget*>("tblQuests");
 
     QListWidgetItem * item = new QListWidgetItem();
-    item->setText("PENE");
-    item->setData(0, QVariant("this is ID"));
+    item->setIcon(QIcon("open.xpm"));
+    item->setData(0, QVariant("XD"));
+    item->setData(1, QVariant("this is ID2"));
 
     lstQuest->addItem(item);
-    //connect(lstQuest, &QListWidget::itemSelectionChanged, this, NewQuest::OnListQuestSelectionChanged(lstQuest->selectedItems()[0]));
+
+    //QDialog::connect(lstQuest, &QListWidget::itemSelectionChanged, this, NewQuest::OnListQuestSelectionChanged(lstQuest->selectedItems()[0]));
 
 }
 
 void NewQuest::OnListQuestSelectionChanged(QListWidgetItem * item) {
-    QVariant v = item->data(0);
+    QVariant v = item->data(1);
     QString id = v.toString();
     QMessageBox::information(this, tr("Empty Search Field"), id);
 }

@@ -35,6 +35,7 @@ enum class RemoveKind { NORMAL, RECURSIVE };
 class Utils {
 public:
     static inline Poco::Data::Session * session = nullptr;
+    static inline std::string Context = "";
 
     static std::string GetCacheFilePath();
     static bool GenerateCache();
@@ -52,7 +53,6 @@ public:
     static std::tuple<bool, std::string> CreateNewQuest(Quest * QuestData);
     static Poco::JSON::Array::Ptr GetQuestAsJSON();
     static std::string GetDBStructure();
-    static Poco::Path GetExecutablePath();
 
     // Windows Only
     static void OpenConsole();

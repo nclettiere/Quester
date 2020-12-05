@@ -1,6 +1,7 @@
 #ifndef NEWQUEST_H
 #define NEWQUEST_H
 
+#include <QMainWindow>
 #include <QDialog>
 #include <QListWidget>
 #include <QLineEdit>
@@ -14,6 +15,11 @@
 namespace Ui {
 class NewQuest;
 }
+
+QT_BEGIN_NAMESPACE
+namespace Ui { class NewQuest; }
+QT_END_NAMESPACE
+
 
 class NewQuest : public QDialog
 {
