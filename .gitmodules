@@ -4,3 +4,9 @@
 [submodule "vendor/poco"]
 	path = vendor/poco
 	url = https://github.com/pocoproject/poco.git
+[submodule "vendor/BreezeStyleSheets"]
+	path = vendor/BreezeStyleSheets
+	url = https://github.com/Alexhuszagh/BreezeStyleSheets.git
+[submodule "vendor/Qt-Frameless-Window-DarkStyle"]
+	path = vendor/Qt-Frameless-Window-DarkStyle
+	url = https://github.com/Jorgen-VikingGod/Qt-Frameless-Window-DarkStyle.git

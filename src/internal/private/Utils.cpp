@@ -378,7 +378,7 @@ std::string Utils::GetDBStructure() {
     try {
         Poco::FileInputStream fis ( DBStructurePath.toString(), std::ios::out );
         while ( getline ( fis, buffer ) ) {
-            DBString += buffer + '\n';
+            DBString += buffer;
         }
         fis.close();
     }catch( Poco::Exception ex ) {
