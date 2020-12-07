@@ -1,55 +1,57 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.5)
 
-#set the project name
 project(Quester)
 
-include_directories(${CMAKE_SOURCE_DIR})
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-# Add all classes in the internal folder
-file(GLOB_RECURSE internal_source "src/internal/private/*.cpp" "src/internal/public/*.h")
-# Add VENDOR: imgui | imgui-node-editor
-file(GLOB imgui_source "vendor/imgui/*.cpp" "vendor/imgui/*.h")
-file(GLOB imgui_node_editor_source "vendor/imgui-node-editor/*.cpp" "vendor/imgui-node-editor/*.h")
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
 
-set(SOURCES src/Quester.cpp src/Quester.h ${internal_source} ${imgui_source} "vendor/imgui/backends/imgui_impl_opengl3.cpp" "vendor/imgui/backends/imgui_impl_opengl3.h" ${imgui_node_editor_source})
-add_executable(Quester ${SOURCES})
-target_include_directories(Quester PRIVATE "vendor/imgui/", "vendor/imgui/backends")
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-IF (WIN32)
-  set_target_properties(Quester PROPERTIES LINK_FLAGS /SUBSYSTEM:WINDOWS)
-ELSE()
-  # set stuff for other systems
-ENDIF()
+add_subdirectory("vendor/nodeeditor")
+include_directories(
+    "src/internal"
+    "vendor/poco/Foundation/include"
+    "vendor/poco/Data/include"
+    "vendor/poco/Foundation/include"
+    "vendor/poco/JSON/include"
+    "vendor/poco/Data/SQLite/include"
+    "vendor/Qt-Frameless-Window-DarkStyle/")
 
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 
-# Find POCO and WxWidgets libraries
-find_package(wxWidgets REQUIRED COMPONENTS net gl core base)
-find_package(OpenGL REQUIRED)
-find_package(Poco REQUIRED COMPONENTS Foundation Net JSON)
-if(wxWidgets_FOUND)
-  include(${wxWidgets_USE_FILE})
-  message( "MEp ${GLEW_VERSION}")
-  # and for each of your dependent executable/library targets:
+find_package(Poco REQUIRED Foundation Data DataSQLite JSON)
+if(Poco_FOUND)
+  message( "Poco Found ${Poco_Version}")
+else()
+    message("Poco not found.")
 endif()
 
-IF (WIN32)
-  list(APPEND CMAKE_PREFIX_PATH "C:/Program Files (x86)/glew")
-ENDIF()
+qt5_add_resources(DarkTheme_Resource
+    "vendor/Qt-Frameless-Window-DarkStyle/darkstyle.qrc"
+    "vendor/Qt-Frameless-Window-DarkStyle/framelesswindow.qrc")
 
-find_package(GLEW REQUIRED)
-if (GLEW_FOUND)
-    include_directories(${GLEW_INCLUDE_DIRS})
+file(GLOB_RECURSE internal_source
+    "src/internal/private/*.cpp"
+    "src/internal/public/*.hpp"
+    "src/internal/public/*.h"
+    "src/internal/private/*.ui"
+    "src/internal/private/*.qml")
 
-    IF (WIN32)
-        include_directories("C:\\Program Files (x86)\\glew\\include")
-        target_link_libraries(Quester PUBLIC ${wxWidgets_LIBRARIES} ${GLEW_LIBRARIES} GLEW::GLEW opengl32 Poco::Foundation Poco::Net Poco::JSON)
-    ELSE()
-        target_link_libraries(Quester PUBLIC ${wxWidgets_LIBRARIES} GL  ${GLEW_LIBRARIES} GLEW::GLEW Poco::Foundation Poco::Net Poco::JSON)
-    ENDIF()
+file(GLOB_RECURSE dark_theme
+    "vendor/Qt-Frameless-Window-DarkStyle/DarkStyle.cpp"
+    "vendor/Qt-Frameless-Window-DarkStyle/DarkStyle.h"
+    "vendor/Qt-Frameless-Window-DarkStyle/framelesswindow/*.h"
+    "vendor/Qt-Frameless-Window-DarkStyle/framelesswindow/*.cpp"
+    "vendor/Qt-Frameless-Window-DarkStyle/framelesswindow/*.ui")
 
-endif()
+set(SOURCES src/main.cpp ${internal_source} ${dark_theme})
+add_executable(Quester ${SOURCES} ${DarkTheme_Resource})
+target_link_libraries(Quester PRIVATE Qt${QT_VERSION_MAJOR}::Widgets nodes Poco::Foundation Poco::Data Poco::DataSQLite Poco::JSON)
 
-file(GLOB Public_Files
-  "Public/*"
-)
+file(GLOB Public_Files "Public/*")
 file(COPY ${Public_Files} DESTINATION ${CMAKE_BINARY_DIR}/Public/)

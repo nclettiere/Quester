@@ -14,40 +14,45 @@
 #include <Poco/JSON/Stringifier.h>
 #include <Poco/UUIDGenerator.h>
 #include <Poco/UUID.h>
-
-#include <wx/wxprec.h>
-#ifndef WX_PRECOMP
-#include <wx/wx.h>
-#endif
+#include <Poco/Data/Session.h>
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+#include <windows.h>    //GetModuleFileNameW
 #include <fcntl.h>
 #include <corecrt_io.h>
+#else
+#include <limits.h>
+#include <unistd.h>     //readlink
 #endif
 
-#include "Quest.h"
+#include <public/Quest.h>
 
 using namespace std;
 
 enum class FileKind { Cache, Quests, DefaultWorlds, Swap };
+enum class RemoveKind { NORMAL, RECURSIVE };
 
 class Utils {
 public:
+    static inline Poco::Data::Session * session = nullptr;
+    static inline std::string Context = "";
+
     static std::string GetCacheFilePath();
     static bool GenerateCache();
-
     static std::string GetEssentialFile ( FileKind Kind );
     static std::tuple<Poco::File, bool> GetFileFrom ( std::string FilePath );
     static std::tuple<Poco::File, bool> GetFileFrom ( Poco::File FilePath );
-    static wxString * GetDefaultWorldsAsList ( std::string Context );
+    static std::vector<std::string> GetDefaultWorldsAsList ( );
     static std::vector<Quest*> GetQuestsAsList();
     static std::vector<Quest*> GetQuestsAsList(Poco::JSON::Array::Ptr Quests);
-    static bool RemoveQuest(Poco::UUID Id);
+    static Quest* GetQuestWithId ( Poco::UUID id );
+    static Quest* GetQuestWithId ( Poco::UUID id, std::vector<Quest*> QuestsList );
+    static std::vector<Quest*> GetQuestWithId ( std::vector<Poco::UUID> QuestsList );
+    static bool RemoveQuest(Poco::UUID Id, RemoveKind );
     static void GenerateStructure();
-    
     static std::tuple<bool, std::string> CreateNewQuest(Quest * QuestData);
-    
     static Poco::JSON::Array::Ptr GetQuestAsJSON();
+    static std::string GetDBStructure();
 
     // Windows Only
     static void OpenConsole();

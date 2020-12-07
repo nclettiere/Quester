@@ -1,8 +1,6 @@
 #include "../public/Utils.h"
 
 bool Utils::GenerateCache() {
-    std::cout << "Looking for: " << Utils::GetCacheFilePath() << std::endl;
-
     Poco::File FileCache ( Utils::GetCacheFilePath() );
 
     cout << "Inspecting integrity of local files..." << endl;
@@ -10,17 +8,14 @@ bool Utils::GenerateCache() {
 
     if ( !FileCache.exists() ) {
         // file does not exist
-
         try {
             FileCache.createFile();
         } catch ( Poco::FileException ex ) {
-            cout << ex.displayText() << endl;
+            return false;
         }
 
         return true;
     }
-
-
     return false;
 }
 
@@ -65,7 +60,7 @@ void Utils::GenerateStructure() {
                 fout.close();
             }
             else {
-                wxLogMessage("Couldnt create %s", Utils::GetEssentialFile(FileKind::Quests));
+                //wxLogMessage("Couldnt create %s", Utils::GetEssentialFile(FileKind::Quests));
             }
         }catch(Poco::Exception ex) {
             cout << ex.displayText() << endl;
@@ -95,14 +90,10 @@ std::string Utils::GetEssentialFile ( FileKind Kind ) {
     return "";
 }
 
-wxString * Utils::GetDefaultWorldsAsList ( std::string Context ) {
+std::vector<std::string> Utils::GetDefaultWorldsAsList ( ) {
     Poco::Path DefaultWorldsPath = Poco::Path ( Context )
-                                   .parent()
-                                   .append ( "/Public/Default/Worlds.json" );
-
-    cout << "DefaultWorldsPath: " << DefaultWorldsPath.toString() << endl;
-
-    wxString * WorldList;
+        .append ( "/Public/Default/Worlds.json" );
+    std::vector<std::string> WorldList;
 
     // if file exists
     try {
@@ -121,19 +112,18 @@ wxString * Utils::GetDefaultWorldsAsList ( std::string Context ) {
             Poco::Dynamic::Var result = Parser.parse ( JSONString );
             Poco::JSON::Array::Ptr arr = result.extract<Poco::JSON::Array::Ptr>();
 
-            WorldList = new wxString[arr->size()];
-
             uint8_t i;
             for ( i = 0; i < arr->size(); i++ ) {
                 try {
                     cout << i << endl;
                     Poco::JSON::Object::Ptr object = arr->getObject ( i );
-                    WorldList[i] = wxString ( object->getValue<std::string> ( "name" ) );
-                } catch ( Poco::Exception ex ) {
-                    cout << "3 " << ex.message() << endl;
+                    WorldList.push_back ( std::string (object->getValue<std::string> ( "name" ))  );
+                    //WorldList[i] = std::string ( );
+                } catch ( Poco::NotFoundException ex ) {
+                    cout << "3 " << ex.displayText() << endl;
                 }
             }
-        } catch ( Poco::Exception ex ) {
+        } catch ( Poco::NotFoundException ex ) {
             cout << "2 " << ex.displayText() << endl;
         }
 
@@ -169,15 +159,20 @@ std::vector<Quest*> Utils::GetQuestsAsList() {
             uint8_t i;
             for ( i = 0; i < arr->size(); i++ ) {
                 try {
-                    cout << i << endl;
                     Poco::JSON::Object::Ptr object = arr->getObject ( i );
 
                     Quest * quest = new Quest();
                     quest->Id = Poco::UUID ( object->getValue<std::string> ( "ID" ) );
                     quest->Name = object->getValue<std::string> ( "Name" );
-                    quest->World = object->getValue<int> ( "World" );
+                    //quest->WorldId = object->getValue<Poco::UUID> ( "WorldId" );
                     quest->WorldName = object->getValue<std::string> ( "WorldName" );
-                    quest->ParentQuest = object->getValue<int> ( "ParentQuest" );
+                    
+                    try {
+                        quest->ParentId = Poco::UUID ( object->getValue<std::string> ( "ParentId" ) );
+                    }catch( Poco::Exception ex) {
+                        quest->ParentId = Poco::UUID ();
+                    }
+
                     quest->ParentQuestName = object->getValue<std::string> ( "ParentQuestName" );
                     quest->IsFailable = object->getValue<bool> ( "IsFailable" );
                     quest->IsOptional = object->getValue<bool> ( "IsOptional" );
@@ -210,9 +205,9 @@ std::vector<Quest*> Utils::GetQuestsAsList(Poco::JSON::Array::Ptr Quests)
             Quest* quest = new Quest();
             quest->Id = Poco::UUID(object->getValue<std::string>("ID"));
             quest->Name = object->getValue<std::string>("Name");
-            quest->World = object->getValue<int>("World");
+            //quest->WorldId = Poco::UUID(object->getValue<std::string>("WorldId"));
             quest->WorldName = object->getValue<std::string>("WorldName");
-            quest->ParentQuest = object->getValue<int>("ParentQuest");
+            quest->ParentId = Poco::UUID(object->getValue<std::string>("ParentId"));
             quest->ParentQuestName = object->getValue<std::string>("ParentQuestName");
             quest->IsFailable = object->getValue<bool>("IsFailable");
             quest->IsOptional = object->getValue<bool>("IsOptional");
@@ -227,41 +222,77 @@ std::vector<Quest*> Utils::GetQuestsAsList(Poco::JSON::Array::Ptr Quests)
     return QuestList;
 }
 
-bool Utils::RemoveQuest(Poco::UUID Id)
-{
-    Poco::JSON::Array::Ptr QuestList = Utils::GetQuestAsJSON();
+Quest* Utils::GetQuestWithId ( Poco::UUID id ) {
+    std::vector<Quest*> QuestsList = GetQuestsAsList();
 
-    for (int i = 0; i < QuestList->size(); i++) {
-        Poco::JSON::Object::Ptr object = QuestList->getObject(i);
-        Poco::UUID ObjectId = Poco::UUID(object->getValue<std::string>("ID"));
+    for (std::size_t i = 0; i != QuestsList.size(); ++i) {
+        if(QuestsList[i]->Id == id) { return QuestsList[i]; }
+    }
 
-        if (Id == ObjectId) {
-            QuestList->remove(i);
-            break;
+    // On fail
+    return nullptr;
+}
+
+Quest* Utils::GetQuestWithId ( Poco::UUID id, std::vector<Quest*> QuestsList ) {
+    for (std::size_t i = 0; i != QuestsList.size(); ++i) {
+        if(QuestsList[i]->Id == id) { return QuestsList[i]; }
+    }
+
+    // On fail
+    return nullptr;
+}
+
+std::vector<Quest*> Utils::GetQuestWithId ( std::vector<Poco::UUID> QuestsList ) {
+
+    std::vector<Quest*> ResultList;
+
+    for (std::size_t i = 0; i != QuestsList.size(); ++i) {
+        try {
+            Quest * q = GetQuestWithId(QuestsList[i]);
+            if(q != nullptr)
+                ResultList.push_back(q);
+        }catch( Poco::Exception ex ) {
         }
     }
 
-    Poco::Dynamic::Var Dynamic(QuestList);
-
-    try {
-        Poco::FileOutputStream fout(Utils::GetEssentialFile(FileKind::Quests));
-        Poco::JSON::Stringifier::stringify(Dynamic, fout, 1, 1, Poco::JSON_ESCAPE_UNICODE);
-        fout.close();
-        return true;
-    }
-    catch (Poco::Exception ex) {
-        cout << "Utils::RemoveQuest(Poco::UUID Id) " << ex.displayText() << endl;
-        return false;
-    }
+    // On fail
+    return ResultList;
 }
+
+//bool Utils::RemoveQuest(Poco::UUID Id) {
+//    Poco::JSON::Array::Ptr QuestList = Utils::GetQuestAsJSON();
+//
+//    for (int i = 0; i < QuestList->size(); i++) {
+//        Poco::JSON::Object::Ptr object = QuestList->getObject(i);
+//        Poco::UUID ObjectId = Poco::UUID(object->getValue<std::string>("ID"));
+//
+//        if (Id == ObjectId) {
+//            QuestList->remove(i);
+//            break;
+//        }
+//    }
+//
+//    Poco::Dynamic::Var Dynamic(QuestList);
+//
+//    try {
+//        Poco::FileOutputStream fout(Utils::GetEssentialFile(FileKind::Quests));
+//        Poco::JSON::Stringifier::stringify(Dynamic, fout, 1, 1, Poco::JSON_ESCAPE_UNICODE);
+//        fout.close();
+//        return true;
+//    }
+//    catch (Poco::Exception ex) {
+//        cout << "Utils::RemoveQuest(Poco::UUID Id) " << ex.displayText() << endl;
+//        return false;
+//    }
+//}
 
 std::tuple<bool, std::string> Utils::CreateNewQuest ( Quest* QuestData ) {
     Poco::JSON::Object::Ptr JSONDataQuest = new Poco::JSON::Object;
     JSONDataQuest->set ( "ID", QuestData->Id.toString() );
     JSONDataQuest->set ( "Name", QuestData->Name );
-    JSONDataQuest->set ( "World", QuestData->World );
+    // TODO => JSONDataQuest->set ( "WorldId", QuestData->WorldId );
     JSONDataQuest->set ( "WorldName", QuestData->WorldName );
-    JSONDataQuest->set ( "ParentQuest", QuestData->ParentQuest );
+    JSONDataQuest->set ( "ParentId", QuestData->ParentId.toString() );
     JSONDataQuest->set ( "ParentQuestName", QuestData->ParentQuestName );
     JSONDataQuest->set ( "IsMain", QuestData->IsMain );
     JSONDataQuest->set ( "IsFailable", QuestData->IsFailable );
@@ -331,16 +362,30 @@ std::string Utils::GetValue ( Poco::JSON::Object::Ptr JSONObject, const char *Ke
     Poco::Dynamic::Var Variable;
     string ReturnString;
     string lsKey ( Key );
-
-    // Get the member Variable
-    //
     Variable = JSONObject->get ( Key );
-
-    // Get the Value from the Variable
-    //
     ReturnString = Variable.convert<std::string>();
 
     return ReturnString;
+}
+
+std::string Utils::GetDBStructure() {
+    Poco::Path DBStructurePath = Poco::Path ( Context )
+        .append ( "/Public/Default/CreateStructure.db" );
+    
+    std::string buffer;
+    std::string DBString;
+
+    try {
+        Poco::FileInputStream fis ( DBStructurePath.toString(), std::ios::out );
+        while ( getline ( fis, buffer ) ) {
+            DBString += buffer;
+        }
+        fis.close();
+    }catch( Poco::Exception ex ) {
+        cout << ex.displayText() << endl;
+    }
+    
+    return DBString;
 }
 
 // Windows Only

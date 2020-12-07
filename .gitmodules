@@ -1,9 +1,12 @@
-[submodule "vendor/imgui-node-editor"]
-	path = vendor/imgui-node-editor
-	url = https://github.com/thedmd/imgui-node-editor.git
-[submodule "vendor/imgui"]
-	path = vendor/imgui
-	url = https://github.com/ocornut/imgui.git
-[submodule "vendor/glew-cmake"]
-	path = vendor/glew-cmake
-	url = https://github.com/Perlmint/glew-cmake.git
+[submodule "vendor/nodeeditor"]
+	path = vendor/nodeeditor
+	url = https://github.com/paceholder/nodeeditor.git
+[submodule "vendor/poco"]
+	path = vendor/poco
+	url = https://github.com/pocoproject/poco.git
+[submodule "vendor/BreezeStyleSheets"]
+	path = vendor/BreezeStyleSheets
+	url = https://github.com/Alexhuszagh/BreezeStyleSheets.git
+[submodule "vendor/Qt-Frameless-Window-DarkStyle"]
+	path = vendor/Qt-Frameless-Window-DarkStyle
+	url = https://github.com/Jorgen-VikingGod/Qt-Frameless-Window-DarkStyle.git
