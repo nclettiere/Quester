@@ -9,6 +9,8 @@
 #include <vector>
 
 #include <public/Utils.h>
+#include <public/Quest.h>
+#include <public/World.h>
 #include <public/DB/Manager.h>
 
 namespace Ui {
@@ -25,12 +27,15 @@ public:
 
 private:
     std::vector<Quest> QuestList;
+    std::vector<World> WorldList;
     void prepareUi();
 
 private slots:
-    void on_comboBox_currentIndexChanged(int index);
+    void on_lineEdit_textChanged(const QString &arg1);
+    void on_cboWorld_currentIndexChanged(int index);
+    void on_lstQuests_currentRowChanged(int currentRow);
 
-    void on_listWidget_currentRowChanged(int currentRow);
+    void on_newQuestDialog_accepted();
 
 private:
     Ui::newQuestDialog *ui;

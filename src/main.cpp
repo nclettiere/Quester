@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
     Session session("SQLite", "QuesterDB.db");
     Utils::session = &session;
     Utils::Context = QCoreApplication::applicationDirPath().toStdString();
-    DB::ManagerTest::CreateContext();
+    DB::Manager::CreateContext();
 
     FramelessWindow framelessWindow;
     framelessWindow.setWindowTitle("Quester");

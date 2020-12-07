@@ -1,6 +1,6 @@
 #include <public/DB/Manager.h>
 
-void DB::ManagerTest::CreateContext() {
+void DB::Manager::CreateContext() {
     try {
         // Ensures basic structure of database
         std::cout <<  Utils::GetDBStructure() << std::endl;
@@ -10,7 +10,7 @@ void DB::ManagerTest::CreateContext() {
     }
 }
 
-DB::ManagerTest::ManagerTest() {
+DB::Manager::Manager() {
     try {
         CreateContext();
     }catch( Poco::Exception ex ) {
@@ -18,7 +18,7 @@ DB::ManagerTest::ManagerTest() {
     }
 }
 
-bool DB::ManagerTest::InsertQuest(Quest * questData) {
+bool DB::Manager::InsertQuest(Quest * questData) {
     try {
         Statement insert(*Utils::session);
 
@@ -41,7 +41,7 @@ bool DB::ManagerTest::InsertQuest(Quest * questData) {
     return true;
 }
 
-Quest  DB::ManagerTest::RetrieveQuest(Poco::UUID id) {
+Quest  DB::Manager::RetrieveQuest(Poco::UUID id) {
     if(id != Poco::UUID()) {
         Statement select(*Utils::session);
         QType::TempQuest tmp;
@@ -55,11 +55,11 @@ Quest  DB::ManagerTest::RetrieveQuest(Poco::UUID id) {
     }
 }
 
-std::vector<Quest> DB::ManagerTest::RetrieveQuests(std::vector<Poco::UUID> idList){
+std::vector<Quest> DB::Manager::RetrieveQuests(std::vector<Poco::UUID> idList){
     return std::vector<Quest>();
 }
 
-void DB::ManagerTest::RetrieveAllQuests(std::vector<Quest> * list) {
+void DB::Manager::RetrieveAllQuests(std::vector<Quest> * list) {
     Statement select(*Utils::session);
     std::vector<QType::TempQuest> quests;
 
@@ -76,7 +76,7 @@ void DB::ManagerTest::RetrieveAllQuests(std::vector<Quest> * list) {
     }
 }
 
-void DB::ManagerTest::GetRelationships(Poco::UUID Id, std::vector<Quest> * QuestList) {
+void DB::Manager::GetRelationships(Poco::UUID Id, std::vector<Quest> * QuestList) {
     Statement select(*Utils::session);
     std::vector<QType::TempQuest> quests;
     select << "SELECT * FROM Quest WHERE ParentId='"+Id.toString()+"';",
@@ -90,7 +90,7 @@ void DB::ManagerTest::GetRelationships(Poco::UUID Id, std::vector<Quest> * Quest
     }
 }
 
-bool DB::ManagerTest::QuestRemove(Quest Quest) {
+bool DB::Manager::QuestRemove(Quest Quest) {
     try {
         *Utils::session << "DELETE FROM Quest WHERE Id='"+Quest.Id.toString()+"';", now;
     }catch(Poco::Exception ex) {
@@ -100,7 +100,7 @@ bool DB::ManagerTest::QuestRemove(Quest Quest) {
 
     return true;
 }
-bool DB::ManagerTest::QuestBatchRemove(std::vector<Quest> * QuestList) {
+bool DB::Manager::QuestBatchRemove(std::vector<Quest> * QuestList) {
     bool returnRes = true;
     std::vector<Quest>& questRefs = *QuestList;
     for(size_t i=0;i<QuestList->size();i++) {
@@ -110,7 +110,7 @@ bool DB::ManagerTest::QuestBatchRemove(std::vector<Quest> * QuestList) {
     return returnRes;
 }
 
-bool DB::ManagerTest::ReplaceReferences(Quest * NewReference, std::vector<Quest> * QuestList){
+bool DB::Manager::ReplaceReferences(Quest * NewReference, std::vector<Quest> * QuestList){
     std::vector<Quest>& questRefs = *QuestList;
     bool returnRes = true;
     for(size_t i=0;i<QuestList->size();i++) {
@@ -122,4 +122,21 @@ bool DB::ManagerTest::ReplaceReferences(Quest * NewReference, std::vector<Quest>
         }
     }
     return returnRes;
+}
+
+void DB::Manager::RetrieveAllWorlds(std::vector<World> * list) {
+    Statement select(*Utils::session);
+    std::vector<QType::TempWorld> worlds;
+
+    select << "SELECT * FROM World;",
+    into(worlds);
+
+
+    while (!select.done())
+    {
+        select.execute();
+        for(size_t i=0;i<worlds.size();i++) {
+            list->push_back(World(worlds[i]));
+        }
+    }
 }

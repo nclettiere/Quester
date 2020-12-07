@@ -34,7 +34,11 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QComboBox" name="comboBox"/>
+      <widget class="QComboBox" name="cboWorld">
+       <property name="editable">
+        <bool>false</bool>
+       </property>
+      </widget>
      </item>
      <item row="2" column="1">
       <widget class="QLabel" name="label_3">
@@ -101,22 +105,5 @@
   </layout>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>lstQuests</sender>
-   <signal>currentRowChanged(int)</signal>
-   <receiver>lstQuests</receiver>
-   <slot>clear()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>236</x>
-     <y>139</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>236</x>
-     <y>139</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

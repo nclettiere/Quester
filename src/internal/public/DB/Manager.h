@@ -14,6 +14,7 @@
 
 #include <public/Utils.h>
 #include <public/Quest.h>
+#include <public/World.h>
 
 using namespace Poco::Data::Keywords;
 using Poco::Data::Session;
@@ -22,10 +23,10 @@ using Poco::Data::Statement;
 //enum class Database { Quests, Worlds };
 
 namespace DB {
-    class ManagerTest
+    class Manager
     {
     public:
-        ManagerTest();
+        Manager();
         static void CreateContext();
         static bool InsertQuest(Quest * questData);
         static Quest RetrieveQuest(Poco::UUID);
@@ -35,5 +36,7 @@ namespace DB {
         static bool QuestRemove(Quest Quest); 
         static bool QuestBatchRemove(std::vector<Quest> * QuestList);
         static bool ReplaceReferences(Quest * NewReference, std::vector<Quest> * QuestList);
+
+        static void RetrieveAllWorlds(std::vector<World> * list);
     };
 }
