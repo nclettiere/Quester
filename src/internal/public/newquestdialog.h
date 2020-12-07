@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QListWidget>
 #include <QListWidgetItem>
+#include <QPushButton>
 
 #include <iostream>
 #include <vector>
@@ -26,8 +27,17 @@ public:
     ~newQuestDialog();
 
 private:
+    QPushButton * btnCreate;
+
     std::vector<Quest> QuestList;
     std::vector<World> WorldList;
+    QString QuestName;
+    World * SelectedWorld = nullptr;
+    Quest * ParentQuest = nullptr;
+    int IsMain;
+    int IsFailable;
+    int IsOptional;
+
     void prepareUi();
 
 private slots:
@@ -35,7 +45,15 @@ private slots:
     void on_cboWorld_currentIndexChanged(int index);
     void on_lstQuests_currentRowChanged(int currentRow);
 
-    void on_newQuestDialog_accepted();
+    void on_btnCreate_released();
+
+    void on_radioButton_released();
+
+    void on_radioButton_2_released();
+
+    void on_checkBox_stateChanged(int arg1);
+
+    void on_checkBox_2_stateChanged(int arg1);
 
 private:
     Ui::newQuestDialog *ui;

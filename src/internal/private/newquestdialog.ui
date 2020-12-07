@@ -47,7 +47,10 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="1">
+     <item row="3" column="1">
+      <widget class="QListWidget" name="lstQuests"/>
+     </item>
+     <item row="5" column="1">
       <widget class="QGroupBox" name="groupBox">
        <property name="title">
         <string>Quest Type:</string>
@@ -87,20 +90,46 @@
        </layout>
       </widget>
      </item>
-     <item row="3" column="1">
-      <widget class="QListWidget" name="lstQuests"/>
+     <item row="4" column="1">
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item alignment="Qt::AlignRight">
+        <widget class="QPushButton" name="btnClear">
+         <property name="text">
+          <string>Clear</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </item>
    <item row="1" column="0">
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-     </property>
-     <property name="centerButtons">
-      <bool>false</bool>
-     </property>
-    </widget>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QPushButton" name="btnCreate">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>Create</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton">
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+         <property name="text">
+          <string>Cancel</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
