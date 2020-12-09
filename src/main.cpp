@@ -3,10 +3,6 @@
 #include <QFile>
 #include <QTextStream>
 
-#include "framelesswindow/framelesswindow.h"
-#include "DarkStyle.h"
-
-
 #include <Poco/Data/Session.h>
 #include <Poco/Data/SQLite/Connector.h>
 
@@ -22,20 +18,15 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    a.setStyle(new DarkStyle);
-
     Poco::Data::SQLite::Connector::registerConnector();
     Session session("SQLite", "QuesterDB.db");
     Utils::session = &session;
     Utils::Context = QCoreApplication::applicationDirPath().toStdString();
     DB::Manager::CreateContext();
 
-    FramelessWindow framelessWindow;
-    framelessWindow.setWindowTitle("Quester");
-    framelessWindow.setWindowIcon(a.style()->standardIcon(QStyle::SP_DesktopIcon));
-    MainWindow *mainWindow = new MainWindow;
-    framelessWindow.setContent(mainWindow);
-    framelessWindow.show();
+    MainWindow mainWindow;
+
+    mainWindow.show();
 
     return a.exec();
 }

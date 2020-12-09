@@ -5,10 +5,6 @@ newQuestDialog::newQuestDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::newQuestDialog)
 {
-    IsMain = 1;
-    IsFailable = 0;
-    IsOptional = 0;
-
     ui->setupUi(this);
     prepareUi();
 }
@@ -35,6 +31,9 @@ void newQuestDialog::prepareUi() {
         item->setText(QString::fromStdString(quest.Name));
         questListView->addItem(item);
     }
+
+    if(WorldList.size() > 0)
+        SelectedWorld = &WorldList[0];
 }
 
 void newQuestDialog::on_lineEdit_textChanged(const QString &arg1)
@@ -81,33 +80,36 @@ void newQuestDialog::on_lstQuests_currentRowChanged(int currentRow)
     qDebug("Parent Index => %s", ParentQuest->GetName());
 }
 
-void newQuestDialog::on_radioButton_released()
-{
-    IsMain = 1;
-}
-
-void newQuestDialog::on_radioButton_2_released()
-{
-    IsMain = 0;
-}
-
-void newQuestDialog::on_checkBox_stateChanged(int arg1)
-{
-    IsFailable = arg1;
-}
-
-void newQuestDialog::on_checkBox_2_stateChanged(int arg1)
-{
-    IsOptional = arg1;
-}
-
 void newQuestDialog::on_btnCreate_released()
 {
-    qDebug("Name == %s | World == %s | ParentQuest == %s | IsMain =- %b | IsFailable == %i | IsOptional == %i",
+    std::string Name = QuestName.toStdString();
+
+    int IsMain = ui->rdbIsMain->isChecked();
+    int IsFailable = ui->chkFailable->isChecked();
+    int IsOptional = ui->chkOptional->isChecked();
+
+    qDebug("Name == %s | World == %s | ParentQuest == %s",
            QuestName.toStdString().c_str(),
            (SelectedWorld != nullptr) ? SelectedWorld->GetName() : "Not-Selected (invalid)",
-           (ParentQuest != nullptr) ? ParentQuest->GetName() : "Not-Selected"),
-            IsMain,
-            IsFailable,
-            IsOptional;
+           (ParentQuest != nullptr) ? ParentQuest->GetName() : "Not-Selected");
+    qDebug("IsMain == %i | IsFailable == %i | IsOptional == %i",
+           IsMain,
+           IsFailable,
+           IsOptional);
+
+    Quest q;
+    q.Name = Name;
+    q.WorldId = (SelectedWorld != nullptr) ? SelectedWorld->Id : Poco::UUID();
+    q.IsMain = IsMain;
+    q.IsFailable = IsFailable;
+    q.IsOptional = IsOptional;
+    q.ParentId = (ParentQuest != nullptr) ? ParentQuest->Id : Poco::UUID();
+
+    if(DB::Manager::InsertQuest(&q)) {
+        QMessageBox::information(this, QString("Success"), QString("Quest successfully created"));
+        this->destroy();
+    }else {
+        QMessageBox::critical(this, QString("Error"), QString("Problem creating quest"));
+        this->destroy();
+    }
 }

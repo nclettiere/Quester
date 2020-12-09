@@ -5,6 +5,7 @@ Quest Quest::From(QType::TempQuest tmpQuest) {
     try {
        Poco::UUID uuid;
        bool idValid = uuid.tryParse(((std::string)tmpQuest.get<0>()));
+       bool worldIdValid = uuid.tryParse(((std::string)tmpQuest.get<2>()));
        if(idValid) {
            q.Id = Poco::UUID(tmpQuest.get<0>());
        }else {
@@ -12,7 +13,11 @@ Quest Quest::From(QType::TempQuest tmpQuest) {
            return Quest();
        }
         q.Name = (std::string) tmpQuest.get<1>();
-        q.WorldName = (std::string) tmpQuest.get<2>();
+        if(worldIdValid) {
+            q.WorldId = Poco::UUID(tmpQuest.get<2>());
+        }else {
+            q.WorldId = Poco::UUID();
+        }
         q.IsMain = (bool) tmpQuest.get<3>();
         q.IsFailable = (bool) tmpQuest.get<4>();
         q.IsOptional = (bool) tmpQuest.get<5>();

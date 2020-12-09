@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <Poco/UUID.h>
+#include <Poco/UUIDGenerator.h>
 #include <Poco/Exception.h>
 #include <Poco/Tuple.h>
 
@@ -13,19 +14,22 @@ public:
     Poco::UUID Id;
 	std::string Name;
 	bool IsMain;
-	std::string WorldName;
+    Poco::UUID WorldId;
 	Poco::UUID ParentId;
 	std::string ParentQuestName;
 	bool IsFailable;
 	bool IsOptional;
 
 public:
-    Quest() {};
+    Quest() {
+        Poco::UUIDGenerator generator = Poco::UUIDGenerator();
+        this->Id = generator.create();
+    };
 
     Quest (
         Poco::UUID Id,
         std::string Name,
-        std::string WorldName,
+        Poco::UUID WorldId,
         Poco::UUID ParentId,
         std::string ParentQuestName,
         bool IsMain,
@@ -34,7 +38,7 @@ public:
         this->Id = Id;
         this->Name = Name;
         this->IsMain = IsMain;
-        this->WorldName = WorldName;
+        this->WorldId = WorldId;
         this->ParentId = ParentId;
         this->ParentQuestName = ParentQuestName;
         this->IsFailable = IsFailable;
@@ -45,6 +49,7 @@ public:
         try {
             Poco::UUID uuid;
             bool idValid = uuid.tryParse(tmpQuest.get<0>());
+            bool worldIdValid = uuid.tryParse(tmpQuest.get<2>());
             bool parentIdValid = uuid.tryParse(tmpQuest.get<6>());
             if(idValid) {
                 this->Id = Poco::UUID(tmpQuest.get<0>());
@@ -52,7 +57,11 @@ public:
                 this->Id = Poco::UUID();
             }
             this->Name = tmpQuest.get<1>();
-            this->WorldName = tmpQuest.get<2>();
+            if(parentIdValid) {
+                this->WorldId = Poco::UUID(tmpQuest.get<2>());
+            }else {
+               this->WorldId = Poco::UUID();
+            }
             this->IsMain = tmpQuest.get<3>();
             this->IsFailable = tmpQuest.get<4>();
             this->IsOptional = tmpQuest.get<5>();

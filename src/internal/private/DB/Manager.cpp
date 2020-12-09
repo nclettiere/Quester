@@ -24,10 +24,11 @@ bool DB::Manager::InsertQuest(Quest * questData) {
 
         std::string qId = questData->Id.toString();
         std::string qParentId = questData->ParentId.toString();
+        std::string qWorldId = questData->WorldId.toString();
         insert << "INSERT INTO Quest VALUES(?, ?, ?, ?, ?, ?, ?)",
             use(qId),
             use(questData->Name),
-            use(questData->WorldName),
+            use(qWorldId),
             use(questData->IsMain),
             use(questData->IsFailable),
             use(questData->IsOptional),
