@@ -22,8 +22,8 @@ include_directories(
     "vendor/poco/Data/SQLite/include"
     "vendor/Qt-Frameless-Window-DarkStyle/")
 
-find_package(QT NAMES Qt5 COMPONENTS Widgets REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
+find_package(QT NAMES Qt5 COMPONENTS Widgets Sql REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Sql REQUIRED)
 
 find_package(Poco REQUIRED Foundation Data DataSQLite JSON)
 if(Poco_FOUND)
@@ -41,7 +41,7 @@ file(GLOB_RECURSE internal_source
 
 set(SOURCES src/main.cpp ${internal_source})
 add_executable(Quester ${SOURCES})
-target_link_libraries(Quester PRIVATE Qt${QT_VERSION_MAJOR}::Widgets nodes Poco::Foundation Poco::Data Poco::DataSQLite Poco::JSON)
+target_link_libraries(Quester PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Sql nodes Poco::Foundation Poco::Data Poco::DataSQLite Poco::JSON)
 
 file(GLOB Public_Files "Public/*")
 file(COPY ${Public_Files} DESTINATION ${CMAKE_BINARY_DIR}/Public/)
