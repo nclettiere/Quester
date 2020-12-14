@@ -6,6 +6,9 @@ QuestViewer::QuestViewer(QWidget *parent) :
     ui(new Ui::QuestViewer)
 {
     ui->setupUi(this);
+
+    ui->lstSections->setMinimumWidth(40);
+    ui->lstSections->setGeometry(0, 0, 10, 10);
 }
 
 QuestViewer::~QuestViewer()

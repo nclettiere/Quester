@@ -2,6 +2,7 @@
 #define QUESTVIEWER_H
 
 #include <QMainWindow>
+#include <QListView>
 
 namespace Ui {
 class QuestViewer;
