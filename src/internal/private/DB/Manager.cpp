@@ -42,7 +42,7 @@ bool DB::Manager::InsertQuest(Quest * questData) {
     return true;
 }
 
-Quest  DB::Manager::RetrieveQuest(Poco::UUID id) {
+Quest DB::Manager::RetrieveQuest(Poco::UUID id) {
     if(id != Poco::UUID()) {
         Statement select(*Utils::session);
         QType::TempQuest tmp;

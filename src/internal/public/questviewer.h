@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QListView>
 
+#include <public/questdialogues.h>
 #include <public/questgeneralinfo.h>
 
 namespace Ui {
@@ -15,7 +16,7 @@ class QuestViewer : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit QuestViewer(QWidget *parent = nullptr);
+    explicit QuestViewer(Quest *quest, QWidget *parent = nullptr);
     ~QuestViewer();
 
 private slots:
@@ -23,8 +24,8 @@ private slots:
 
 private:
     Ui::QuestViewer *ui;
-
-    QWidget * SelectedWidget;
+    Quest *SelectedQuest;
+    QWidget *SelectedWidget;
 
     void UpdateUI();
     void ClearLayout(QLayout *layout);

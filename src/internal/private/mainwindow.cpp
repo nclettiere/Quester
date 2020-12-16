@@ -67,7 +67,7 @@ void MainWindow::on_tableWidget_currentCellChanged(int currentRow, int currentCo
 void MainWindow::on_pushButton_3_released()
 {
     if(!viewer_opened) {
-        QuestViewer * qViewer = new QuestViewer(this);
+        QuestViewer * qViewer = new QuestViewer(SelectedQuest, this);
         viewer_opened = true;
         qViewer->show();
     }

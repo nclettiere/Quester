@@ -1,8 +1,9 @@
 #include <public/questviewer.h>
 #include "./ui_questviewer.h"
 
-QuestViewer::QuestViewer(QWidget *parent) :
+QuestViewer::QuestViewer(Quest *quest, QWidget *parent) :
     QMainWindow(parent),
+    SelectedQuest(quest),
     ui(new Ui::QuestViewer)
 {
     ui->setupUi(this);
@@ -32,13 +33,20 @@ void QuestViewer::on_lstSections_currentRowChanged(int currentRow)
 
     ClearLayout(ui->Content);
 
+    QWidget * newView;
+
     switch(currentRow) {
         case 0:
-            QuestGeneralInfo * general = new QuestGeneralInfo(this);
-            SelectedWidget = general;
-            ui->Content->addWidget(general);
+            newView = new QuestGeneralInfo(SelectedQuest, this);
+        break;
+
+        case 1:
+            newView = new QuestDialogues(this);
         break;
     }
+
+    SelectedWidget = newView;
+    ui->Content->addWidget(newView);
 }
 
 void QuestViewer::ClearLayout(QLayout *layout) {
