@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>428</width>
+    <height>282</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -25,12 +25,34 @@
       </attribute>
       <layout class="QGridLayout" name="gridLayout">
        <item row="0" column="0">
-        <layout class="QVBoxLayout" name="verticalLayout_2">
-         <item alignment="Qt::AlignRight|Qt::AlignTop">
+        <layout class="QGridLayout" name="gridLayout_2">
+         <item row="0" column="0">
           <widget class="QPushButton" name="btnAddNewMain">
            <property name="text">
             <string>Add New</string>
            </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QScrollArea" name="scrollArea">
+           <property name="widgetResizable">
+            <bool>true</bool>
+           </property>
+           <widget class="QWidget" name="scrollAreaWidgetContents">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>382</width>
+              <height>187</height>
+             </rect>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_3">
+             <item row="0" column="0">
+              <layout class="QVBoxLayout" name="Container"/>
+             </item>
+            </layout>
+           </widget>
           </widget>
          </item>
         </layout>

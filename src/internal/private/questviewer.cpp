@@ -39,7 +39,6 @@ void QuestViewer::on_lstSections_currentRowChanged(int currentRow)
         case 0:
             newView = new QuestGeneralInfo(SelectedQuest, this);
         break;
-
         case 1:
             newView = new QuestDialogues(this);
         break;
