@@ -2,9 +2,11 @@
 
 TextDisplayDataModel::
 TextDisplayDataModel()
-  : _label(new QLabel("Resulting Text"))
+  : _label(new QLabel("Dialogue Text"))
 {
+  _label->setFixedWidth(250);
   _label->setMargin(3);
+  _label->setWordWrap(true);
 }
 
 

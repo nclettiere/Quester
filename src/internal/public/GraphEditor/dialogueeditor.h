@@ -1,7 +1,20 @@
 #ifndef DIALOGUEEDITOR_H
 #define DIALOGUEEDITOR_H
 
+#include <nodes/NodeData>
+#include <nodes/FlowScene>
+#include <nodes/FlowView>
+
 #include <QMainWindow>
+
+#include <nodes/DataModelRegistry>
+
+#include <public/GraphEditor/TextSourceDataModel.hpp>
+#include <public/GraphEditor/TextDisplayDataModel.hpp>
+
+using QtNodes::DataModelRegistry;
+using QtNodes::FlowView;
+using QtNodes::FlowScene;
 
 namespace Ui {
 class DialogueEditor;
@@ -17,6 +30,9 @@ public:
 
 private:
     Ui::DialogueEditor *ui;
+
+    static std::shared_ptr<DataModelRegistry>
+    registerDataModels();
 };
 
 #endif // DIALOGUEEDITOR_H

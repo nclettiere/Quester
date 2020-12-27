@@ -3,6 +3,8 @@
 
 #include <QWidget>
 
+#include <public/GraphEditor/dialogueeditor.h>
+
 namespace Ui {
 class DialoguePreview;
 }
@@ -14,6 +16,9 @@ class DialoguePreview : public QWidget
 public:
     explicit DialoguePreview(QWidget *parent = nullptr);
     ~DialoguePreview();
+
+private slots:
+    void on_btnEdit_clicked();
 
 private:
     Ui::DialoguePreview *ui;

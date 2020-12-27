@@ -59,14 +59,13 @@ public:
   { }
 
   QWidget *
-  embeddedWidget() override { return _lineEdit; }
+  embeddedWidget() override { return _textEdit; }
 
-private Q_SLOTS:
-
+private slots:
   void
-  onTextEdited(QString const &string);
+  onTextEdited();
 
 private:
 
-  QLineEdit * _lineEdit;
+  QTextEdit * _textEdit;
 };
