@@ -27,21 +27,29 @@ public:
   ~TextSourceDataModel() {}
 
 public:
-
   QString
   caption() const override
-  { return QString("Text Source"); }
-
-  bool
-  captionVisible() const override { return false; }
-
-  static QString
-  Name()
-  { return QString("TextSourceDataModel"); }
+  {
+    return QString("Make Dialogue");
+  }
 
   QString
   name() const override
-  { return TextSourceDataModel::Name(); }
+  {
+    return QString("MakeDialogue");
+  }
+
+public:
+
+  QJsonObject
+  save() const override
+  {
+    QJsonObject modelJson;
+
+    modelJson["name"] = name();
+
+    return modelJson;
+  }
 
 public:
 

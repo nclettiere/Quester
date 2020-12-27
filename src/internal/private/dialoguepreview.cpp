@@ -1,5 +1,6 @@
 #include <public/dialoguepreview.h>
 #include "ui_dialoguepreview.h"
+#include <public/GraphEditor/TextData.hpp>
 
 DialoguePreview::DialoguePreview(QWidget *parent) :
     QWidget(parent),

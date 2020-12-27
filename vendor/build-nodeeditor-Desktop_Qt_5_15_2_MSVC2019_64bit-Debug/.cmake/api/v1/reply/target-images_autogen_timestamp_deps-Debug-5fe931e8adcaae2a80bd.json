@@ -1,0 +1,64 @@
+{
+	"backtrace" : 0,
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : 
+		[
+			"examples/images/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"id" : "nodes::@6890427a1f51a3e7e1df"
+		}
+	],
+	"id" : "images_autogen_timestamp_deps::@062e391225274de7d6f0",
+	"isGeneratorProvided" : true,
+	"name" : "images_autogen_timestamp_deps",
+	"paths" : 
+	{
+		"build" : "examples/images",
+		"source" : "examples/images"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"name" : "CMake Rules",
+			"sourceIndexes" : 
+			[
+				1
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "C:/Users/Percebe32/Documents/Projects/Quester/vendor/build-nodeeditor-Desktop_Qt_5_15_2_MSVC2019_64bit-Debug/examples/images/CMakeFiles/images_autogen_timestamp_deps",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "C:/Users/Percebe32/Documents/Projects/Quester/vendor/build-nodeeditor-Desktop_Qt_5_15_2_MSVC2019_64bit-Debug/examples/images/CMakeFiles/images_autogen_timestamp_deps.rule",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "UTILITY"
+}

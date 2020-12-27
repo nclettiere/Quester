@@ -4,6 +4,7 @@ TextSourceDataModel::
 TextSourceDataModel()
   : _textEdit(new QTextEdit("Default Text"))
 {
+  _textEdit->setStyleSheet("margin: 10px;background:transparent;border:3px solid yellow;border-radius: 10px;");
   connect(_textEdit, SIGNAL(textChanged()), this, SLOT(onTextEdited()));
 }
 
@@ -35,8 +36,8 @@ void
 TextSourceDataModel::
 onTextEdited()
 {
-  qDebug("TEXT EDITED");
-
+  //QSize size = _textEdit->document()->size().toSize();
+  //_textEdit->setFixedHeight( size.height() + 3 );
   //Q_UNUSED(string);
 
   Q_EMIT dataUpdated(0);
