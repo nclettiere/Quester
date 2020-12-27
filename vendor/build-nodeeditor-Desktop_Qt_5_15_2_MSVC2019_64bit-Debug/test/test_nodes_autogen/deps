@@ -1,9 +1,0 @@
-test/test_nodes_autogen/timestamp: \
-	C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5/Qt5Config.cmake \
-	C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5/Qt5ConfigVersion.cmake \
-	C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5/Qt5ModuleLocation.cmake \
-	C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Test/Qt5TestConfig.cmake \
-	C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Test/Qt5TestConfigExtras.cmake \
-	C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Test/Qt5TestConfigVersion.cmake \
-	C:/Users/Percebe32/Documents/Projects/Quester/vendor/nodeeditor/test/CMakeLists.txt \
-	C:/Qt/Tools/CMake_64/bin/cmake.exe
