@@ -15,6 +15,43 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="1" alignment="Qt::AlignTop">
+     <widget class="QGroupBox" name="verticalGroupBox">
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item alignment="Qt::AlignTop">
+        <widget class="QPushButton" name="pushButton">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Create New Quest&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="whatsThis">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Create New Quest&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="text">
+          <string>Create New</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_3">
+         <property name="text">
+          <string>View</string>
+         </property>
+        </widget>
+       </item>
+       <item alignment="Qt::AlignTop">
+        <widget class="QPushButton" name="pushButton_2">
+         <property name="text">
+          <string>Delete</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../../../vendor/nodeeditor/resources/resources.qrc">
+           <normaloff>:/convert.png</normaloff>:/convert.png</iconset>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
     <item row="0" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
@@ -74,43 +111,6 @@
       </item>
      </layout>
     </item>
-    <item row="0" column="1" alignment="Qt::AlignTop">
-     <widget class="QGroupBox" name="verticalGroupBox">
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item alignment="Qt::AlignTop">
-        <widget class="QPushButton" name="pushButton">
-         <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Create New Quest&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-         <property name="whatsThis">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Create New Quest&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-         <property name="text">
-          <string>Create New</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButton_3">
-         <property name="text">
-          <string>View</string>
-         </property>
-        </widget>
-       </item>
-       <item alignment="Qt::AlignTop">
-        <widget class="QPushButton" name="pushButton_2">
-         <property name="text">
-          <string>Delete</string>
-         </property>
-         <property name="icon">
-          <iconset resource="../../../vendor/nodeeditor/resources/resources.qrc">
-           <normaloff>:/convert.png</normaloff>:/convert.png</iconset>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -119,7 +119,7 @@
      <x>0</x>
      <y>0</y>
      <width>390</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

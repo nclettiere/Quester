@@ -1,10 +1,16 @@
 #include <public/GraphEditor/TextSourceDataModel.hpp>
+#include <QPainterPath>
 
 TextSourceDataModel::
 TextSourceDataModel()
   : _textEdit(new QTextEdit("Default Text"))
 {
-  _textEdit->setStyleSheet("margin: 10px;background:transparent;border:3px solid yellow;border-radius: 10px;");
+  QPalette palette = _textEdit->palette();
+  palette.setBrush(palette.Window, QBrush(Qt::transparent));
+  _textEdit->setPalette(palette);
+
+  _textEdit->setStyleSheet("QTextEdit {color: white;margin-top:5px;border-radius: 3px;background-clip: border;background-color: transparent;font: 11pt Vazir;border:3px solid;border-color: rgb(255,95,95);}");
+
   connect(_textEdit, SIGNAL(textChanged()), this, SLOT(onTextEdited()));
 }
 
