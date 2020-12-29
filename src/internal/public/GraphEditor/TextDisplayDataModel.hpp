@@ -3,7 +3,10 @@
 #include <QtCore/QObject>
 #include <QtWidgets/QLabel>
 
+#include <public/GraphEditor/ExecData.hpp>
 #include <public/GraphEditor/TextData.hpp>
+
+#include <public/dialogueselectornode.h>
 
 #include <nodes/NodeDataModel>
 
@@ -28,20 +31,30 @@ public:
 
 public:
 
+public:
   QString
   caption() const override
-  { return QString("Text Display"); }
-
-  bool
-  captionVisible() const override { return false; }
-
-  static QString
-  Name()
-  { return QString("TextDisplayDataModel"); }
+  {
+    return QString("Run Dialogue");
+  }
 
   QString
   name() const override
-  { return TextDisplayDataModel::Name(); }
+  {
+    return QString("Run Dialogue");
+  }
+
+public:
+
+  QJsonObject
+  save() const override
+  {
+    QJsonObject modelJson;
+
+    modelJson["name"] = name();
+
+    return modelJson;
+  }
 
 public:
 
@@ -61,20 +74,20 @@ public:
 
     if (textData)
     {
-      _label->setText(textData->text());
+      _dialogue_selector_node->UpdateTextDialogue(textData->text());
     }
     else
     {
-      _label->clear();
+      _dialogue_selector_node->clear();
     }
 
-    _label->adjustSize();
+    _dialogue_selector_node->adjustSize();
   }
 
   QWidget *
-  embeddedWidget() override { return _label; }
+  embeddedWidget() override { return _dialogue_selector_node; }
 
 private:
 
-  QLabel * _label;
+  DialogueSelectorNode * _dialogue_selector_node;
 };

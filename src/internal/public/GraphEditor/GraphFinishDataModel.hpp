@@ -16,27 +16,27 @@ using QtNodes::NodeDataModel;
 
 /// The model dictates the number of inputs and outputs for the Node.
 /// In this example it has no logic.
-class GraphBeginDataModel : public NodeDataModel
+class GraphFinishDataModel : public NodeDataModel
 {
   Q_OBJECT
 
 public:
-  GraphBeginDataModel();
+  GraphFinishDataModel();
 
   virtual
-  ~GraphBeginDataModel() {}
+  ~GraphFinishDataModel() {}
 
 public:
   QString
   caption() const override
   {
-    return QString("Execute Graph");
+    return QString("Finish Execute");
   }
 
   QString
   name() const override
   {
-    return QString("Execute Graph");
+    return QString("Finish Execute");
   }
 
 public:

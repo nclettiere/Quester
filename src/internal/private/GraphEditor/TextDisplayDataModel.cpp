@@ -2,13 +2,10 @@
 
 TextDisplayDataModel::
 TextDisplayDataModel()
-  : _label(new QLabel("Dialogue Text"))
+  : _dialogue_selector_node(new DialogueSelectorNode())
 {
-  _label->setFixedWidth(250);
-  _label->setMargin(3);
-  _label->setWordWrap(true);
-}
 
+}
 
 unsigned int
 TextDisplayDataModel::
@@ -19,25 +16,51 @@ nPorts(PortType portType) const
   switch (portType)
   {
     case PortType::In:
-      result = 1;
+      result = 2;
       break;
 
     case PortType::Out:
-      result = 0;
-
-    default:
+      result = 1;
+      break;
+    case PortType::None:
       break;
   }
 
   return result;
 }
 
-
 NodeDataType
 TextDisplayDataModel::
-dataType(PortType, PortIndex) const
+dataType(PortType portType,
+         PortIndex portIndex) const
 {
-  return TextData().type();
+  switch (portType)
+  {
+    case PortType::In:
+      switch (portIndex)
+      {
+        case 0:
+          return ExecData().type();
+        case 1:
+          return TextData().type();
+      }
+      break;
+
+    case PortType::Out:
+      switch (portIndex)
+      {
+        case 0:
+          return ExecData().type();
+        //case 1:
+        //  return TextData().type();
+      }
+      break;
+
+    case PortType::None:
+      break;
+  }
+  // FIXME: control may reach end of non-void function [-Wreturn-type]
+  return NodeDataType();
 }
 
 

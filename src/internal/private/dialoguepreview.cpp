@@ -2,6 +2,7 @@
 #include "ui_dialoguepreview.h"
 #include <public/GraphEditor/TextData.hpp>
 #include <public/GraphEditor/GraphBeginDataModel.hpp>
+#include <public/GraphEditor/GraphFinishDataModel.hpp>
 
 #include <nodes/NodeData>
 #include <nodes/FlowScene>
@@ -35,6 +36,7 @@ std::shared_ptr<DataModelRegistry> registerDataModels()
   auto ret = std::make_shared<DataModelRegistry>();
 
   ret->registerModel<GraphBeginDataModel>();
+  ret->registerModel<GraphFinishDataModel>();
   ret->registerModel<TextSourceDataModel>();
   ret->registerModel<TextDisplayDataModel>();
 
@@ -45,62 +47,71 @@ static
 void
 _setStyle()
 {
-  FlowViewStyle::setStyle(
-  R"(
-  {
-    "FlowViewStyle": {
-      "BackgroundColor": [255, 255, 240],
-      "FineGridColor": [245, 245, 230],
-      "CoarseGridColor": [235, 235, 220]
-    }
-  }
-  )");
-
-  NodeStyle::setNodeStyle(
-  R"(
-  {
-    "NodeStyle": {
-      "NormalBoundaryColor": "darkgray",
-      "SelectedBoundaryColor": "deepskyblue",
-      "GradientColor0": "mintcream",
-      "GradientColor1": "mintcream",
-      "GradientColor2": "mintcream",
-      "GradientColor3": "mintcream",
-      "ShadowColor": [200, 200, 200],
-      "FontColor": [10, 10, 10],
-      "FontColorFaded": [100, 100, 100],
-      "ConnectionPointColor": "white",
-      "PenWidth": 2.0,
-      "HoveredPenWidth": 2.5,
-      "ConnectionPointDiameter": 10.0,
-      "Opacity": 1.0,
-      "padding": 50.0,
-      "margin": 50.0
-    }
-  }
-  )");
-
   ConnectionStyle::setConnectionStyle(
-  R"(
+    R"(
   {
     "ConnectionStyle": {
-      "ConstructionColor": "gray",
-      "NormalColor": "black",
-      "SelectedColor": "gray",
-      "SelectedHaloColor": "deepskyblue",
-      "HoveredColor": "deepskyblue",
-      "LineWidth": 3.0,
-      "ConstructionLineWidth": 2.0,
-      "PointDiameter": 10.0,
-      "UseDataDefinedColors": false
+      "UseDataDefinedColors": true
     }
   }
   )");
+
+  //FlowViewStyle::setStyle(
+  //R"(
+  //{
+  //  "FlowViewStyle": {
+  //    "BackgroundColor": [255, 255, 240],
+  //    "FineGridColor": [245, 245, 230],
+  //    "CoarseGridColor": [235, 235, 220]
+  //  }
+  //}
+  //)");
+  //
+  //NodeStyle::setNodeStyle(
+  //R"(
+  //{
+  //  "NodeStyle": {
+  //    "NormalBoundaryColor": "darkgray",
+  //    "SelectedBoundaryColor": "deepskyblue",
+  //    "GradientColor0": "mintcream",
+  //    "GradientColor1": "mintcream",
+  //    "GradientColor2": "mintcream",
+  //    "GradientColor3": "mintcream",
+  //    "ShadowColor": [200, 200, 200],
+  //    "FontColor": [10, 10, 10],
+  //    "FontColorFaded": [100, 100, 100],
+  //    "ConnectionPointColor": "white",
+  //    "PenWidth": 2.0,
+  //    "HoveredPenWidth": 2.5,
+  //    "ConnectionPointDiameter": 10.0,
+  //    "Opacity": 1.0,
+  //    "padding": 50.0,
+  //    "margin": 50.0
+  //  }
+  //}
+  //)");
+  //
+  //ConnectionStyle::setConnectionStyle(
+  //R"(
+  //{
+  //  "ConnectionStyle": {
+  //    "ConstructionColor": "gray",
+  //    "NormalColor": "black",
+  //    "SelectedColor": "gray",
+  //    "SelectedHaloColor": "deepskyblue",
+  //    "HoveredColor": "deepskyblue",
+  //    "LineWidth": 3.0,
+  //    "ConstructionLineWidth": 2.0,
+  //    "PointDiameter": 10.0,
+  //    "UseDataDefinedColors": false
+  //  }
+  //}
+  //)");
 }
 
 void DialoguePreview::on_btnEdit_clicked()
 {
-    //_setStyle();
+    _setStyle();
     FlowScene scene(registerDataModels());
 
     FlowView view(&scene);
