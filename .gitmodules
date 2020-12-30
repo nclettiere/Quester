@@ -1,6 +1,6 @@
 [submodule "vendor/nodeeditor"]
 	path = vendor/nodeeditor
-	url = https://github.com/paceholder/nodeeditor.git
+	url = https://github.com/Daguerreo/NodeEditor.git
 [submodule "vendor/poco"]
 	path = vendor/poco
 	url = https://github.com/pocoproject/poco.git
