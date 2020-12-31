@@ -1,10 +1,8 @@
 #pragma once
 
 #include <QtCore/QObject>
-#include <QtWidgets/QTextEdit>
-
-#include "TextData.hpp"
-
+#include <public/GraphEditor/DialogueData.hpp>
+#include <public/makedialoguewidget.h>
 #include <nodes/NodeDataModel>
 
 #include <iostream>
@@ -67,7 +65,7 @@ public:
   { }
 
   QWidget *
-  embeddedWidget() override { return _textEdit; }
+  embeddedWidget() override { return _makeDialogue; }
 
 private slots:
   void
@@ -75,5 +73,5 @@ private slots:
 
 private:
 
-  QTextEdit * _textEdit;
+  MakeDialogueWidget * _makeDialogue;
 };

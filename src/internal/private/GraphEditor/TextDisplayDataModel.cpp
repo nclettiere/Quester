@@ -42,7 +42,7 @@ dataType(PortType portType,
         case 0:
           return ExecData().type();
         case 1:
-          return TextData().type();
+          return DialogueData().type();
       }
       break;
 

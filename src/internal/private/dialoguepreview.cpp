@@ -1,8 +1,9 @@
 #include <public/dialoguepreview.h>
 #include "ui_dialoguepreview.h"
-#include <public/GraphEditor/TextData.hpp>
+#include <public/GraphEditor/DialogueData.hpp>
 #include <public/GraphEditor/GraphBeginDataModel.hpp>
 #include <public/GraphEditor/GraphFinishDataModel.hpp>
+#include <public/GraphEditor/MaxModel.hpp>
 
 #include <nodes/NodeData>
 #include <nodes/FlowScene>
@@ -39,6 +40,7 @@ std::shared_ptr<DataModelRegistry> registerDataModels()
   ret->registerModel<GraphFinishDataModel>();
   ret->registerModel<TextSourceDataModel>();
   ret->registerModel<TextDisplayDataModel>();
+  ret->registerModel<MaxModel>();
 
   return ret;
 }

@@ -3,15 +3,15 @@
 
 TextSourceDataModel::
 TextSourceDataModel()
-  : _textEdit(new QTextEdit("Default Text"))
+  : _makeDialogue(new MakeDialogueWidget())
 {
-  QPalette palette = _textEdit->palette();
-  palette.setBrush(palette.Window, QBrush(Qt::transparent));
-  _textEdit->setPalette(palette);
-
-  _textEdit->setStyleSheet("QTextEdit {color: white;margin-top:5px;border-radius: 3px;background-clip: border;background-color: transparent;font: 11pt Vazir;border:3px solid;border-color: rgb(255,95,95);}");
-
-  connect(_textEdit, SIGNAL(textChanged()), this, SLOT(onTextEdited()));
+  //QPalette palette = _textEdit->palette();
+  //palette.setBrush(palette.Window, QBrush(Qt::transparent));
+  //_textEdit->setPalette(palette);
+  //
+  //_textEdit->setStyleSheet("QTextEdit {color: white;margin-top:5px;border-radius: 3px;background-clip: border;background-color: transparent;font: 11pt Vazir;border:3px solid;border-color: rgb(255,95,95);}");
+  //
+  //connect(_textEdit, SIGNAL(textChanged()), this, SLOT(onTextEdited()));
 }
 
 
@@ -54,13 +54,14 @@ NodeDataType
 TextSourceDataModel::
 dataType(PortType, PortIndex) const
 {
-  return TextData().type();
+  return DialogueData().type();
 }
-
 
 std::shared_ptr<NodeData>
 TextSourceDataModel::
 outData(PortIndex)
 {
-  return std::make_shared<TextData>(_textEdit->toPlainText());
+  //return std::make_shared<TextData>(_makeDialogue->toPlainText());
+    DialogueData dlg(*_makeDialogue->GetDialogues());
+    return std::make_shared<DialogueData>(dlg);
 }

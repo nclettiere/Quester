@@ -48,7 +48,7 @@ QType::Localization DialogueSelectorNode::GetLocalization() {
 }
 
 void DialogueSelectorNode::UpdateTextDialogue(QString text) {
-    ui->lineEdit->setText(text);
+    //ui->lineEdit->setText(text);
 }
 
 QString DialogueSelectorNode::GetTextDialogue() {

@@ -4,7 +4,7 @@
 #include <QtWidgets/QLabel>
 
 #include <public/GraphEditor/ExecData.hpp>
-#include <public/GraphEditor/TextData.hpp>
+#include <public/GraphEditor/DialogueData.hpp>
 
 #include <public/dialogueselectornode.h>
 
@@ -70,11 +70,11 @@ public:
   void
   setInData(std::shared_ptr<NodeData> data, int) override
   {
-    auto textData = std::dynamic_pointer_cast<TextData>(data);
+    auto textData = std::dynamic_pointer_cast<DialogueData>(data);
 
     if (textData)
     {
-      _dialogue_selector_node->UpdateTextDialogue(textData->text());
+      _dialogue_selector_node->UpdateTextDialogue(textData->dialogues()[0]);
     }
     else
     {
