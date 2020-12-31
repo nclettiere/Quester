@@ -49,6 +49,8 @@ void MakeDialogueWidget::on_pushButton_clicked()
 
     connect(newLine, &QLineEdit::textEdited, this, &MakeDialogueWidget::onTextEdited);
     newLine->setText("Default Text");
+
+    Q_EMIT OnThisDataChanged();
 }
 
 void MakeDialogueWidget::onTextEdited(QString const &string)
@@ -61,6 +63,8 @@ void MakeDialogueWidget::onTextEdited(QString const &string)
        qDebug("SENDER: %i", id);
        DialogueOptions[id] = line->text();
     }
+
+    Q_EMIT OnThisDataChanged();
 }
 
 std::vector<QString> *MakeDialogueWidget::GetDialogues() {

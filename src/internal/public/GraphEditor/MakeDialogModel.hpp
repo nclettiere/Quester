@@ -14,15 +14,15 @@ using QtNodes::NodeDataModel;
 
 /// The model dictates the number of inputs and outputs for the Node.
 /// In this example it has no logic.
-class TextSourceDataModel : public NodeDataModel
+class MakeDialogModel : public NodeDataModel
 {
   Q_OBJECT
 
 public:
-  TextSourceDataModel();
+  MakeDialogModel();
 
   virtual
-  ~TextSourceDataModel() {}
+  ~MakeDialogModel() {}
 
 public:
   QString
@@ -50,7 +50,6 @@ public:
   }
 
 public:
-
   unsigned int
   nPorts(PortType portType) const override;
 
@@ -61,8 +60,7 @@ public:
   outData(PortIndex port) override;
 
   void
-  setInData(std::shared_ptr<NodeData>, int) override
-  { }
+  setInData(std::shared_ptr<NodeData> data, PortIndex portIndex) override;
 
   QWidget *
   embeddedWidget() override { return _makeDialogue; }
@@ -72,6 +70,5 @@ private slots:
   onTextEdited();
 
 private:
-
   MakeDialogueWidget * _makeDialogue;
 };

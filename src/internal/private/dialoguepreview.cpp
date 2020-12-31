@@ -4,6 +4,8 @@
 #include <public/GraphEditor/GraphBeginDataModel.hpp>
 #include <public/GraphEditor/GraphFinishDataModel.hpp>
 #include <public/GraphEditor/MaxModel.hpp>
+#include <public/GraphEditor/MakeDialogModel.hpp>
+#include <public/GraphEditor/RunDialogModel.hpp>
 
 #include <nodes/NodeData>
 #include <nodes/FlowScene>
@@ -38,8 +40,8 @@ std::shared_ptr<DataModelRegistry> registerDataModels()
 
   ret->registerModel<GraphBeginDataModel>();
   ret->registerModel<GraphFinishDataModel>();
-  ret->registerModel<TextSourceDataModel>();
-  ret->registerModel<TextDisplayDataModel>();
+  ret->registerModel<MakeDialogModel>();
+  ret->registerModel<RunDialogModel>();
   ret->registerModel<MaxModel>();
 
   return ret;

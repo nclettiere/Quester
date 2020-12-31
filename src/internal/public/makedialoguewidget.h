@@ -17,6 +17,9 @@ public:
 
     std::vector<QString> *GetDialogues();
 
+public:
+    Q_SIGNAL void OnThisDataChanged();
+
 private slots:
     void on_pushButton_clicked();
 

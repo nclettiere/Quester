@@ -19,15 +19,15 @@ using QtNodes::NodeDataModel;
 
 /// The model dictates the number of inputs and outputs for the Node.
 /// In this example it has no logic.
-class TextDisplayDataModel : public NodeDataModel
+class RunDialogModel : public NodeDataModel
 {
   Q_OBJECT
 
 public:
-  TextDisplayDataModel();
+  RunDialogModel();
 
   virtual
-  ~TextDisplayDataModel() {}
+  ~RunDialogModel() {}
 
 public:
 
@@ -58,6 +58,9 @@ public:
 
 public:
 
+  bool
+  hasDynamicPorts(PortType portType) const override;
+
   unsigned int
   nPorts(PortType portType) const override;
 
@@ -68,26 +71,12 @@ public:
   outData(PortIndex port) override;
 
   void
-  setInData(std::shared_ptr<NodeData> data, int) override
-  {
-    auto textData = std::dynamic_pointer_cast<DialogueData>(data);
-
-    if (textData)
-    {
-      _dialogue_selector_node->UpdateTextDialogue(textData->dialogues()[0]);
-    }
-    else
-    {
-      _dialogue_selector_node->clear();
-    }
-
-    _dialogue_selector_node->adjustSize();
-  }
+  setInData(std::shared_ptr<NodeData> data, PortIndex portIndex) override;
 
   QWidget *
   embeddedWidget() override { return _dialogue_selector_node; }
 
 private:
-
-  DialogueSelectorNode * _dialogue_selector_node;
+    std::vector<std::weak_ptr<DialogueData>> _numberList;
+    DialogueSelectorNode * _dialogue_selector_node;
 };

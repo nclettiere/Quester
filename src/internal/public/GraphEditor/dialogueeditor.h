@@ -9,8 +9,8 @@
 
 #include <nodes/DataModelRegistry>
 
-#include <public/GraphEditor/TextSourceDataModel.hpp>
-#include <public/GraphEditor/TextDisplayDataModel.hpp>
+#include <public/GraphEditor/MakeDialogModel.hpp>
+#include <public/GraphEditor/RunDialogModel.hpp>
 
 using QtNodes::DataModelRegistry;
 using QtNodes::FlowView;

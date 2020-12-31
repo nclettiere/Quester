@@ -25,9 +25,9 @@ std::shared_ptr<DataModelRegistry> DialogueEditor::registerDataModels()
 {
   auto ret = std::make_shared<DataModelRegistry>();
 
-  ret->registerModel<TextSourceDataModel>();
+  ret->registerModel<MakeDialogModel>();
 
-  ret->registerModel<TextDisplayDataModel>();
+  ret->registerModel<RunDialogModel>();
 
   return ret;
 }

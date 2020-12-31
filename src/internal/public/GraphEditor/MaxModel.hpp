@@ -3,6 +3,8 @@
 #include <nodes/NodeDataModel>
 
 #include <public/GraphEditor/DialogueData.hpp>
+#include <public/GraphEditor/ExecData.hpp>
+#include <public/dialogueselectornode.h>
 
 using QtNodes::PortType;
 using QtNodes::PortIndex;
@@ -16,6 +18,8 @@ class MaxModel : public NodeDataModel
    Q_OBJECT
 
 public:
+  MaxModel();
+  virtual ~MaxModel() {}
 
   unsigned int
   nPorts(PortType portType) const override;
@@ -40,8 +44,8 @@ public:
   bool
   portCaptionVisible(PortType portType, PortIndex portIndex) const override;
 
-  QString
-  portCaption(PortType portType, PortIndex portIndex) const override;
+  //QString
+  //portCaption(PortType portType, PortIndex portIndex) const override;
 
   QString
   name() const override;
@@ -49,13 +53,13 @@ public:
 public:
 
   QWidget *
-  embeddedWidget() override { return nullptr; }
+  embeddedWidget() override { return _dialogue_selector_node; }
 
-  NodeValidationState
-  validationState() const override;
-
-  QString
-  validationMessage() const override;
+  //NodeValidationState
+  //validationState() const override;
+  //
+  //QString
+  //validationMessage() const override;
 
 private:
 
@@ -66,10 +70,11 @@ private:
   compute();
 
 private:
+   DialogueSelectorNode * _dialogue_selector_node;
 
    std::vector<std::weak_ptr<DialogueData>> _numberList;
    std::shared_ptr<DialogueData> _result;
 
-   NodeValidationState _modelValidationState = NodeValidationState::Warning;
-   QString _modelValidationError = QString("Missing or incorrect inputs");
+   //NodeValidationState _modelValidationState = NodeValidationState::Warning;
+   //QString _modelValidationError = QString("Missing or incorrect inputs");
 };

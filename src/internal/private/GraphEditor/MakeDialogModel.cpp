@@ -1,8 +1,8 @@
-#include <public/GraphEditor/TextSourceDataModel.hpp>
+#include <public/GraphEditor/MakeDialogModel.hpp>
 #include <QPainterPath>
 
-TextSourceDataModel::
-TextSourceDataModel()
+MakeDialogModel::
+MakeDialogModel()
   : _makeDialogue(new MakeDialogueWidget())
 {
   //QPalette palette = _textEdit->palette();
@@ -11,12 +11,13 @@ TextSourceDataModel()
   //
   //_textEdit->setStyleSheet("QTextEdit {color: white;margin-top:5px;border-radius: 3px;background-clip: border;background-color: transparent;font: 11pt Vazir;border:3px solid;border-color: rgb(255,95,95);}");
   //
-  //connect(_textEdit, SIGNAL(textChanged()), this, SLOT(onTextEdited()));
+
+  connect(_makeDialogue, SIGNAL(OnThisDataChanged()), this, SLOT(onTextEdited()));
 }
 
 
 unsigned int
-TextSourceDataModel::
+MakeDialogModel::
 nPorts(PortType portType) const
 {
   unsigned int result = 1;
@@ -28,7 +29,7 @@ nPorts(PortType portType) const
       break;
 
     case PortType::Out:
-      result = 1;
+      result = (1);
 
     default:
       break;
@@ -37,9 +38,17 @@ nPorts(PortType portType) const
   return result;
 }
 
+void
+MakeDialogModel::
+setInData(std::shared_ptr<QtNodes::NodeData> data, QtNodes::PortIndex portIndex)
+{
+
+
+  //compute();
+}
 
 void
-TextSourceDataModel::
+MakeDialogModel::
 onTextEdited()
 {
   //QSize size = _textEdit->document()->size().toSize();
@@ -51,17 +60,20 @@ onTextEdited()
 
 
 NodeDataType
-TextSourceDataModel::
+MakeDialogModel::
 dataType(PortType, PortIndex) const
 {
   return DialogueData().type();
 }
 
 std::shared_ptr<NodeData>
-TextSourceDataModel::
+MakeDialogModel::
 outData(PortIndex)
 {
   //return std::make_shared<TextData>(_makeDialogue->toPlainText());
-    DialogueData dlg(*_makeDialogue->GetDialogues());
-    return std::make_shared<DialogueData>(dlg);
+    //DialogueData dlg(*_makeDialogue->GetDialogues());
+    //return std::make_shared<DialogueData>(dlg);
+    //return std::make_shared<DialogueData>();
+    return std::make_shared<DialogueData>(*_makeDialogue->GetDialogues());
+
 }
