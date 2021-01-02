@@ -17,7 +17,12 @@ MakeDialogueWidget::MakeDialogueWidget(QWidget *parent) :
 
     connect(ui->edit0, &QLineEdit::textEdited, this, &MakeDialogueWidget::onTextEdited);
 
-    DialogueOptions.push_back(ui->edit0->text());
+    QType::DialogueNodeData data;
+    Poco::UUIDGenerator generator = Poco::UUIDGenerator();
+    data.Id = generator.create();
+    data.Text = ui->edit0->text();
+
+    DialogueOptions.push_back(data);
 }
 
 MakeDialogueWidget::~MakeDialogueWidget()
@@ -29,6 +34,11 @@ void MakeDialogueWidget::on_pushButton_clicked()
 {
     int newIndex = DialogueOptions.size();
 
+    QType::DialogueNodeData data;
+    Poco::UUIDGenerator generator = Poco::UUIDGenerator();
+    data.Id = generator.create();
+    data.Text = QString("Default Text");
+
     QGroupBox *newGroup = new QGroupBox(this);
     newGroup->setTitle(QString("Opcion ") + QString::number(newIndex + 1));
     newGroup->setFont(QFont("Verdana", 9));
@@ -36,16 +46,29 @@ void MakeDialogueWidget::on_pushButton_clicked()
 
     QLineEdit *newLine = new QLineEdit(newGroup);
     newLine->setProperty("id", QVariant(newIndex));
+    newLine->setProperty("uuid", QVariant(QString::fromStdString(data.Id.toString())));
     newLine->setStyleSheet("color: black;");
 
-    QVBoxLayout *vbox = new QVBoxLayout;
-    vbox->addWidget(newLine);
-    vbox->addStretch(1);
-    newGroup->setLayout(vbox);
+    QPushButton *deleteButton = new QPushButton;
+    deleteButton->setProperty("id", QVariant(newIndex));
+    deleteButton->setProperty("widget", QVariant::fromValue(newGroup));
+    deleteButton->setText("X");
+    deleteButton->setFixedWidth(30);
+    deleteButton->setStyleSheet("color: black;");
+    connect(deleteButton, &QPushButton::clicked, this, &MakeDialogueWidget::on_delete_clicked);
+
+    QHBoxLayout *hbox = new QHBoxLayout;
+    hbox->addWidget(newLine, 2);
+    hbox->addWidget(deleteButton, 0, Qt::AlignRight);
+
+    //QVBoxLayout *vbox = new QVBoxLayout;
+    //vbox->addWidget(hbox);
+    //vbox->addStretch(1);
+    newGroup->setLayout(hbox);
 
     ui->optionLayout->addWidget(newGroup);
 
-    DialogueOptions.push_back(newLine->text());
+    DialogueOptions.push_back(data);
 
     connect(newLine, &QLineEdit::textEdited, this, &MakeDialogueWidget::onTextEdited);
     newLine->setText("Default Text");
@@ -60,13 +83,28 @@ void MakeDialogueWidget::onTextEdited(QString const &string)
     if( line != NULL )
     {
        int id = line->property("id").toInt();
-       qDebug("SENDER: %i", id);
-       DialogueOptions[id] = line->text();
+       DialogueOptions[id].Text = line->text();
     }
 
     Q_EMIT OnThisDataChanged();
 }
 
-std::vector<QString> *MakeDialogueWidget::GetDialogues() {
+std::vector<QType::DialogueNodeData> *MakeDialogueWidget::GetDialogues() {
     return &DialogueOptions;
+}
+
+void MakeDialogueWidget::on_delete_clicked() {
+    QPushButton *btn = qobject_cast<QPushButton*>(sender());
+
+    if( btn != NULL )
+    {
+       qDebug("SIZE : %i", DialogueOptions.size());
+       int id = btn->property("id").toInt();
+       QGroupBox *box = qvariant_cast<QGroupBox*>(btn->property("widget"));
+       DialogueOptions.erase(DialogueOptions.begin() + id);
+       box->deleteLater();
+       qDebug("NEW SIZE : %i", DialogueOptions.size());
+    }
+
+    Q_EMIT OnThisDataChanged();
 }

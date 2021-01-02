@@ -1,4 +1,5 @@
 #include <public/GraphEditor/MaxModel.hpp>
+#include <algorithm>
 
 MaxModel::MaxModel()
 : _dialogue_selector_node(new DialogueSelectorNode())
@@ -23,6 +24,7 @@ nPorts(QtNodes::PortType portType) const
        break;
 
      case PortType::Out:
+       qDebug("Got %i dialogs | 1 exec", _numberList.size());
        result = (_numberList.size() + 1);
        break;
      case PortType::None:
@@ -91,21 +93,44 @@ setInData(std::shared_ptr<QtNodes::NodeData> data, QtNodes::PortIndex portIndex)
     if (auto numberData = std::dynamic_pointer_cast<DialogueData>(data))
     {
         if(portIndex > 0) {
-            _numberList.push_back(numberData);
-            Q_EMIT portAdded(PortType::Out, _numberList.size());
-            //Q_EMIT portAdded(PortType::In, _numberList.size());
+            for(auto& data : numberData->dialogues()) {
+                if(_numberList.size() > 0) {
+                    if(!(std::find(_numberList.begin(), _numberList.end(), data) != _numberList.end())) {
+                        _numberList.push_back(data);
+                        Q_EMIT portAdded(PortType::Out, static_cast<int>(_numberList.size()));
+                    }
+                }else {
+                    _numberList.push_back(data);
+                    Q_EMIT portAdded(PortType::Out, static_cast<int>(_numberList.size()));
+                    //Q_EMIT portAdded(PortType::In, _numberList.size());
+                }
+            }
+
+            for(size_t i = 0; i < _numberList.size(); i++) {
+                bool found = false;
+                for(size_t t = 0; t < numberData->dialogues().size(); t++)
+                    if(_numberList[i] == numberData->dialogues()[t])
+                        found = true;
+                if(!found) {
+                    //_numberList.erase(_numberList.begin() + i);
+                    //Q_EMIT portRemoved(PortType::Out, i);
+                }
+            }
         }
 
     }
     else
     {
-        if(portIndex > 0)
-        {
-            qDebug("OK => PortIndex: %i -- Size: %i -- WHAT: %i", portIndex, static_cast<int>(_numberList.size()), 00);
-            _numberList.clear();
+            qDebug("Size: %i", static_cast<int>(_numberList.size()));
             //Q_EMIT portRemoved(PortType::In, portIndex);
-            Q_EMIT portRemoved(PortType::Out, portIndex);
-        }
+            for(size_t i = nPorts(PortType::Out) - 1; i > 0; i--) {
+               qDebug("\t--i: %i", i);
+               Q_EMIT portRemoved(PortType::Out, i);
+            }
+            _numberList.clear();
+
+            qDebug("Size: %i", _numberList.size());
+
     }
 
     compute();

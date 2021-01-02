@@ -1,6 +1,7 @@
 #pragma once
 
 #include <nodes/NodeDataModel>
+#include <public/Globals.h>
 
 using QtNodes::NodeData;
 using QtNodes::NodeDataType;
@@ -13,23 +14,27 @@ public:
 
   DialogueData() {}
 
-  DialogueData(std::vector<QString> const &dialogues)
+  DialogueData(std::vector<QType::DialogueNodeData> dialogues)
   {
-      for(auto& text : dialogues) {
-         _dialogues.push_back(text);
+      for(auto& data : dialogues) {
+         _dialogues.push_back(data);
       }
   }
 
   NodeDataType type() const override
   { return NodeDataType {"dialogue", "Dialogue"}; }
 
-  std::vector<QString> dialogues() const { return _dialogues; }
+  std::vector<QType::DialogueNodeData> dialogues() const { return _dialogues; }
 
 private:
 
-  void addData(QString text) {
-    _dialogues.push_back(text);
+  void addData(Poco::UUID id, QString text) {
+    QType::DialogueNodeData inData;
+    inData.Id = id;
+    inData.Text = text;
+
+    _dialogues.push_back(inData);
   }
 
-  std::vector<QString> _dialogues;
+  std::vector<QType::DialogueNodeData> _dialogues;
 };

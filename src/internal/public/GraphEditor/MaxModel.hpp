@@ -6,6 +6,9 @@
 #include <public/GraphEditor/ExecData.hpp>
 #include <public/dialogueselectornode.h>
 
+
+#include <public/Globals.h>
+
 using QtNodes::PortType;
 using QtNodes::PortIndex;
 using QtNodes::NodeData;
@@ -72,7 +75,7 @@ private:
 private:
    DialogueSelectorNode * _dialogue_selector_node;
 
-   std::vector<std::weak_ptr<DialogueData>> _numberList;
+   std::vector<QType::DialogueNodeData> _numberList;
    std::shared_ptr<DialogueData> _result;
 
    //NodeValidationState _modelValidationState = NodeValidationState::Warning;
