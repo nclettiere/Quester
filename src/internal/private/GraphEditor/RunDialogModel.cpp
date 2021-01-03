@@ -34,31 +34,31 @@ RunDialogModel::
 dataType(PortType portType,
          PortIndex portIndex) const
 {
-  switch (portType)
-  {
-    case PortType::In:
-      switch (portIndex)
-      {
-        case 0:
-          return ExecData().type();
-        case 1:
-          return DialogueData().type();
-      }
-      break;
+    switch (portType)
+    {
+      case PortType::In:
+        switch (portIndex)
+        {
+          case 0:
+            return ExecData().type();
+          case 1:
+            return DialogueData().type();
+        }
+        break;
 
-    case PortType::Out:
-      switch (portIndex)
-      {
-        case 0:
-          return ExecData().type();
-        //case 1:
-        //  return TextData().type();
-      }
-      break;
+      case PortType::Out:
+        switch (portIndex)
+        {
+          case 0:
+            return ExecData().type();
+          default:
+              return ExecData().type();
+        }
+        break;
 
-    case PortType::None:
-      break;
-  }
+      case PortType::None:
+        break;
+    }
   // FIXME: control may reach end of non-void function [-Wreturn-type]
   return NodeDataType();
 }
@@ -86,39 +86,65 @@ void
 RunDialogModel::
 setInData(std::shared_ptr<NodeData> data, PortIndex portIndex)
 {
-  //auto textData = std::dynamic_pointer_cast<DialogueData>(data);
-  //
-  //if (textData)
-  //{
-  //  _dialogue_selector_node->UpdateTextDialogue(textData->dialogues()[0]);
-  //}
-  //else
-  //{
-  //  _dialogue_selector_node->clear();
-  //}
-  //
-  //_dialogue_selector_node->adjustSize();
-
     if (auto numberData = std::dynamic_pointer_cast<DialogueData>(data))
     {
-      if (portIndex == static_cast<int>(_numberList.size()))
-      {
-        _numberList.push_back(numberData);
-        Q_EMIT portAdded(PortType::Out, _numberList.size());
-        //Q_EMIT portAdded(PortType::In, _numberList.size());
-      }
-      else
-      {
-        _numberList[portIndex] = numberData;
-      }
+        if(portIndex > 0) {
+            for(size_t i = nPorts(PortType::Out) - 1; i > 0; i--) {
+               qDebug("\t--i: %i", i);
+               Q_EMIT portRemoved(PortType::Out, i);
+            }
+            _numberList.clear();
+
+            for(auto& data : numberData->dialogues()) {
+                if(_numberList.size() > 0) {
+                    if(!(std::find(_numberList.begin(), _numberList.end(), data) != _numberList.end())) {
+                        _numberList.push_back(data);
+                        Q_EMIT portAdded(PortType::Out, static_cast<int>(_numberList.size()));
+                    }
+                }else {
+                    _numberList.push_back(data);
+                    Q_EMIT portAdded(PortType::Out, static_cast<int>(_numberList.size()));
+                    //Q_EMIT portAdded(PortType::In, _numberList.size());
+                }
+            }
+        }
+
     }
     else
     {
-        if(portIndex < static_cast<int>(_numberList.size()))
-       {
-         _numberList.erase(_numberList.begin() + portIndex);
-         //Q_EMIT portRemoved(PortType::In, portIndex);
-         Q_EMIT portRemoved(PortType::Out, portIndex);
-       }
+        qDebug("Size: %i", static_cast<int>(_numberList.size()));
+        //Q_EMIT portRemoved(PortType::In, portIndex);
+        for(size_t i = nPorts(PortType::Out) - 1; i > 0; i--) {
+           qDebug("\t--i: %i", i);
+           Q_EMIT portRemoved(PortType::Out, i);
+        }
+        _numberList.clear();
+
+        qDebug("Size: %i", _numberList.size());
     }
+
+    //compute();
+}
+
+QString
+RunDialogModel::
+portCaption(QtNodes::PortType portType, QtNodes::PortIndex portIndex) const
+{
+  switch (portType)
+  {
+    case PortType::In:
+      if(portIndex == 0)
+        return QStringLiteral("Exec");
+      else
+        return QStringLiteral("Dialogue");
+    case PortType::Out:
+      if(portIndex == 0)
+        return QStringLiteral("Default Exec");
+      else
+        return QStringLiteral("Option ") + QString::number(portIndex);
+
+    default:
+      break;
+  }
+  return QString();
 }

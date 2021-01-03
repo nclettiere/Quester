@@ -39,6 +39,14 @@ public:
   }
 
   QString
+  portCaption(PortType portType, PortIndex portIndex) const override;
+
+  bool
+  portCaptionVisible(PortType portType, PortIndex portIndex) const override {
+      return true;
+  }
+
+  QString
   name() const override
   {
     return QString("Run Dialogue");
@@ -77,6 +85,6 @@ public:
   embeddedWidget() override { return _dialogue_selector_node; }
 
 private:
-    std::vector<std::weak_ptr<DialogueData>> _numberList;
+    std::vector<QType::DialogueNodeData> _numberList;
     DialogueSelectorNode * _dialogue_selector_node;
 };

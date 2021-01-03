@@ -89,10 +89,15 @@ void
 MaxModel::
 setInData(std::shared_ptr<QtNodes::NodeData> data, QtNodes::PortIndex portIndex)
 {
-
     if (auto numberData = std::dynamic_pointer_cast<DialogueData>(data))
     {
         if(portIndex > 0) {
+            for(size_t i = nPorts(PortType::Out) - 1; i > 0; i--) {
+               qDebug("\t--i: %i", i);
+               Q_EMIT portRemoved(PortType::Out, i);
+            }
+            _numberList.clear();
+
             for(auto& data : numberData->dialogues()) {
                 if(_numberList.size() > 0) {
                     if(!(std::find(_numberList.begin(), _numberList.end(), data) != _numberList.end())) {
@@ -103,17 +108,6 @@ setInData(std::shared_ptr<QtNodes::NodeData> data, QtNodes::PortIndex portIndex)
                     _numberList.push_back(data);
                     Q_EMIT portAdded(PortType::Out, static_cast<int>(_numberList.size()));
                     //Q_EMIT portAdded(PortType::In, _numberList.size());
-                }
-            }
-
-            for(size_t i = 0; i < _numberList.size(); i++) {
-                bool found = false;
-                for(size_t t = 0; t < numberData->dialogues().size(); t++)
-                    if(_numberList[i] == numberData->dialogues()[t])
-                        found = true;
-                if(!found) {
-                    //_numberList.erase(_numberList.begin() + i);
-                    //Q_EMIT portRemoved(PortType::Out, i);
                 }
             }
         }

@@ -3,7 +3,7 @@
 #include <public/GraphEditor/DialogueData.hpp>
 #include <public/GraphEditor/GraphBeginDataModel.hpp>
 #include <public/GraphEditor/GraphFinishDataModel.hpp>
-#include <public/GraphEditor/MaxModel.hpp>
+#include <public/GraphEditor/WaitModel.hpp>
 #include <public/GraphEditor/MakeDialogModel.hpp>
 #include <public/GraphEditor/RunDialogModel.hpp>
 
@@ -42,7 +42,7 @@ std::shared_ptr<DataModelRegistry> registerDataModels()
   ret->registerModel<GraphFinishDataModel>();
   ret->registerModel<MakeDialogModel>();
   ret->registerModel<RunDialogModel>();
-  ret->registerModel<MaxModel>();
+  ret->registerModel<WaitModel>();
 
   return ret;
 }

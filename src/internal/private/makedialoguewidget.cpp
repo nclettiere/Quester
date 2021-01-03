@@ -61,9 +61,6 @@ void MakeDialogueWidget::on_pushButton_clicked()
     hbox->addWidget(newLine, 2);
     hbox->addWidget(deleteButton, 0, Qt::AlignRight);
 
-    //QVBoxLayout *vbox = new QVBoxLayout;
-    //vbox->addWidget(hbox);
-    //vbox->addStretch(1);
     newGroup->setLayout(hbox);
 
     ui->optionLayout->addWidget(newGroup);
