@@ -7,16 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>126</width>
-    <height>68</height>
+    <height>40</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
-   <item alignment="Qt::AlignTop">
-    <widget class="QComboBox" name="comboBox"/>
-   </item>
    <item alignment="Qt::AlignTop">
     <widget class="QLineEdit" name="lineEdit">
      <property name="enabled">

@@ -1,7 +1,8 @@
 #pragma once
 
 #include <QtCore/QObject>
-#include <QtWidgets/QTextEdit>
+#include <QtWidgets/QDoubleSpinBox>
+#include <QDoubleValidator>
 
 #include "ExecData.hpp"
 
@@ -21,7 +22,11 @@ class WaitModel : public NodeDataModel
   Q_OBJECT
 
 public:
-    WaitModel() {}
+    WaitModel()
+    : _spinBox(new QDoubleSpinBox())
+    {
+        _spinBox->setValue(5.0);
+    }
 
   virtual
   ~WaitModel() {}
@@ -30,7 +35,7 @@ public:
   QString
   caption() const override
   {
-    return QString("Wait");
+    return QString("Wait (seconds)");
   }
 
   QString
@@ -84,5 +89,7 @@ public:
   }
 
  QWidget *
- embeddedWidget() override { return nullptr; }
+ embeddedWidget() override { return _spinBox; }
+
+ QDoubleSpinBox * _spinBox;
 };

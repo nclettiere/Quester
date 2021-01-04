@@ -15,11 +15,11 @@ DialogueSelectorNode::DialogueSelectorNode(QWidget *parent) :
 
     this->setContentsMargins(0, 20, 0, 0);
 
-    ui->comboBox->setContentsMargins(0, 20, 0, 0);
-
-    ui->comboBox->addItem(QString("ES"));
-    ui->comboBox->addItem(QString("EN"));
-    ui->comboBox->addItem(QString("IT"));
+    //ui->comboBox->setContentsMargins(0, 20, 0, 0);
+    //
+    //ui->comboBox->addItem(QString("ES"));
+    //ui->comboBox->addItem(QString("EN"));
+    //ui->comboBox->addItem(QString("IT"));
 }
 
 DialogueSelectorNode::~DialogueSelectorNode()
@@ -28,17 +28,17 @@ DialogueSelectorNode::~DialogueSelectorNode()
 }
 
 void DialogueSelectorNode::SetLocalization(QType::Localization localization) {
-    switch(localization) {
-    case QType::Localization::ES:
-        ui->comboBox->setCurrentIndex(0);
-        break;
-    case QType::Localization::EN:
-        ui->comboBox->setCurrentIndex(1);
-        break;
-    case QType::Localization::IT:
-        ui->comboBox->setCurrentIndex(2);
-        break;
-    }
+    //switch(localization) {
+    //case QType::Localization::ES:
+    //    ui->comboBox->setCurrentIndex(0);
+    //    break;
+    //case QType::Localization::EN:
+    //    ui->comboBox->setCurrentIndex(1);
+    //    break;
+    //case QType::Localization::IT:
+    //    ui->comboBox->setCurrentIndex(2);
+    //    break;
+    //}
 
 
 }
@@ -48,7 +48,7 @@ QType::Localization DialogueSelectorNode::GetLocalization() {
 }
 
 void DialogueSelectorNode::UpdateTextDialogue(QString text) {
-    //ui->lineEdit->setText(text);
+    ui->lineEdit->setText(text);
 }
 
 QString DialogueSelectorNode::GetTextDialogue() {

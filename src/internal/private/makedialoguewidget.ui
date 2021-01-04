@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>154</width>
-    <height>112</height>
+    <height>118</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <item alignment="Qt::AlignTop">
       <widget class="QPushButton" name="pushButton">
        <property name="text">
-        <string>Agregar Opcion</string>
+        <string>Agregar Opcion (respuestas)</string>
        </property>
       </widget>
      </item>
@@ -37,7 +37,7 @@
           <string notr="true">color: #d5d5d5;</string>
          </property>
          <property name="title">
-          <string>Opcion 1</string>
+          <string>Dialogo principal</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_2">
           <item row="0" column="0">
@@ -46,7 +46,7 @@
              <string notr="true">color: black;</string>
             </property>
             <property name="text">
-             <string>Default Text</string>
+             <string>Main dialogue</string>
             </property>
            </widget>
           </item>

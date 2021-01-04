@@ -90,37 +90,37 @@ setInData(std::shared_ptr<NodeData> data, PortIndex portIndex)
     {
         if(portIndex > 0) {
             for(size_t i = nPorts(PortType::Out) - 1; i > 0; i--) {
-               qDebug("\t--i: %i", i);
                Q_EMIT portRemoved(PortType::Out, i);
             }
+            _dialogue_selector_node->UpdateTextDialogue("");
             _numberList.clear();
 
+            uint8_t i = 0;
             for(auto& data : numberData->dialogues()) {
-                if(_numberList.size() > 0) {
-                    if(!(std::find(_numberList.begin(), _numberList.end(), data) != _numberList.end())) {
+                if(i != 0) {
+                    if(_numberList.size() > 0) {
+                        if(!(std::find(_numberList.begin(), _numberList.end(), data) != _numberList.end())) {
+                            _numberList.push_back(data);
+                            Q_EMIT portAdded(PortType::Out, static_cast<int>(_numberList.size()));
+                        }
+                    }else {
                         _numberList.push_back(data);
                         Q_EMIT portAdded(PortType::Out, static_cast<int>(_numberList.size()));
                     }
-                }else {
-                    _numberList.push_back(data);
-                    Q_EMIT portAdded(PortType::Out, static_cast<int>(_numberList.size()));
-                    //Q_EMIT portAdded(PortType::In, _numberList.size());
                 }
+                i++;
             }
-        }
 
+            _dialogue_selector_node->UpdateTextDialogue(numberData->dialogues()[0].Text);
+        }
     }
     else
     {
-        qDebug("Size: %i", static_cast<int>(_numberList.size()));
-        //Q_EMIT portRemoved(PortType::In, portIndex);
         for(size_t i = nPorts(PortType::Out) - 1; i > 0; i--) {
-           qDebug("\t--i: %i", i);
            Q_EMIT portRemoved(PortType::Out, i);
         }
         _numberList.clear();
-
-        qDebug("Size: %i", _numberList.size());
+        _dialogue_selector_node->UpdateTextDialogue("");
     }
 
     //compute();

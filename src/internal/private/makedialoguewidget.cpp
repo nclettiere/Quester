@@ -40,7 +40,7 @@ void MakeDialogueWidget::on_pushButton_clicked()
     data.Text = QString("Default Text");
 
     QGroupBox *newGroup = new QGroupBox(this);
-    newGroup->setTitle(QString("Opcion ") + QString::number(newIndex + 1));
+    newGroup->setTitle(QString("Opcion ") + QString::number(newIndex));
     newGroup->setFont(QFont("Verdana", 9));
     newGroup->setStyleSheet("color: #d5d5d5;");
 
