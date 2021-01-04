@@ -13,11 +13,11 @@ DialogueSelectorNode::DialogueSelectorNode(QWidget *parent) :
 
     setFixedWidth(250);
 
-    this->setContentsMargins(0, 20, 0, 0);
+    //this->setContentsMargins(0, 20, 0, 0);
 
     //ui->comboBox->setContentsMargins(0, 20, 0, 0);
-    //
-    //ui->comboBox->addItem(QString("ES"));
+
+    ui->comboBox->addItem(QString("Player"));
     //ui->comboBox->addItem(QString("EN"));
     //ui->comboBox->addItem(QString("IT"));
 }
@@ -39,8 +39,6 @@ void DialogueSelectorNode::SetLocalization(QType::Localization localization) {
     //    ui->comboBox->setCurrentIndex(2);
     //    break;
     //}
-
-
 }
 
 QType::Localization DialogueSelectorNode::GetLocalization() {

@@ -51,6 +51,7 @@ void MakeDialogueWidget::on_pushButton_clicked()
 
     QPushButton *deleteButton = new QPushButton;
     deleteButton->setProperty("id", QVariant(newIndex));
+    deleteButton->setProperty("uuid", QVariant(QString::fromStdString(data.Id.toString())));
     deleteButton->setProperty("widget", QVariant::fromValue(newGroup));
     deleteButton->setText("X");
     deleteButton->setFixedWidth(30);
@@ -95,13 +96,40 @@ void MakeDialogueWidget::on_delete_clicked() {
 
     if( btn != NULL )
     {
-       qDebug("SIZE : %i", DialogueOptions.size());
        int id = btn->property("id").toInt();
+       Poco::UUID uuid = Poco::UUID(btn->property("uuid").toString().toStdString());
+
+       bool dataDeleted = false;
+       for (auto it = begin (DialogueOptions); it != end (DialogueOptions); ++it) {
+           if(it->Id == uuid) {
+             DialogueOptions.erase(it);
+             dataDeleted = true;
+             break;
+           }
+       }
+
+       // if no iterator erased
+       // Proceed the unsafe way (may throw a vector out-of index error)
+       // TODO: Implement try-catch clausule
+       if(!dataDeleted)
+           DialogueOptions.erase(DialogueOptions.begin() + id);
+
        QGroupBox *box = qvariant_cast<QGroupBox*>(btn->property("widget"));
-       DialogueOptions.erase(DialogueOptions.begin() + id);
        box->deleteLater();
-       qDebug("NEW SIZE : %i", DialogueOptions.size());
     }
+
+    for (int i = 1; i < ui->optionLayout->count(); ++i)
+    {
+      QGroupBox *gBox = static_cast<QGroupBox*>(ui->optionLayout->itemAt(i)->widget());
+      if (gBox != NULL)
+      {
+          gBox->setTitle(QString("Opcion ") + QString::number(i));
+      }else {
+          qDebug("SHINE NULL");
+      }
+    }
+
+    qDebug("Child count %i", ui->optionLayout->count());
 
     Q_EMIT OnThisDataChanged();
 }
