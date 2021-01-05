@@ -15,7 +15,9 @@
 using QtNodes::PortType;
 using QtNodes::PortIndex;
 using QtNodes::NodeData;
+using QtNodes::NodeDataType;
 using QtNodes::NodeDataModel;
+using QtNodes::NodeValidationState;
 
 /// The model dictates the number of inputs and outputs for the Node.
 /// In this example it has no logic.
@@ -84,7 +86,19 @@ public:
   QWidget *
   embeddedWidget() override { return _dialogue_selector_node; }
 
+  NodeValidationState
+  validationState() const override;
+
+  QString
+  validationMessage() const override;
+
+  void
+  compute(int dialogueSize);
+
 private:
     std::vector<QType::DialogueNodeData> _numberList;
     DialogueSelectorNode * _dialogue_selector_node;
+
+    NodeValidationState _modelValidationState = NodeValidationState::Warning;
+    QString _modelValidationError = QString("Missing or incorrect inputs");
 };

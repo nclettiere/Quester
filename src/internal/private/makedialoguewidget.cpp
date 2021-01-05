@@ -115,21 +115,20 @@ void MakeDialogueWidget::on_delete_clicked() {
            DialogueOptions.erase(DialogueOptions.begin() + id);
 
        QGroupBox *box = qvariant_cast<QGroupBox*>(btn->property("widget"));
+       box->setVisible(false);
+       box->setParent(nullptr);
        box->deleteLater();
     }
 
-    for (int i = 1; i < ui->optionLayout->count(); ++i)
+    for (int i = 1; i < ui->optionLayout->count(); i++)
     {
       QGroupBox *gBox = static_cast<QGroupBox*>(ui->optionLayout->itemAt(i)->widget());
       if (gBox != NULL)
       {
+          qDebug("OLD NAME: %s", gBox->title().toStdString().c_str());
           gBox->setTitle(QString("Opcion ") + QString::number(i));
-      }else {
-          qDebug("SHINE NULL");
       }
     }
-
-    qDebug("Child count %i", ui->optionLayout->count());
 
     Q_EMIT OnThisDataChanged();
 }

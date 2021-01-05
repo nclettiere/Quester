@@ -86,7 +86,8 @@ void
 RunDialogModel::
 setInData(std::shared_ptr<NodeData> data, PortIndex portIndex)
 {
-    if (auto numberData = std::dynamic_pointer_cast<DialogueData>(data))
+    auto dialogueData = std::dynamic_pointer_cast<DialogueData>(data);
+    if (dialogueData)
     {
         if(portIndex > 0) {
             for(size_t i = nPorts(PortType::Out) - 1; i > 0; i--) {
@@ -96,7 +97,7 @@ setInData(std::shared_ptr<NodeData> data, PortIndex portIndex)
             _numberList.clear();
 
             uint8_t i = 0;
-            for(auto& data : numberData->dialogues()) {
+            for(auto& data : dialogueData->dialogues()) {
                 if(i != 0) {
                     if(_numberList.size() > 0) {
                         if(!(std::find(_numberList.begin(), _numberList.end(), data) != _numberList.end())) {
@@ -111,19 +112,27 @@ setInData(std::shared_ptr<NodeData> data, PortIndex portIndex)
                 i++;
             }
 
-            _dialogue_selector_node->UpdateTextDialogue(numberData->dialogues()[0].Text);
+            _dialogue_selector_node->UpdateTextDialogue(dialogueData->dialogues()[0].Text);
+
+            _modelValidationState = NodeValidationState::Valid;
+            _modelValidationError = "";
+            Q_EMIT dataUpdated(0);
         }
     }
     else
     {
-        for(size_t i = nPorts(PortType::Out) - 1; i > 0; i--) {
-           Q_EMIT portRemoved(PortType::Out, i);
-        }
-        _numberList.clear();
-        _dialogue_selector_node->UpdateTextDialogue("");
-    }
+        if(portIndex > 0) {
+            for(size_t i = nPorts(PortType::Out) - 1; i > 0; i--) {
+               Q_EMIT portRemoved(PortType::Out, i);
+            }
+            _numberList.clear();
+            _dialogue_selector_node->UpdateTextDialogue("");
 
-    //compute();
+            _modelValidationState = NodeValidationState::Warning;
+            _modelValidationError = QString("Missing or incorrect inputs");
+            Q_EMIT dataUpdated(0);
+        }
+    }
 }
 
 QString
@@ -147,4 +156,37 @@ portCaption(QtNodes::PortType portType, QtNodes::PortIndex portIndex) const
       break;
   }
   return QString();
+}
+
+
+QtNodes::NodeValidationState
+RunDialogModel::
+validationState() const
+{
+  return _modelValidationState;
+}
+
+QString
+RunDialogModel::
+validationMessage() const
+{
+  return _modelValidationError;
+}
+
+void
+RunDialogModel::
+compute(int dialogueSize)
+{
+    if(dialogueSize > 0)
+    {
+      _modelValidationState = NodeValidationState::Valid;
+      _modelValidationError = "";
+    }
+    else
+    {
+      _modelValidationState = NodeValidationState::Warning;
+      _modelValidationError = QString("Missing or incorrect inputs");
+    }
+
+    Q_EMIT dataUpdated(0);
 }
