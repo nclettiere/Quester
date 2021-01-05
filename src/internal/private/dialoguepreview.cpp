@@ -7,6 +7,9 @@
 #include <public/GraphEditor/MakeDialogModel.hpp>
 #include <public/GraphEditor/RunDialogModel.hpp>
 
+#include <QMenuBar>
+#include <QAction>
+
 #include <nodes/NodeData>
 #include <nodes/FlowScene>
 #include <nodes/FlowView>
@@ -119,6 +122,21 @@ void DialoguePreview::on_btnEdit_clicked()
     FlowScene scene(registerDataModels());
 
     FlowView view(&scene);
+
+    auto menuBar    = new QMenuBar();
+    auto saveAction = menuBar->addAction("Save..");
+    auto loadAction = menuBar->addAction("Load..");
+
+    menuBar->setContentsMargins(0, 0, 0, 0);
+    scene.addWidget(menuBar);
+
+    //connect(saveAction, SLOT(&QAction::triggered()), scene, SIGNAL(scene.save()));
+
+    connect(saveAction, &QAction::triggered,
+                       &scene, &FlowScene::save);
+
+    connect(loadAction, &QAction::triggered,
+                       &scene, &FlowScene::load);
 
     view.setWindowTitle("Node-based flow editor");
     view.resize(800, 600);
