@@ -7,6 +7,13 @@
 #include <public/GraphEditor/MakeDialogModel.hpp>
 #include <public/GraphEditor/RunDialogModel.hpp>
 
+//New Ones!
+#include <public/GraphEditor/AddItemModel.hpp>
+#include <public/GraphEditor/RemoveItemModel.hpp>
+#include <public/GraphEditor/CompleteQuestModel.hpp>
+#include <public/GraphEditor/FailQuestModel.hpp>
+#include <public/GraphEditor/UpdateQuestValueModel.hpp>
+
 #include <QMenuBar>
 #include <QAction>
 
@@ -46,6 +53,13 @@ std::shared_ptr<DataModelRegistry> registerDataModels()
   ret->registerModel<MakeDialogModel>();
   ret->registerModel<RunDialogModel>();
   ret->registerModel<WaitModel>();
+
+  // new nodes
+  ret->registerModel<AddItemModel>();
+  ret->registerModel<RemoveItemModel>();
+  ret->registerModel<CompleteQuestModel>();
+  ret->registerModel<FailQuestModel>();
+  ret->registerModel<UpdateQuestValueModel>();
 
   return ret;
 }
