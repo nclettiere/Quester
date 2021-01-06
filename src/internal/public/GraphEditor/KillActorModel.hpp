@@ -14,58 +14,62 @@ using QtNodes::PortIndex;
 using QtNodes::NodeData;
 using QtNodes::NodeDataModel;
 
-/// The model dictates the number of inputs and outputs for the Node.
-/// In this example it has no logic.
-class KillActorModel : public NodeDataModel
-{
-  Q_OBJECT
+namespace GraphEditor {
+    /*!
+    ### Model used to kill/deactivate an actor inside an UE4 Game Project.
+    Needs to load a Character Database before used.
+    */
+    class KillActorModel : public NodeDataModel
+    {
+      Q_OBJECT
 
-public:
-  KillActorModel();
+    public:
+      KillActorModel();
 
-  virtual
-  ~KillActorModel() {}
+      virtual
+      ~KillActorModel() {}
 
-public:
-  QString
-  caption() const override
-  {
-    return QString("Kill Character");
-  }
+    public:
+      QString
+      caption() const override
+      {
+        return QString("Kill Character");
+      }
 
-  QString
-  name() const override
-  {
-    return QString("Kill Character");
-  }
+      QString
+      name() const override
+      {
+        return QString("Kill Character");
+      }
 
-public:
+    public:
 
-  QJsonObject
-  save() const override
-  {
-    QJsonObject modelJson;
+      QJsonObject
+      save() const override
+      {
+        QJsonObject modelJson;
 
-    modelJson["name"] = name();
+        modelJson["name"] = name();
 
-    return modelJson;
-  }
+        return modelJson;
+      }
 
-public:
+    public:
 
-  unsigned int
-  nPorts(PortType portType) const override;
+      unsigned int
+      nPorts(PortType portType) const override;
 
-  NodeDataType
-  dataType(PortType portType, PortIndex portIndex) const override;
+      NodeDataType
+      dataType(PortType portType, PortIndex portIndex) const override;
 
-  std::shared_ptr<NodeData>
-  outData(PortIndex port) override;
+      std::shared_ptr<NodeData>
+      outData(PortIndex port) override;
 
-  void
-  setInData(std::shared_ptr<NodeData>, int) override
-  { }
+      void
+      setInData(std::shared_ptr<NodeData>, int) override
+      { }
 
- QWidget *
- embeddedWidget() override { return nullptr; }
-};
+     QWidget *
+     embeddedWidget() override { return nullptr; }
+    };
+}

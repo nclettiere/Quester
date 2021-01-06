@@ -1,6 +1,8 @@
 #include <public/GraphEditor/GraphFinishDataModel.hpp>
 #include <QPainterPath>
 
+using namespace GraphEditor;
+
 GraphFinishDataModel::
 GraphFinishDataModel()
 {

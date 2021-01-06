@@ -1,6 +1,8 @@
 #include <public/GraphEditor/CompleteQuestModel.hpp>
 #include <QPainterPath>
 
+using namespace GraphEditor;
+
 CompleteQuestModel::
 CompleteQuestModel()
 : _embeddedDummy(new QWidget())

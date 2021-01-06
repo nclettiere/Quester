@@ -1,6 +1,8 @@
 #include <public/GraphEditor/UnlockTrophieModel.hpp>
 #include <QPainterPath>
 
+using namespace GraphEditor;
+
 UnlockTrophieModel::
 UnlockTrophieModel()
 {

@@ -37,7 +37,10 @@ file(GLOB_RECURSE internal_source
     "src/internal/public/*.hpp"
     "src/internal/public/*.h"
     "src/internal/private/*.ui"
-    "src/internal/private/*.qml")
+    "src/internal/private/*.qml"
+    "src/internal/public/*.qml"
+    "src/internal/public/UI/*.qml"
+    "src/internal/private/UI/*.qml")
 
 set(SOURCES src/main.cpp ${internal_source})
 add_executable(Quester ${SOURCES})

@@ -17,74 +17,79 @@ using QtNodes::NodeDataType;
 using QtNodes::NodeDataModel;
 using QtNodes::NodeValidationState;
 
-/// The model dictates the number of inputs and outputs for the Node.
-/// In this example it has no logic.
-class RemoveItemModel : public NodeDataModel
-{
-  Q_OBJECT
+namespace GraphEditor {
+    /*!
+    ### Model used to remove an UE4 GameItem Class from a character
+    Needs an UE4 generated GameItem Database before usage.
+    */
+    class RemoveItemModel : public NodeDataModel
+    {
+      Q_OBJECT
 
-public:
-  RemoveItemModel();
+    public:
+      RemoveItemModel();
 
-  virtual
-  ~RemoveItemModel() {}
+      virtual
+      ~RemoveItemModel() {}
 
-public:
-  QString
-  caption() const override
-  {
-    return QString("Remove Item");
-  }
+    public:
+      QString
+      caption() const override
+      {
+        return QString("Remove Item");
+      }
 
-  QString
-  name() const override
-  {
-    return QString("Remove Item");
-  }
+      QString
+      name() const override
+      {
+        return QString("Remove Item");
+      }
 
-public:
+    public:
 
-  QJsonObject
-  save() const override
-  {
-    QJsonObject modelJson;
+      QJsonObject
+      save() const override
+      {
+        QJsonObject modelJson;
 
-    modelJson["name"] = name();
+        modelJson["name"] = name();
 
-    return modelJson;
-  }
+        return modelJson;
+      }
 
-public:
+    public:
 
-  unsigned int
-  nPorts(PortType portType) const override;
+      unsigned int
+      nPorts(PortType portType) const override;
 
-  NodeDataType
-  dataType(PortType portType, PortIndex portIndex) const override;
+      NodeDataType
+      dataType(PortType portType, PortIndex portIndex) const override;
 
-  std::shared_ptr<NodeData>
-  outData(PortIndex port) override;
+      std::shared_ptr<NodeData>
+      outData(PortIndex port) override;
 
-  void
-  setInData(std::shared_ptr<NodeData>, int) override;
+      void
+      setInData(std::shared_ptr<NodeData>, int) override;
 
- QWidget *
- embeddedWidget() override { return _getItemWidget; }
+     QWidget *
+     embeddedWidget() override { return _getItemWidget; }
 
- NodeValidationState
- validationState() const override;
+     NodeValidationState
+     validationState() const override;
 
- QString
- validationMessage() const override;
+     QString
+     validationMessage() const override;
 
- void
- compute(bool isQuestConnected);
+     void
+     compute(bool isQuestConnected);
 
-private:
+    private:
 
- SelectCharacterWidget *
- _getItemWidget;
+     SelectCharacterWidget *
+     _getItemWidget;
 
- NodeValidationState _modelValidationState = NodeValidationState::Warning;
- QString _modelValidationError = QString("Missing or incorrect inputs");
-};
+     NodeValidationState _modelValidationState = NodeValidationState::Warning;
+     QString _modelValidationError = QString("Missing or incorrect inputs");
+    };
+}
+

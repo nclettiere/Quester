@@ -1,6 +1,8 @@
 #include <public/GraphEditor/OpenCloseWindowModel.hpp>
 #include <QPainterPath>
 
+using namespace GraphEditor;
+
 OpenCloseWindowModel::
 OpenCloseWindowModel()
 {

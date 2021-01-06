@@ -17,74 +17,80 @@ using QtNodes::NodeDataType;
 using QtNodes::NodeDataModel;
 using QtNodes::NodeValidationState;
 
-/// The model dictates the number of inputs and outputs for the Node.
-/// In this example it has no logic.
-class UpdateQuestValueModel : public NodeDataModel
-{
-  Q_OBJECT
+namespace GraphEditor {
+    /*!
+    ### Model used to update a certain variable of a quest.
+    Needs a generated UE4 Quest Database before usage.
 
-public:
-  UpdateQuestValueModel();
+    This model allow user to select which kind of value is going to be modified on a specific quest or self.
+    */
+    class UpdateQuestValueModel : public NodeDataModel
+    {
+      Q_OBJECT
 
-  virtual
-  ~UpdateQuestValueModel() {}
+    public:
+      UpdateQuestValueModel();
 
-public:
-  QString
-  caption() const override
-  {
-    return QString("Update Quest Value");
-  }
+      virtual
+      ~UpdateQuestValueModel() {}
 
-  QString
-  name() const override
-  {
-    return QString("Update Quest Value");
-  }
+    public:
+      QString
+      caption() const override
+      {
+        return QString("Update Quest Value");
+      }
 
-public:
+      QString
+      name() const override
+      {
+        return QString("Update Quest Value");
+      }
 
-  QJsonObject
-  save() const override
-  {
-    QJsonObject modelJson;
+    public:
 
-    modelJson["name"] = name();
+      QJsonObject
+      save() const override
+      {
+        QJsonObject modelJson;
 
-    return modelJson;
-  }
+        modelJson["name"] = name();
 
-public:
+        return modelJson;
+      }
 
-  unsigned int
-  nPorts(PortType portType) const override;
+    public:
 
-  NodeDataType
-  dataType(PortType portType, PortIndex portIndex) const override;
+      unsigned int
+      nPorts(PortType portType) const override;
 
-  std::shared_ptr<NodeData>
-  outData(PortIndex port) override;
+      NodeDataType
+      dataType(PortType portType, PortIndex portIndex) const override;
 
-  void
-  setInData(std::shared_ptr<NodeData>, int) override;
+      std::shared_ptr<NodeData>
+      outData(PortIndex port) override;
 
- QWidget *
- embeddedWidget() override { return _getItemWidget; }
+      void
+      setInData(std::shared_ptr<NodeData>, int) override;
 
- NodeValidationState
- validationState() const override;
+     QWidget *
+     embeddedWidget() override { return _getItemWidget; }
 
- QString
- validationMessage() const override;
+     NodeValidationState
+     validationState() const override;
 
- void
- compute(bool isQuestConnected);
+     QString
+     validationMessage() const override;
 
-private:
+     void
+     compute(bool isQuestConnected);
 
- UpdateQuestWidget *
- _getItemWidget;
+    private:
 
- NodeValidationState _modelValidationState = NodeValidationState::Warning;
- QString _modelValidationError = QString("Missing or incorrect inputs");
-};
+     UpdateQuestWidget *
+     _getItemWidget;
+
+     NodeValidationState _modelValidationState = NodeValidationState::Warning;
+     QString _modelValidationError = QString("Missing or incorrect inputs");
+    };
+}

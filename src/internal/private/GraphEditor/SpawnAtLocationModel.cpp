@@ -1,6 +1,8 @@
 #include <public/GraphEditor/SpawnAtLocationModel.hpp>
 #include <QPainterPath>
 
+using namespace GraphEditor;
+
 SpawnAtLocationModel::
 SpawnAtLocationModel()
 {

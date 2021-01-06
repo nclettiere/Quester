@@ -31,6 +31,8 @@
 #include <nodes/FlowViewStyle>
 #include <nodes/ConnectionStyle>
 
+using namespace GraphEditor;
+
 using QtNodes::DataModelRegistry;
 using QtNodes::FlowScene;
 using QtNodes::FlowView;

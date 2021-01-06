@@ -1,6 +1,8 @@
 #include <public/GraphEditor/UpdateQuestValueModel.hpp>
 #include <QPainterPath>
 
+using namespace GraphEditor;
+
 UpdateQuestValueModel::
 UpdateQuestValueModel()
 : _getItemWidget(new UpdateQuestWidget())

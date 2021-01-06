@@ -1,5 +1,7 @@
 #include <public/GraphEditor/RunDialogModel.hpp>
 
+using namespace GraphEditor;
+
 RunDialogModel::
 RunDialogModel()
   : _dialogue_selector_node(new DialogueSelectorNode())
@@ -189,4 +191,14 @@ compute(int dialogueSize)
     }
 
     Q_EMIT dataUpdated(0);
+}
+
+void
+RunDialogModel::
+restore(const QJsonObject& obj)
+{
+   int in = obj["dynamic_inputs"].toInt();
+   if(in > 0){
+      _numberList.resize(in-1);
+   }
 }

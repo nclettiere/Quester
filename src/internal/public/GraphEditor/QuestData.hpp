@@ -5,15 +5,19 @@
 using QtNodes::NodeData;
 using QtNodes::NodeDataType;
 
-/// The class can potentially incapsulate any user data which
-/// need to be transferred within the Node Editor graph
-class QuestData : public NodeData
-{
-public:
+namespace GraphEditor {
+    /*!
+    ### Contains UE4 Game Quest data and other metadata info.
+    Needs a UE4 generated Quest Database before usage.
+    */
+    class QuestData : public NodeData
+    {
+    public:
 
-  QuestData() {}
+      QuestData() {}
 
-  NodeDataType type() const override
-  { return NodeDataType {"quest", "Quest"}; }
+      NodeDataType type() const override
+      { return NodeDataType {"quest", "Quest"}; }
 
-};
+    };
+}

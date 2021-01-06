@@ -1,6 +1,8 @@
 #include <public/GraphEditor/MakeDialogModel.hpp>
 #include <QPainterPath>
 
+using namespace GraphEditor;
+
 MakeDialogModel::
 MakeDialogModel()
   : _makeDialogue(new MakeDialogueWidget())

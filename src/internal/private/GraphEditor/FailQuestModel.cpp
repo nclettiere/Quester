@@ -1,6 +1,8 @@
 #include <public/GraphEditor/FailQuestModel.hpp>
 #include <QPainterPath>
 
+using namespace GraphEditor;
+
 FailQuestModel::
 FailQuestModel()
 : _embeddedDummy(new QWidget())

@@ -1,6 +1,8 @@
 #include <public/GraphEditor/GetQuestModel.hpp>
 #include <QPainterPath>
 
+using namespace GraphEditor;
+
 GetQuestModel::
 GetQuestModel()
 : _embeddedGetQuestWidget(new GetQuestWidget())

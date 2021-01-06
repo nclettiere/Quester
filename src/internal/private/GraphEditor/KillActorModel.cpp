@@ -1,6 +1,8 @@
 #include <public/GraphEditor/KillActorModel.hpp>
 #include <QPainterPath>
 
+using namespace GraphEditor;
+
 KillActorModel::
 KillActorModel()
 {

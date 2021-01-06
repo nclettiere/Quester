@@ -15,81 +15,85 @@ using QtNodes::PortIndex;
 using QtNodes::NodeData;
 using QtNodes::NodeDataModel;
 
-/// The model dictates the number of inputs and outputs for the Node.
-/// In this example it has no logic.
-class WaitModel : public NodeDataModel
-{
-  Q_OBJECT
-
-public:
-    WaitModel()
-    : _spinBox(new QDoubleSpinBox())
+namespace GraphEditor {
+    /*!
+    ### Model used to make a delay on a quest dialogue or *on the fly.
+    This model allow user to select the desired amount of time (seconds) to wait.
+    */
+    class WaitModel : public NodeDataModel
     {
-        _spinBox->setValue(5.0);
-    }
+      Q_OBJECT
 
-  virtual
-  ~WaitModel() {}
+    public:
+        WaitModel()
+        : _spinBox(new QDoubleSpinBox())
+        {
+            _spinBox->setValue(5.0);
+        }
 
-public:
-  QString
-  caption() const override
-  {
-    return QString("Wait (seconds)");
-  }
+      virtual
+      ~WaitModel() {}
 
-  QString
-  name() const override
-  {
-    return QString("Wait");
-  }
+    public:
+      QString
+      caption() const override
+      {
+        return QString("Wait (seconds)");
+      }
 
-public:
+      QString
+      name() const override
+      {
+        return QString("Wait");
+      }
 
-  QJsonObject
-  save() const override
-  {
-    QJsonObject modelJson;
+    public:
 
-    modelJson["name"] = name();
+      QJsonObject
+      save() const override
+      {
+        QJsonObject modelJson;
 
-    return modelJson;
-  }
+        modelJson["name"] = name();
 
-public:
+        return modelJson;
+      }
 
-  bool
-  hasDynamicPorts(PortType portType) const override {
-      return true;
-  }
+    public:
 
-  unsigned int
-  nPorts(PortType portType) const override {
-      return 1;
-  }
+      bool
+      hasDynamicPorts(PortType portType) const override {
+          return true;
+      }
 
-  NodeDataType
-  dataType(PortType portType, PortIndex portIndex) const override {
-    return ExecData().type();
-  }
+      unsigned int
+      nPorts(PortType portType) const override {
+          return 1;
+      }
 
-  std::shared_ptr<NodeData>
-  outData(PortIndex port) override {
-    return std::make_shared<ExecData>();
-  }
+      NodeDataType
+      dataType(PortType portType, PortIndex portIndex) const override {
+        return ExecData().type();
+      }
 
-  void
-  setInData(std::shared_ptr<NodeData> data, int i) override
-  {
-    if (auto numberData = std::dynamic_pointer_cast<ExecData>(data)) {
+      std::shared_ptr<NodeData>
+      outData(PortIndex port) override {
+        return std::make_shared<ExecData>();
+      }
 
-    }else {
-        //Q_EMIT portMoved(PortType::In, i, i);
-    }
-  }
+      void
+      setInData(std::shared_ptr<NodeData> data, int i) override
+      {
+        if (auto numberData = std::dynamic_pointer_cast<ExecData>(data)) {
 
- QWidget *
- embeddedWidget() override { return _spinBox; }
+        }else {
+            //Q_EMIT portMoved(PortType::In, i, i);
+        }
+      }
 
- QDoubleSpinBox * _spinBox;
-};
+     QWidget *
+     embeddedWidget() override { return _spinBox; }
+
+     QDoubleSpinBox * _spinBox;
+    };
+}

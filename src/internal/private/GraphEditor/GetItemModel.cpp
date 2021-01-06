@@ -1,6 +1,8 @@
 #include <public/GraphEditor/GetItemModel.hpp>
 #include <QPainterPath>
 
+using namespace GraphEditor;
+
 GetItemModel::
 GetItemModel()
 : _getItemWidget(new GetItemWidget())

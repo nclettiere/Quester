@@ -1,6 +1,8 @@
 #include <public/GraphEditor/AddItemModel.hpp>
 #include <QPainterPath>
 
+using namespace GraphEditor;
+
 AddItemModel::
 AddItemModel()
 : _getItemWidget(new SelectCharacterWidget())

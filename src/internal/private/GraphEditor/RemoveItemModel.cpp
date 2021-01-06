@@ -1,6 +1,8 @@
 #include <public/GraphEditor/RemoveItemModel.hpp>
 #include <QPainterPath>
 
+using namespace GraphEditor;
+
 RemoveItemModel::
 RemoveItemModel()
 : _getItemWidget(new SelectCharacterWidget())

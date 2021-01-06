@@ -5,15 +5,21 @@
 using QtNodes::NodeData;
 using QtNodes::NodeDataType;
 
-/// The class can potentially incapsulate any user data which
-/// need to be transferred within the Node Editor graph
-class ExecData : public NodeData
-{
-public:
+namespace GraphEditor {
+    /*!
+    ### Used to create inheritance across nodes
+    Contains node Id and next/previous nodes ids.
 
-  ExecData() {}
+    Every action node should have at least one executable port.
+    */
+    class ExecData : public NodeData
+    {
+    public:
 
-  NodeDataType type() const override
-  { return NodeDataType {"exec", "Exec"}; }
+      ExecData() {}
 
-};
+      NodeDataType type() const override
+      { return NodeDataType {"exec", "Exec"}; }
+
+    };
+}

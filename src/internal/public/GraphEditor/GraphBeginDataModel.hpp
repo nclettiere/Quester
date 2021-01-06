@@ -14,58 +14,62 @@ using QtNodes::PortIndex;
 using QtNodes::NodeData;
 using QtNodes::NodeDataModel;
 
-/// The model dictates the number of inputs and outputs for the Node.
-/// In this example it has no logic.
-class GraphBeginDataModel : public NodeDataModel
-{
-  Q_OBJECT
+namespace GraphEditor {
+    /*!
+    ### Model used to begin a Quest/Dialogue graph
+    In conjuction with GraphFinishDataModel it is an essential and non skippable node of every graph.
+    */
+    class GraphBeginDataModel : public NodeDataModel
+    {
+      Q_OBJECT
 
-public:
-  GraphBeginDataModel();
+    public:
+      GraphBeginDataModel();
 
-  virtual
-  ~GraphBeginDataModel() {}
+      virtual
+      ~GraphBeginDataModel() {}
 
-public:
-  QString
-  caption() const override
-  {
-    return QString("Execute Graph");
-  }
+    public:
+      QString
+      caption() const override
+      {
+        return QString("Execute Graph");
+      }
 
-  QString
-  name() const override
-  {
-    return QString("Execute Graph");
-  }
+      QString
+      name() const override
+      {
+        return QString("Execute Graph");
+      }
 
-public:
+    public:
 
-  QJsonObject
-  save() const override
-  {
-    QJsonObject modelJson;
+      QJsonObject
+      save() const override
+      {
+        QJsonObject modelJson;
 
-    modelJson["name"] = name();
+        modelJson["name"] = name();
 
-    return modelJson;
-  }
+        return modelJson;
+      }
 
-public:
+    public:
 
-  unsigned int
-  nPorts(PortType portType) const override;
+      unsigned int
+      nPorts(PortType portType) const override;
 
-  NodeDataType
-  dataType(PortType portType, PortIndex portIndex) const override;
+      NodeDataType
+      dataType(PortType portType, PortIndex portIndex) const override;
 
-  std::shared_ptr<NodeData>
-  outData(PortIndex port) override;
+      std::shared_ptr<NodeData>
+      outData(PortIndex port) override;
 
-  void
-  setInData(std::shared_ptr<NodeData>, int) override
-  { }
+      void
+      setInData(std::shared_ptr<NodeData>, int) override
+      { }
 
- QWidget *
- embeddedWidget() override { return nullptr; }
-};
+     QWidget *
+     embeddedWidget() override { return nullptr; }
+    };
+}

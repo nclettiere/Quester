@@ -12,63 +12,67 @@ using QtNodes::PortIndex;
 using QtNodes::NodeData;
 using QtNodes::NodeDataModel;
 
-/// The model dictates the number of inputs and outputs for the Node.
-/// In this example it has no logic.
-class MakeDialogModel : public NodeDataModel
-{
-  Q_OBJECT
+namespace GraphEditor {
+    /*!
+    ### Model used to generate DialogueData.
+    Can generate several options to choose, intended to be used mainly with RunDialogModel.
+    */
+    class MakeDialogModel : public NodeDataModel
+    {
+      Q_OBJECT
 
-public:
-  MakeDialogModel();
+    public:
+      MakeDialogModel();
 
-  virtual
-  ~MakeDialogModel() {}
+      virtual
+      ~MakeDialogModel() {}
 
-public:
-  QString
-  caption() const override
-  {
-    return QString("Make Dialogue");
-  }
+    public:
+      QString
+      caption() const override
+      {
+        return QString("Make Dialogue");
+      }
 
-  QString
-  name() const override
-  {
-    return QString("MakeDialogue");
-  }
+      QString
+      name() const override
+      {
+        return QString("MakeDialogue");
+      }
 
-public:
+    public:
 
-  QJsonObject
-  save() const override
-  {
-    QJsonObject modelJson;
+      QJsonObject
+      save() const override
+      {
+        QJsonObject modelJson;
 
-    modelJson["name"] = name();
+        modelJson["name"] = name();
 
-    return modelJson;
-  }
+        return modelJson;
+      }
 
-public:
-  unsigned int
-  nPorts(PortType portType) const override;
+    public:
+      unsigned int
+      nPorts(PortType portType) const override;
 
-  NodeDataType
-  dataType(PortType portType, PortIndex portIndex) const override;
+      NodeDataType
+      dataType(PortType portType, PortIndex portIndex) const override;
 
-  std::shared_ptr<NodeData>
-  outData(PortIndex port) override;
+      std::shared_ptr<NodeData>
+      outData(PortIndex port) override;
 
-  void
-  setInData(std::shared_ptr<NodeData> data, PortIndex portIndex) override;
+      void
+      setInData(std::shared_ptr<NodeData> data, PortIndex portIndex) override;
 
-  QWidget *
-  embeddedWidget() override { return _makeDialogue; }
+      QWidget *
+      embeddedWidget() override { return _makeDialogue; }
 
-private slots:
-  void
-  onTextEdited();
+    private slots:
+      void
+      onTextEdited();
 
-private:
-  MakeDialogueWidget * _makeDialogue;
-};
+    private:
+      MakeDialogueWidget * _makeDialogue;
+    };
+}

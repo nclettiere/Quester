@@ -1,6 +1,8 @@
 #include <public/GraphEditor/GraphBeginDataModel.hpp>
 #include <QPainterPath>
 
+using namespace GraphEditor;
+
 GraphBeginDataModel::
 GraphBeginDataModel()
 {
