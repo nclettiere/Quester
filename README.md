@@ -22,7 +22,7 @@ Preview of the quest graph editor
 
 1. [Qt5](https://www.qt.io/)
 2. [CMake](https://cmake.org/)
-3. [nodeeditor](https://github.com/paceholder/nodeeditor) -> used for Quest/Dialogue graphs
+3. [nodeeditor](https://github.com/paceholder/nodeeditor) -> used for Quest/Dialogue graphs ([used this specific fork](https://github.com/Daguerreo/NodeEditor/tree/98621b15f9c7e87561a4e51a1d38f9469612cbc1))
 4. [Poco](https://pocoproject.org/) -> used for SQLite libraries
 
 !!-> The Poco library must be compiled, build and installed using CMake system-wide. [Check here for more info](https://pocoproject.org/download.html)
