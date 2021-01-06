@@ -3,12 +3,9 @@ Quest manager for UE4 based projects. Specially made for *Project: Moolight* Gam
 
 ### !!-> PRE-ALPHA: This program is currently on development and it lacks of many features. You will experience bugs/crashes and other weird things.
 
----
-
 Preview of the quest graph editor
 ![Preview of the graph editor](https://github.com/Noriaki-Kakyoin/Quester/blob/master/readme_img.png)
 
----
 
 ## Features
 
