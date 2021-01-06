@@ -1,9 +1,8 @@
 #pragma once
 
 #include <QtCore/QObject>
-#include <public/updatequestwidget.h>
+#include <public/getquestwidget.h>
 
-#include "ExecData.hpp"
 #include "QuestData.hpp"
 
 #include <nodes/NodeDataModel>
@@ -15,31 +14,30 @@ using QtNodes::PortIndex;
 using QtNodes::NodeData;
 using QtNodes::NodeDataType;
 using QtNodes::NodeDataModel;
-using QtNodes::NodeValidationState;
 
 /// The model dictates the number of inputs and outputs for the Node.
 /// In this example it has no logic.
-class UpdateQuestValueModel : public NodeDataModel
+class GetQuestModel : public NodeDataModel
 {
   Q_OBJECT
 
 public:
-  UpdateQuestValueModel();
+  GetQuestModel();
 
   virtual
-  ~UpdateQuestValueModel() {}
+  ~GetQuestModel() {}
 
 public:
   QString
   caption() const override
   {
-    return QString("Update Quest Value");
+    return QString("Get Quest");
   }
 
   QString
   name() const override
   {
-    return QString("Update Quest Value");
+    return QString("Get Quest");
   }
 
 public:
@@ -66,25 +64,13 @@ public:
   outData(PortIndex port) override;
 
   void
-  setInData(std::shared_ptr<NodeData>, int) override;
+  setInData(std::shared_ptr<NodeData>, int) override
+  {}
 
- QWidget *
- embeddedWidget() override { return _getItemWidget; }
-
- NodeValidationState
- validationState() const override;
-
- QString
- validationMessage() const override;
-
- void
- compute(bool isQuestConnected);
+  QWidget *
+  embeddedWidget() override { return _embeddedGetQuestWidget; }
 
 private:
 
- UpdateQuestWidget *
- _getItemWidget;
-
- NodeValidationState _modelValidationState = NodeValidationState::Warning;
- QString _modelValidationError = QString("Missing or incorrect inputs");
+ GetQuestWidget *_embeddedGetQuestWidget;
 };

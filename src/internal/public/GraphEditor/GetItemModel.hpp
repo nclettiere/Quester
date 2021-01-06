@@ -1,10 +1,10 @@
 #pragma once
 
 #include <QtCore/QObject>
-#include <public/updatequestwidget.h>
+#include <public/getitemwidget.h>
 
 #include "ExecData.hpp"
-#include "QuestData.hpp"
+#include "ItemData.hpp"
 
 #include <nodes/NodeDataModel>
 
@@ -19,27 +19,27 @@ using QtNodes::NodeValidationState;
 
 /// The model dictates the number of inputs and outputs for the Node.
 /// In this example it has no logic.
-class UpdateQuestValueModel : public NodeDataModel
+class GetItemModel : public NodeDataModel
 {
   Q_OBJECT
 
 public:
-  UpdateQuestValueModel();
+  GetItemModel();
 
   virtual
-  ~UpdateQuestValueModel() {}
+  ~GetItemModel() {}
 
 public:
   QString
   caption() const override
   {
-    return QString("Update Quest Value");
+    return QString("Get Item");
   }
 
   QString
   name() const override
   {
-    return QString("Update Quest Value");
+    return QString("Get Item");
   }
 
 public:
@@ -66,25 +66,14 @@ public:
   outData(PortIndex port) override;
 
   void
-  setInData(std::shared_ptr<NodeData>, int) override;
+  setInData(std::shared_ptr<NodeData>, int) override
+  {}
 
  QWidget *
  embeddedWidget() override { return _getItemWidget; }
 
- NodeValidationState
- validationState() const override;
-
- QString
- validationMessage() const override;
-
- void
- compute(bool isQuestConnected);
-
 private:
 
- UpdateQuestWidget *
+ GetItemWidget *
  _getItemWidget;
-
- NodeValidationState _modelValidationState = NodeValidationState::Warning;
- QString _modelValidationError = QString("Missing or incorrect inputs");
 };

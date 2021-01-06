@@ -13,6 +13,12 @@
 #include <public/GraphEditor/CompleteQuestModel.hpp>
 #include <public/GraphEditor/FailQuestModel.hpp>
 #include <public/GraphEditor/UpdateQuestValueModel.hpp>
+#include <public/GraphEditor/GetQuestModel.hpp>
+#include <public/GraphEditor/SpawnAtLocationModel.hpp>
+#include <public/GraphEditor/KillActorModel.hpp>
+#include <public/GraphEditor/OpenCloseWindowModel.hpp>
+#include <public/GraphEditor/UnlockTrophieModel.hpp>
+#include <public/GraphEditor/GetItemModel.hpp>
 
 #include <QMenuBar>
 #include <QAction>
@@ -60,6 +66,12 @@ std::shared_ptr<DataModelRegistry> registerDataModels()
   ret->registerModel<CompleteQuestModel>();
   ret->registerModel<FailQuestModel>();
   ret->registerModel<UpdateQuestValueModel>();
+  ret->registerModel<GetQuestModel>();
+  ret->registerModel<SpawnAtLocationModel>();
+  ret->registerModel<KillActorModel>();
+  ret->registerModel<OpenCloseWindowModel>();
+  ret->registerModel<UnlockTrophieModel>();
+  ret->registerModel<GetItemModel>();
 
   return ret;
 }
