@@ -33,13 +33,13 @@ public:
   QString
   caption() const override
   {
-    return QString("Fail Quest");
+    return QString("Complete Quest");
   }
 
   QString
   name() const override
   {
-    return QString("Fail Quest");
+    return QString("Complete Quest");
   }
 
 public:
