@@ -22,12 +22,15 @@ include_directories(
     "vendor/poco/Data/SQLite/include"
     "vendor/Qt-Frameless-Window-DarkStyle/")
 
-find_package(QT NAMES Qt5 COMPONENTS Widgets Sql REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Sql REQUIRED)
-
+find_package(QT NAMES Qt5 COMPONENTS Widgets Sql Quick REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Sql Quick REQUIRED)
 find_package(Poco REQUIRED Foundation Data DataSQLite JSON)
+
+# add the qml.qrc file
+qt5_add_resources(qml_QRC src/qml.qrc)
+
 if(Poco_FOUND)
-  message( "Poco Found ${Poco_Version}")
+  message(STATUS "> Poco Found ${Poco_Version}<")
 else()
     message("Poco not found.")
 endif()
@@ -40,11 +43,13 @@ file(GLOB_RECURSE internal_source
     "src/internal/private/*.qml"
     "src/internal/public/*.qml"
     "src/internal/public/UI/*.qml"
-    "src/internal/private/UI/*.qml")
+    "src/internal/private/UI/*.qml"
+    "src/*.qml"
+    "src/*.qrc")
 
 set(SOURCES src/main.cpp ${internal_source})
-add_executable(Quester ${SOURCES})
-target_link_libraries(Quester PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Sql nodes Poco::Foundation Poco::Data Poco::DataSQLite Poco::JSON)
+add_executable(Quester ${SOURCES} ${qml_QRC})
+target_link_libraries(Quester PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Sql Qt${QT_VERSION_MAJOR}::Quick nodes Poco::Foundation Poco::Data Poco::DataSQLite Poco::JSON)
 
 file(GLOB Public_Files "Public/*")
 file(COPY ${Public_Files} DESTINATION ${CMAKE_BINARY_DIR}/Public/)
