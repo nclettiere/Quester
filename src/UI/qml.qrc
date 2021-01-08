@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>ContextItem.qml</file>
+        <file>ContextMenu.qml</file>
+        <file>ProjectCreatorWindow.qml</file>
+    </qresource>
+</RCC>
