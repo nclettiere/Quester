@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 
 # Poco Options
-#option(BUILD_SHARED_LIBS "Build shared libraries" ON)
+option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 
 option(ENABLE_FOUNDATION "Enable Foundation, required by all components except CppUnit" ON)
 option(ENABLE_ENCODINGS "Enable Encodings" ON)

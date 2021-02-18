@@ -15,7 +15,7 @@
 #include <Graphics/Global.h>
 #include <Graphics/QTexture.hxx>
 
-#include <spdlog/spdlog-inl.h>
+
 
 #include <string>
 

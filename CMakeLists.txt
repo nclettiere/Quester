@@ -32,5 +32,4 @@ target_include_directories(Quester PRIVATE
         src/
         Quester/Core/include
         Quester/Graphics/include
-        Quester/Editor/include
-        Quester/Core/vendor/spdlog/include)
+        Quester/Editor/include)

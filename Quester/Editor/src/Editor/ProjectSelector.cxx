@@ -112,7 +112,7 @@ void ProjectSelector::OnFrame() {
                 free(string);
             }
 
-            QProject p;
+            QProject p = QProject();
 
         }
 

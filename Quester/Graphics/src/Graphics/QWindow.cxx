@@ -3,6 +3,7 @@
 //
 
 #include <Graphics/QWindow.hxx>
+#include <spdlog/spdlog.h>
 
 QWindow::QWindow(const std::string &title, int width, int height) :
         _title(title), _width(width), _height(height), _backend(DX11_Backend())
