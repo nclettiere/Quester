@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(Quester CXX)
+project(Quester)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -35,4 +35,5 @@ target_include_directories(Quester PRIVATE
         src/
         Quester/Core/include
         Quester/Graphics/include
-        Quester/Editor/include)
+        Quester/Editor/include
+        Quester/Core/vendor/spdlog/include)

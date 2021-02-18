@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(QGraphics CXX)
+project(QGraphics)
 
 set(CMAKE_CXX_STANDARD 17)
 set(SDL2_VERSION 2.0.14)
@@ -56,11 +56,19 @@ target_include_directories(QGraphics
     ${SDL2_INCLUDE_DIRS}
     ${imgui_DIR}/
     ${imgui_DIR}/backends/
-    ../Core/include/)
+    ../Core/include/
+    ../Core/vendor/spdlog/include)
 
 file(GLOB FONTS "${CMAKE_CURRENT_LIST_DIR}/../../vendor/fonts/*")
 file(GLOB TEXTURES "${CMAKE_CURRENT_LIST_DIR}/../../vendor/textures/*")
 
-file(COPY ${SDL2_DLL} DESTINATION ${CMAKE_BINARY_DIR}/)
-file(COPY ${FONTS} DESTINATION ${CMAKE_BINARY_DIR}/assets/fonts/)
-file(COPY ${TEXTURES} DESTINATION ${CMAKE_BINARY_DIR}/assets/textures/)
+
+if("${CMAKE_GENERATOR}" MATCHES "Visual Studio")
+    file(COPY ${SDL2_DLL} DESTINATION ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE})
+    file(COPY ${FONTS} DESTINATION ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/assets/fonts/)
+    file(COPY ${TEXTURES} DESTINATION ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/assets/textures/)
+else()
+    file(COPY ${SDL2_DLL} DESTINATION ${CMAKE_BINARY_DIR}/)
+    file(COPY ${FONTS} DESTINATION ${CMAKE_BINARY_DIR}/assets/fonts/)
+    file(COPY ${TEXTURES} DESTINATION ${CMAKE_BINARY_DIR}/assets/textures/)
+endif()

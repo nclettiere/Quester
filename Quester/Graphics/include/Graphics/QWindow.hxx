@@ -15,7 +15,8 @@
 #include <Graphics/Global.h>
 #include <Graphics/QTexture.hxx>
 
-#include <iostream>
+#include <spdlog/spdlog-inl.h>
+
 #include <string>
 
 class QWindow : public IQTexture {

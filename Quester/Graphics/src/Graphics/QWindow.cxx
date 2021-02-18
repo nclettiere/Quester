@@ -4,18 +4,10 @@
 
 #include <Graphics/QWindow.hxx>
 
-#ifdef DEBUG
-#define D_PRINT_OUT(fmt, ...) fprintf(stdout, fmt, __VA_ARGS__)
-#define D_PRINT_CERR(fmt, ...) fprintf(stdout, fmt, __VA_ARGS__)
-#else
-#define D_PRINT_OUT(fmt, ...) do {} while (0)
-#define D_PRINT_CERR(fmt, ...) do {} while (0)
-#endif
-
 QWindow::QWindow(const std::string &title, int width, int height) :
         _title(title), _width(width), _height(height), _backend(DX11_Backend())
 {
-    D_PRINT_OUT("Initializing window id[%s] . . .\n", title.c_str());
+    spdlog::debug("Initializing window uuid[{0}] . . .", title.c_str());
 
     if(!Initialize()) {
         _closed = true;
@@ -33,7 +25,7 @@ QWindow::~QWindow()
     _backend.CleanupDeviceD3D();
 #endif
 
-    D_PRINT_CERR("Window id[%s] terminated with no errors.\n", _title.c_str());
+    spdlog::debug("Window uuid[{0}] terminated with no errors.", _title.c_str());
 
     SDL_DestroyWindow(_window);
     SDL_Quit();
@@ -44,7 +36,7 @@ bool QWindow::Initialize() {
     SDL_SetMainReady();
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0)
     {
-        printf("Error: %s\n", SDL_GetError());
+        spdlog::error("SDL Error: {0}", SDL_GetError());
         return 0;
     }
 
@@ -53,7 +45,7 @@ bool QWindow::Initialize() {
     _window = SDL_CreateWindow(_title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, _width, _height, window_flags);
 
     if(_window == nullptr) {
-        std::cerr << "QWindow::_window returned: nullptr.\n";
+        spdlog::error("QWindow::_window returned: nullptr.");
         return 0;
     }
 
@@ -63,18 +55,17 @@ bool QWindow::Initialize() {
     HWND hwnd = (HWND)wmInfo.info.win.window;
 
 #ifdef USING_DX11
-    std::cout << "Initializing Direct3D\n";
     // Initialize Direct3D
     if (!_backend.CreateDeviceD3D(hwnd))
     {
         _backend.CleanupDeviceD3D();
-        std::cerr << "Could not create DeviceD3D.\n";
+        spdlog::error("Could not create DeviceD3D");
         return 1;
     }
-    std::cout << "Good\n";
+
+    spdlog::debug("D3D11 Device: Passing");
 #endif
 
-    std::cout << "Passing IMGUI Context and IO\n";
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -85,23 +76,13 @@ bool QWindow::Initialize() {
     //io.ConfigViewportsNoAutoMerge = true;
     //io.ConfigViewportsNoTaskBarIcon = true;
 
-    // Setup Dear ImGui style
-    //ImGui::StyleColorsDark();
-    //ImGui::StyleColorsClassic();
+    /* SET APP STYLE ==> */ Style();
 
-    // SET_STYLE METHOD HERE !
-    Style();
-
-    std::cout << "Good\n";
-    std::cout << "Setup Platform/Renderer backends\n";
-    // Setup Platform/Renderer backends
     ImGui_ImplSDL2_InitForD3D(_window);
-    std::cout << "SDL2: Passing\n";
+    spdlog::debug("ImGui SDL2 Implementation: Passing");
 #ifdef USING_DX11
-    std::cout << "Testing backend specific passing...\n";
-    std::cout << "IS DEVICE NULLPTR " << (_backend.GetBackendSpecific()._device == nullptr) << '\n';
     ImGui_ImplDX11_Init(_backend.GetBackendSpecific()._device, _backend.GetBackendSpecific()._deviceContext);
-    //std::cout << "Good\n";
+    spdlog::debug("ImGui D3D11 Implementation: Passing");
 #endif
     io.Fonts->AddFontFromFileTTF("assets/fonts/IBMPlex/IBMPlexSansCondensed-Medium.ttf", 18.0f);
 
@@ -138,13 +119,11 @@ void QWindow::FinishRender() {
     // Rendering
     ImGui::Render();
 #ifdef USING_DX11
-    //std::cout << "Testing DeviceContext...\n";
     ID3D11RenderTargetView* tView = _backend.GetBackendSpecific()._renderTargetView;
     _backend.GetBackendSpecific()._deviceContext->OMSetRenderTargets(
             1,
-            &tView, //reinterpret_cast<ID3D11RenderTargetView *const *>
+            &tView,
             NULL);
-    //std::cout << "Good\n";
 
     _backend.GetBackendSpecific()._deviceContext->ClearRenderTargetView(
             _backend.GetBackendSpecific()._renderTargetView,
