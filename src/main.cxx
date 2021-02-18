@@ -1,5 +1,5 @@
 #include <Windows/ProjectSelectorWindow.h>
-#include <spdlog/spdlog-inl.h>
+#include <spdlog/spdlog.h>
 
 int main(int, char**)
 {

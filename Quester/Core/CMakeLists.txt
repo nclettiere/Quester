@@ -5,6 +5,8 @@ set(CMAKE_CXX_STANDARD 17)
 
 
 # Poco Options
+#option(BUILD_SHARED_LIBS "Build shared libraries" ON)
+
 option(ENABLE_FOUNDATION "Enable Foundation, required by all components except CppUnit" ON)
 option(ENABLE_ENCODINGS "Enable Encodings" ON)
 option(ENABLE_ENCODINGS_COMPILER "Enable Encodings Compiler" OFF)
@@ -34,10 +36,6 @@ set(SOURCES ${QCore_SOURCE})
 
 add_library(QCore STATIC ${SOURCES})
 
-if (CMAKE_GENERATOR MATCHES "Visual Studio")
-    SET(RUNTIME_OUTPUT_DIRECTORY "C:/Users/Percebe64/QuesterProjects/ABC")
-endif()
-
 add_subdirectory(vendor/poco)
 add_subdirectory(vendor/spdlog)
 
@@ -53,4 +51,8 @@ target_include_directories(QCore
     PUBLIC
     include/
     src/
-    vendor/)
+    vendor/
+    vendor/poco/Foundation/include/
+    vendor/poco/Data/include/
+    vendor/poco/Util/include/
+    vendor/poco/Zip/include/)

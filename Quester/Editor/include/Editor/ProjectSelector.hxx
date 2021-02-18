@@ -8,6 +8,7 @@
 #include <Core/FileSystem.hxx>
 #include <Editor/IBase.h>
 #include <Graphics/QWindow.hxx>
+#include <Core/QProject.hxx>
 
 using namespace ImGui;
 

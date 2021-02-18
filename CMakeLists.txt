@@ -8,9 +8,9 @@ file(GLOB_RECURSE Quester_SOURCE
         "src/*.cpp"
         "src/Windows/*.cpp"
         "src/Windows/*.cxx"
-        "include/*.h[pp]")
+        "include/*.h[pp/xx]")
 
-set(SOURCES src/main.cxx ${Quester_SOURCE} src/Windows/ProjectSelectorWindow.cpp)
+set(SOURCES src/main.cxx ${Quester_SOURCE})
 
 add_executable(Quester ${SOURCES})
 
@@ -24,11 +24,8 @@ add_subdirectory(Quester/Core)
 add_subdirectory(Quester/Graphics)
 add_subdirectory(Quester/Editor)
 
-#set_target_properties(Quester PROPERTIES
-#        LINK_FLAGS /SUBSYSTEM:CONSOLE)
 
-
-target_link_libraries(Quester PRIVATE QCore QGraphics QEditor)
+target_link_libraries(Quester PUBLIC QCore QGraphics QEditor)
 
 target_include_directories(Quester PRIVATE
         include/

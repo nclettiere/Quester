@@ -112,6 +112,8 @@ void ProjectSelector::OnFrame() {
                 free(string);
             }
 
+            QProject p;
+
         }
 
         if(strlen(_titleBuf) == 0) {

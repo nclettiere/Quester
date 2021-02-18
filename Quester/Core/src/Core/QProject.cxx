@@ -3,15 +3,15 @@
 //
 
 #include <Core/QProject.hxx>
-//
-//QProject::QProject() {
-//    auto uuidGenerator = Poco::UUIDGenerator();
-//    //_uuid = uuidGenerator.create();
-//    uuidGenerator.createFromName(_uuid, "project");
-//
-//    spdlog::error("Could not create DeviceD3D");
-//}
-//
-//QProject::QProject(const UUID& uuid) : _uuid(uuid) {
 
-//}
+QProject::QProject() {
+    auto uuidGenerator = Poco::UUIDGenerator();
+    //_uuid = uuidGenerator.create();
+    uuidGenerator.createFromName(_uuid, "project");
+
+    spdlog::error("Generated UUID: {0}", _uuid.toString());
+}
+
+QProject::QProject(const Poco::UUID& uuid) : _uuid(uuid) {
+
+}
