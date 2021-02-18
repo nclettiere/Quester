@@ -1,55 +1,38 @@
-cmake_minimum_required(VERSION 3.5)
-
+cmake_minimum_required(VERSION 3.15)
 project(Quester)
 
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+file(GLOB_RECURSE Quester_SOURCE
+        "src/*.cxx"
+        "src/*.cpp"
+        "src/Windows/*.cpp"
+        "src/Windows/*.cxx"
+        "include/*.h[pp]")
 
-add_subdirectory("vendor/nodeeditor")
-include_directories(
-    "src/internal"
-    "vendor/poco/Foundation/include"
-    "vendor/poco/Data/include"
-    "vendor/poco/Foundation/include"
-    "vendor/poco/JSON/include"
-    "vendor/poco/Data/SQLite/include"
-    "vendor/Qt-Frameless-Window-DarkStyle/")
+set(SOURCES src/main.cxx ${Quester_SOURCE} src/Windows/ProjectSelectorWindow.cpp)
 
-find_package(QT NAMES Qt5 COMPONENTS Widgets Sql Quick REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Sql Quick REQUIRED)
-find_package(Poco REQUIRED Foundation Data DataSQLite JSON)
+add_executable(Quester ${SOURCES})
 
-# add the qml.qrc file
-qt5_add_resources(qml_QRC src/qml.qrc)
-
-if(Poco_FOUND)
-  message(STATUS "> Poco Found ${Poco_Version}<")
-else()
-    message("Poco not found.")
+if(CMAKE_BUILD_TYPE MATCHES Debug)
+    target_compile_definitions(Quester PUBLIC DEBUG=1)
+elseif(CMAKE_BUILD_TYPE MATCHES Release)
+    target_compile_definitions(Quester PUBLIC DEBUG=0)
 endif()
 
-file(GLOB_RECURSE internal_source
-    "src/internal/private/*.cpp"
-    "src/internal/public/*.hpp"
-    "src/internal/public/*.h"
-    "src/internal/private/*.ui"
-    "src/internal/private/*.qml"
-    "src/internal/public/*.qml"
-    "src/internal/public/UI/*.qml"
-    "src/internal/private/UI/*.qml"
-    "src/*.qml"
-    "src/*.qrc")
+add_subdirectory(Quester/Core)
+add_subdirectory(Quester/Graphics)
+add_subdirectory(Quester/Editor)
 
-set(SOURCES src/main.cpp ${internal_source})
-add_executable(Quester ${SOURCES} ${qml_QRC})
-target_link_libraries(Quester PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Sql Qt${QT_VERSION_MAJOR}::Quick nodes Poco::Foundation Poco::Data Poco::DataSQLite Poco::JSON)
+#set_target_properties(Quester PROPERTIES
+#        LINK_FLAGS /SUBSYSTEM:CONSOLE)
 
-file(GLOB Public_Files "Public/*")
-file(COPY ${Public_Files} DESTINATION ${CMAKE_BINARY_DIR}/Public/)
+
+target_link_libraries(Quester PRIVATE QCore QGraphics QEditor)
+
+target_include_directories(Quester PRIVATE
+        include/
+        src/
+        Quester/Core/include
+        Quester/Graphics/include
+        Quester/Editor/include)
