@@ -1,8 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
-project(QGraphics)
+project(QGraphics CXX)
 
 set(CMAKE_CXX_STANDARD 17)
-set(imgui_VERSION 1.81)
 set(SDL2_VERSION 2.0.14)
 
 set(SDL2_INCLUDE_DIRS "../../vendor/SDL2-${SDL2_VERSION}/include/")
@@ -18,7 +17,7 @@ else ()
 endif ()
 string(STRIP "${SDL2_LIBRARIES}" SDL2_LIBRARIES)
 
-set(imgui_DIR ${CMAKE_CURRENT_LIST_DIR}/../../vendor/imgui-${imgui_VERSION}/)
+set(imgui_DIR ${CMAKE_CURRENT_LIST_DIR}/../../vendor/imgui/)
 
 file(GLOB SDL2_SOURCE
         "${SDL2_INCLUDE_DIRS}/*.h")

@@ -1,9 +1,17 @@
 cmake_minimum_required(VERSION 3.15)
-project(QEditor)
+project(QEditor CXX)
 
 set(CMAKE_CXX_STANDARD 17)
-set(imgui_VERSION 1.81)
-set(imgui_DIR ${CMAKE_CURRENT_LIST_DIR}/../../vendor/imgui-${imgui_VERSION}/)
+set(imgui_DIR ${CMAKE_CURRENT_LIST_DIR}/../../vendor/imgui/)
+
+SET(spdlog_DIR ${CMAKE_CURRENT_LIST_DIR}/../../vendor/spdlog/cmake)
+
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_LIST_DIR}/../../vendor/spdlog/cmake")
+
+if(NOT TARGET spdlog)
+    # Stand-alone build
+    find_package(spdlog REQUIRED)
+endif()
 
 file(GLOB imgui_SOURCE
         "${imgui_DIR}/*.cpp"
@@ -16,7 +24,6 @@ file(GLOB QEditor_SOURCE
 
 set(SOURCES ${QEditor_SOURCE})
 
-add_library(QEditor STATIC ${SOURCES})
 
 target_link_libraries(QEditor QGraphics)
 
