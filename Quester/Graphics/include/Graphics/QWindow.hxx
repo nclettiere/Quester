@@ -5,6 +5,7 @@
 #ifndef QUESTER_QWINDOW_HXX
 #define QUESTER_QWINDOW_HXX
 
+#include <Core/QGlobals.hxx>
 #include <Core/DX11_Backend.hxx>
 
 #include <backends/imgui_impl_sdl.h>
@@ -15,9 +16,8 @@
 #include <Graphics/Global.h>
 #include <Graphics/QTexture.hxx>
 
-
-
 #include <string>
+
 
 class QWindow : public IQTexture {
 public:
@@ -37,6 +37,7 @@ public:
     }
 
 private:
+    Poco::UUID  _uuid;
     std::string _title;
     int         _width =  1280;
     int         _height = 720;

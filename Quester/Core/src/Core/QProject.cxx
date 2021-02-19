@@ -10,14 +10,14 @@ QProject::QProject() {
     spdlog::debug("Generated UUID: {0}", _uuid.toString());
 }
 
-QProject::QProject(const char* path, std::string& name, std::string& ue4Version, std::string& description) :
-    _path(Poco::Path(path)),
+QProject::QProject(const std::string& name, const std::string& ue4Version, const std::string& description) :
+    _path(Poco::Path()),
     _name(name),
     _ue4Version(ue4Version),
     _description(description) {
 
      GenerateUUID(_uuid);
-     spdlog::debug("Generated UUID: {0}", _uuid.toString());
+     spdlog::debug("Generated Project UUID: {0}", _uuid.toString());
 }
 
 QProject::QProject(const Poco::UUID& uuid) : _uuid(uuid) {}
@@ -62,3 +62,54 @@ void QProject::SetUE4Version(const std::string &ue4V) {
 void QProject::SetDescription(const std::string &description) {
     _description = description;
 }
+
+bool QProject::SaveProject(const std::string& customPath) {
+    if (GetName().empty())
+        return false;
+
+    if(customPath.empty()) {
+        // Use default save directory
+
+        SetPath(FormatProjectDefaultDir(GetName()));
+        //spdlog::debug("Saving Project to: {0}", GetPath().toString());
+
+        GenerateProjectStructure();
+
+        Poco::File pFile(GetProjectFile(GetName()));
+        return pFile.createFile();
+    }
+
+    return false;
+}
+
+bool QProject::GenerateProjectStructure() {
+    if (GetName().empty())
+        return false;
+
+    if(_path.toString().empty())
+        SetPath(FormatProjectDefaultDir(GetName()));
+    _path.makeDirectory();
+
+    Poco::Path pChars(FormatProjectCharDir(GetName()));
+    Poco::Path pDials(FormatProjectDialDir(GetName()));
+    Poco::Path pQuests(FormatProjectQuestDir(GetName()));
+
+    Poco::File pDir(_path);
+    Poco::File pCharsDir(pChars);
+    Poco::File pDialDir(pDials);
+    Poco::File pQuestsDir(pQuests);
+
+    spdlog::debug("Saving Project to: {0}", GetPath().toString());
+
+    if (!pDir.exists())
+        pDir.createDirectories();
+    if (!pCharsDir.exists())
+        pCharsDir.createDirectories();
+    if (!pDialDir.exists())
+        pDialDir.createDirectories();
+    if (!pQuestsDir.exists())
+        pQuestsDir.createDirectories();
+
+    return true;
+}
+

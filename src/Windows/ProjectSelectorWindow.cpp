@@ -5,14 +5,13 @@
 #include <Windows/ProjectSelectorWindow.h>
 
 void ProjectSelectorWindow::Run() {
-    ProjectSelector stats(&_window, _ue4Versions);
+    ProjectSelector pSelector(&_window);
 
     while(!_window.IsClosed()) {
         _window.Render();
 
-        stats.Run();
+        pSelector.Run();
 
         _window.FinishRender();
     }
 }
-

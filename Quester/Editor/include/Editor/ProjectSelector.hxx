@@ -5,17 +5,17 @@
 #ifndef QUESTER_PROJECTSELECTOR_HXX
 #define QUESTER_PROJECTSELECTOR_HXX
 
-#include <Core/FileSystem.hxx>
 #include <Editor/IBase.h>
 #include <Graphics/QWindow.hxx>
+#include <Core/QGlobals.hxx>
 #include <Core/QProject.hxx>
 
 using namespace ImGui;
 
 class ProjectSelector: public IBaseEditorWindow {
 public:
-    ProjectSelector(QWindow* window, const char* ue4Versions)
-    : IBaseEditorWindow("Stats"), _window(window), _availableUE4Versions(ue4Versions) {
+    ProjectSelector(QWindow* window)
+    : IBaseEditorWindow("Stats"), _window(window) {
         _window->LoadTextureDX11(
                 _window->GetBackendData()->GetBackendSpecific()._device,
                 R"(assets\textures\new_project.png)",
@@ -33,10 +33,11 @@ public:
     }
 
 private:
-    const char* _availableUE4Versions;
     int _selectedUE4Version = 0;
     char _titleBuf[64] = "";
     char _descriptionBuf[256] = "";
+
+    bool savingProject = true;
 
     float color[4] = { 0.4f, 0.7f, 0.0f, 0.5f };
 

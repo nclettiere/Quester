@@ -51,10 +51,8 @@ void ProjectSelector::OnFrame() {
 
     ImGui::SetNextWindowSize(ImVec2(350, 310));
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8, 8));
-    if (ImGui::BeginPopupModal("Create Project", NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar))
+    if (ImGui::BeginPopupModal("Create Project", NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove))
     {
-        //ImGui::Text("Hello from Stacked The First\nUsing style.Colors[ImGuiCol_ModalWindowDimBg] behind it.");
-
         ImGui::Text("Enter Project Name:");
         ImGui::PushItemWidth(-1);
         ImGui::InputText("##p-name", _titleBuf, 64, ImGuiInputTextFlags_CallbackCharFilter, TextFilters::FilterImGuiLetters);
@@ -62,7 +60,8 @@ void ProjectSelector::OnFrame() {
 
         ImGui::Text("Select Unreal Engine Version:");
         ImGui::PushItemWidth(-1);
-        ImGui::Combo("##p-ue4v", &_selectedUE4Version, _availableUE4Versions);
+        ImGui::Combo("##p-ue4v", &_selectedUE4Version, G_ue4Versions, IM_ARRAYSIZE(G_ue4Versions));
+        //ImGui::Combo("##p-ue4v", &_selectedUE4Version, _availableUE4Versions);
         ImGui::PopItemWidth();
 
         ImGui::Text("Enter Short Description (optional):");
@@ -94,26 +93,14 @@ void ProjectSelector::OnFrame() {
             ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
         }
         if(ImGui::Button("Create", ImVec2(-FLT_MIN, 32.0f))) {
+            ImGui::OpenPopup("Loading");
 
-            char* string = FileSystem::ReadFile(R"(C:\Users\Percebe64\CLionProjects\Quester\vendor\imgui-1.81\LICENSE.txt)");
-            if (string)
-            {
-                puts(string);
-                bool completed = FileSystem::WriteFile(R"(C:\Users\Percebe64\CLionProjects\res.txt)", string);
-                if (completed)
-                {
-                    std::cout << "completed\n";
-                }else {
-                    std::cout << "nop\n";
-                }
-
-
-
-                free(string);
-            }
-
-            QProject p = QProject();
-
+            QProject p = QProject(
+                    std::string(_titleBuf),
+                    std::string(G_ue4Versions[_selectedUE4Version]),
+                    std::string(_descriptionBuf));
+            p.SaveProject();
+            savingProject = false;
         }
 
         if(strlen(_titleBuf) == 0) {
@@ -123,12 +110,16 @@ void ProjectSelector::OnFrame() {
 
         ImGui::PopStyleColor(3);
 
-        //ImGui::Dummy(ImVec2(0, 4));
-
         //BufferingBar("##buffer_bar", 0.0f, ImVec2(400, 6), bg, col);
-        if (ImGui::BeginPopupModal("Loading", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar)) {
+        if (ImGui::BeginPopupModal("Loading", &savingProject,
+                                   ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoDecoration |
+                                   ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoBackground |
+                                   ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize |
+                                   ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar)) {
             Spinner("##spinner", 10, 3, col);
-            ImGui::EndPopup();
+            if(!savingProject) {
+                ImGui::EndPopup();
+            }
         }
 
         ImGui::EndPopup();

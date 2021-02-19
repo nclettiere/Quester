@@ -6,9 +6,11 @@
 #include <spdlog/spdlog.h>
 
 QWindow::QWindow(const std::string &title, int width, int height) :
-        _title(title), _width(width), _height(height), _backend(DX11_Backend())
+    _title(title), _width(width), _height(height), _backend(DX11_Backend())
 {
-    spdlog::debug("Initializing window uuid[{0}] . . .", title.c_str());
+    GenerateUUID(_uuid);
+
+    spdlog::debug("Initializing window uuid[{0}] . . .", _uuid.toString());
 
     if(!Initialize()) {
         _closed = true;
@@ -26,7 +28,7 @@ QWindow::~QWindow()
     _backend.CleanupDeviceD3D();
 #endif
 
-    spdlog::debug("Window uuid[{0}] terminated with no errors.", _title.c_str());
+    spdlog::debug("Window uuid[{0}] terminated with no errors.", _uuid.toString());
 
     SDL_DestroyWindow(_window);
     SDL_Quit();

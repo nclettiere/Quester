@@ -47,7 +47,7 @@ elseif(CMAKE_BUILD_TYPE MATCHES Release)
     target_compile_definitions(QGraphics PUBLIC DEBUG=0)
 endif()
 
-target_link_libraries(QGraphics ${SDL2_LIBRARIES})
+target_link_libraries(QGraphics QCore ${SDL2_LIBRARIES})
 
 target_include_directories(QGraphics
     PUBLIC

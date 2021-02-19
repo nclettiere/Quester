@@ -12,11 +12,7 @@ class ProjectSelectorWindow {
 
 public:
     ProjectSelectorWindow() : _window(QWindow("Project Selector", 720, 560)) {}
-
     void Run();
-
-protected:
-    const char* _ue4Versions = " 4.26\0 4.25\0 4.24\0 4.23\0 4.22\0 4.21\0 4.20\0\0";
 
 private:
     QWindow _window;

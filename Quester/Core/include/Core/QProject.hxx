@@ -7,6 +7,7 @@
 
 #include <Poco/UUIDGenerator.h>
 #include <Poco/Path.h>
+#include <Poco/File.h>
 #include <Core/QGlobals.hxx>
 
 #include <Core/QCharacter.hxx>
@@ -17,7 +18,7 @@
 class QProject {
 public:
     QProject();
-    QProject(const char* path, std::string& name, std::string& ue4Version, std::string& description);
+    QProject(const std::string& name, const std::string& ue4Version, const std::string& description);
     explicit QProject(const Poco::UUID& uuid);
     ~QProject() = default;
 
@@ -28,6 +29,8 @@ public:
     bool operator!=(const QProject& otherProject) noexcept {
         return ( GetUUID() != otherProject.GetUUID() );
     }
+
+    bool SaveProject(const std::string& customPath = std::string());
 
     [[nodiscard]] Poco::UUID  GetUUID() const;
     [[nodiscard]] Poco::Path  GetPath() const;
@@ -41,6 +44,8 @@ public:
     void SetUE4Version(const std::string& ue4V);
     void SetDescription(const std::string& description);
 
+private:
+    bool GenerateProjectStructure();
 
 private:
     Poco::UUID       _uuid;
