@@ -6,25 +6,22 @@
 #include <spdlog/include/spdlog/spdlog.h>
 
 QProject::QProject() {
-    {
-        auto uuidGenerator = Poco::UUIDGenerator();
-        _uuid = uuidGenerator.create();
-        spdlog::debug("Generated UUID: {0}", _uuid.toString());
-    }
+    GenerateUUID(_uuid);
+    spdlog::debug("Generated UUID: {0}", _uuid.toString());
 }
 
-QProject::QProject(const char* path, std::string& name, std::string& ue4Version, std::string& description)
-    : _path(Poco::Path(path)), _name(name), _ue4Version(ue4Version), _description(description) {
-    {
-        auto uuidGenerator = Poco::UUIDGenerator();
-        _uuid = uuidGenerator.create();
-        spdlog::debug("Generated UUID: {0}", _uuid.toString());
-    }
+QProject::QProject(const char* path, std::string& name, std::string& ue4Version, std::string& description) :
+    _path(Poco::Path(path)),
+    _name(name),
+    _ue4Version(ue4Version),
+    _description(description) {
+
+     GenerateUUID(_uuid);
+     spdlog::debug("Generated UUID: {0}", _uuid.toString());
 }
 
-QProject::QProject(const Poco::UUID& uuid) : _uuid(uuid) {
+QProject::QProject(const Poco::UUID& uuid) : _uuid(uuid) {}
 
-}
 
 Poco::UUID QProject::GetUUID() const {
     return Poco::UUID();
@@ -44,4 +41,24 @@ std::string QProject::GetUE4Version() const {
 
 std::string QProject::GetDescription() const {
     return _description;
+}
+
+void QProject::SetPath(const std::string &path) {
+    _path = Poco::Path(path);
+}
+
+void QProject::SetPath(const Poco::Path &path) {
+    _path = path;
+}
+
+void QProject::SetName(const std::string &name) {
+    _name = name;
+}
+
+void QProject::SetUE4Version(const std::string &ue4V) {
+    _ue4Version = ue4V;
+}
+
+void QProject::SetDescription(const std::string &description) {
+    _description = description;
 }
