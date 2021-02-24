@@ -113,3 +113,29 @@ bool QProject::GenerateProjectStructure() {
     return true;
 }
 
+void QProject::SearchForProjects(std::vector<std::string>& vProjects, const std::string& customPath) {
+    DirectoryIterator end;
+    for (DirectoryIterator it(customPath); it != end; ++it)
+    {
+        cout << (it->isDirectory() ? "d" : "-");
+        cout << (it->canRead()     ? "r" : "-");
+        cout << (it->canWrite()    ? "w" : "-");
+        cout << (it->canExecute()  ? "x" : "-");
+        cout << "\t";
+
+        cout << it->getSize() << "\t";
+
+        LocalDateTime lastModified(it->getLastModified());
+        cout << DateTimeFormatter::format
+                (lastModified, "%Y-%m-%d %H:%M") << "\t";
+
+        cout << it->path() << (it->isDirectory() ?
+                               "/" : it->canExecute() ? "*" : "") << endl;
+
+        if (it->isDirectory())
+        {
+            //rec_dir(it->path());
+        }
+    }
+}
+

@@ -8,12 +8,18 @@
 #include <Poco/UUIDGenerator.h>
 #include <Poco/Path.h>
 #include <Poco/File.h>
+#include <Poco/DirectoryIterator.h>
+#include <Poco/DateTimeFormatter.h>
+#include <Poco/LocalDateTime.h>
 #include <Core/QGlobals.hxx>
 
 #include <Core/QCharacter.hxx>
 #include <Core/QDialogue.hxx>
 #include <Core/Quest.hxx>
 #include <vector>
+
+using namespace Poco;
+using namespace std;
 
 class QProject {
 public:
@@ -46,6 +52,9 @@ public:
 
 private:
     bool GenerateProjectStructure();
+
+public:
+    static void SearchForProjects(std::vector<std::string>& vProjects, const std::string& customPath = std::string());
 
 private:
     Poco::UUID       _uuid;

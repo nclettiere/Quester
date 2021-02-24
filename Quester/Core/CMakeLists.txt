@@ -4,28 +4,6 @@ project(QCore)
 set(CMAKE_CXX_STANDARD 17)
 
 
-# Poco Options
-option(BUILD_SHARED_LIBS "Build shared libraries" ON)
-
-option(ENABLE_FOUNDATION "Enable Foundation, required by all components except CppUnit" ON)
-option(ENABLE_ENCODINGS "Enable Encodings" ON)
-option(ENABLE_ENCODINGS_COMPILER "Enable Encodings Compiler" OFF)
-option(ENABLE_XML "Enable XML" OFF)
-option(ENABLE_JSON "Enable JSON" OFF)
-option(ENABLE_MONGODB "Enable MongoDB" OFF)
-option(ENABLE_DATA_SQLITE "Enable Data SQlite" OFF)
-option(ENABLE_REDIS "Enable Redis" OFF)
-option(ENABLE_PDF "Enable PDF" OFF)
-option(ENABLE_UTIL "Enable Util" ON)
-option(ENABLE_NET "Enable Net" OFF)
-
-option(ENABLE_SEVENZIP "Enable SevenZip" OFF)
-option(ENABLE_ZIP "Enable Zip" ON)
-option(ENABLE_CPPPARSER "Enable C++ parser" OFF)
-option(ENABLE_POCODOC "Enable Poco Documentation Generator" OFF)
-option(ENABLE_PAGECOMPILER "Enable PageCompiler" OFF)
-option(ENABLE_PAGECOMPILER_FILE2PAGE "Enable File2Page" OFF)
-
 file(GLOB QCore_SOURCE
         "src/Core/*.cxx"
         "src/Core/*.cpp"
@@ -36,10 +14,17 @@ set(SOURCES ${QCore_SOURCE})
 
 add_library(QCore STATIC ${SOURCES})
 
-add_subdirectory(vendor/poco)
 add_subdirectory(vendor/spdlog)
 
-target_link_libraries(QCore PRIVATE d3d11 d3dcompiler dxgi spdlog::spdlog Poco::Foundation Poco::Data Poco::Util Poco::Zip)
+find_package(Poco REQUIRED Foundation)
+
+if(Poco_FOUND)
+message(STATUS "Poco Found!")
+else()
+message(FATAL_ERROR "Could not find Poco C++ Libraries. Poco should be installed on the system.")
+endif()
+
+target_link_libraries(QCore PRIVATE d3d11 d3dcompiler dxgi spdlog::spdlog ${Poco_LIBRARIES})
 
 if(CMAKE_BUILD_TYPE MATCHES Debug)
     target_compile_definitions(QCore PUBLIC DEBUG=1)
