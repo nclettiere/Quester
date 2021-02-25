@@ -10,6 +10,8 @@
 #include <Core/QGlobals.hxx>
 #include <Core/QProject.hxx>
 
+#include <vector>
+
 using namespace ImGui;
 
 class ProjectSelector: public IBaseEditorWindow {
@@ -40,6 +42,8 @@ private:
     bool savingProject = true;
 
     float color[4] = { 0.4f, 0.7f, 0.0f, 0.5f };
+
+    std::vector<std::string> vProjects;
 
     bool
     BufferingBar(const char *label, float value, const ImVec2 &size_arg, const ImU32 &bg_col, const ImU32 &fg_col) {

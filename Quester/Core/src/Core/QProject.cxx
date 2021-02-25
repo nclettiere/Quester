@@ -116,27 +116,23 @@ bool QProject::GenerateProjectStructure() {
 }
 
 void QProject::SearchForProjects(std::vector<std::string>& vProjects, const std::string& customPath) {
+    std::string path = ".";
+
+    if(customPath.empty()) {
+        path = GetDefaultProjectDir();
+    }else {
+        path = customPath;
+        delete &customPath;
+    }
+
     DirectoryIterator end;
-    for (DirectoryIterator it(customPath); it != end; ++it)
+    for (DirectoryIterator it(path); it != end; ++it)
     {
-        std::cout << (it->isDirectory() ? "d" : "-");
-        std::cout << (it->canRead()     ? "r" : "-");
-        std::cout << (it->canWrite()    ? "w" : "-");
-        std::cout << (it->canExecute()  ? "x" : "-");
-        std::cout << "\t";
-
-        std::cout << it->getSize() << "\t";
-
-        LocalDateTime lastModified(it->getLastModified());
-        std::cout << DateTimeFormatter::format
-                (lastModified, "%Y-%m-%d %H:%M") << "\t";
-
-        std::cout << it->path() << (it->isDirectory() ?
-                               "/" : it->canExecute() ? "*" : "") << endl;
-
-        if (it->isDirectory())
-        {
-            //rec_dir(it->path());
+        if(it->isDirectory()) {
+            if (!(std::find(vProjects.begin(), vProjects.end(), it.path().toString()) != vProjects.end())) {
+                std::cout << "Element not found\n";
+                vProjects.push_back(it.path().toString());
+            }
         }
     }
 }

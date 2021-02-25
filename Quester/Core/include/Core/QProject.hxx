@@ -9,8 +9,6 @@
 #include <Poco/Path.h>
 #include <Poco/File.h>
 #include <Poco/DirectoryIterator.h>
-#include <Poco/DateTimeFormatter.h>
-#include <Poco/LocalDateTime.h>
 #include <Core/QGlobals.hxx>
 
 #include <Core/QCharacter.hxx>

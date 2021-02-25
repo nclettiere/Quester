@@ -25,5 +25,4 @@ target_include_directories(QEditor
         src/
         ${imgui_DIR}
         ../Core/include
-        ../Core/vendor/poco/Foundation/include/
         ../Graphics/include)
