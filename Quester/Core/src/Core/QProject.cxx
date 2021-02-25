@@ -5,6 +5,8 @@
 #include <Core/QProject.hxx>
 #include <spdlog/include/spdlog/spdlog.h>
 
+#include <iostream>
+
 QProject::QProject() {
     GenerateUUID(_uuid);
     spdlog::debug("Generated UUID: {0}", _uuid.toString());
@@ -117,19 +119,19 @@ void QProject::SearchForProjects(std::vector<std::string>& vProjects, const std:
     DirectoryIterator end;
     for (DirectoryIterator it(customPath); it != end; ++it)
     {
-        cout << (it->isDirectory() ? "d" : "-");
-        cout << (it->canRead()     ? "r" : "-");
-        cout << (it->canWrite()    ? "w" : "-");
-        cout << (it->canExecute()  ? "x" : "-");
-        cout << "\t";
+        std::cout << (it->isDirectory() ? "d" : "-");
+        std::cout << (it->canRead()     ? "r" : "-");
+        std::cout << (it->canWrite()    ? "w" : "-");
+        std::cout << (it->canExecute()  ? "x" : "-");
+        std::cout << "\t";
 
-        cout << it->getSize() << "\t";
+        std::cout << it->getSize() << "\t";
 
         LocalDateTime lastModified(it->getLastModified());
-        cout << DateTimeFormatter::format
+        std::cout << DateTimeFormatter::format
                 (lastModified, "%Y-%m-%d %H:%M") << "\t";
 
-        cout << it->path() << (it->isDirectory() ?
+        std::cout << it->path() << (it->isDirectory() ?
                                "/" : it->canExecute() ? "*" : "") << endl;
 
         if (it->isDirectory())

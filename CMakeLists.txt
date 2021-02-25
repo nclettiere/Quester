@@ -20,10 +20,10 @@ elseif(CMAKE_BUILD_TYPE MATCHES Release)
     target_compile_definitions(Quester PUBLIC DEBUG=0)
 endif()
 
+
 add_subdirectory(Quester/Core)
 add_subdirectory(Quester/Graphics)
 add_subdirectory(Quester/Editor)
-
 
 target_link_libraries(Quester PUBLIC QCore QGraphics QEditor)
 
@@ -32,4 +32,5 @@ target_include_directories(Quester PRIVATE
         src/
         Quester/Core/include
         Quester/Graphics/include
-        Quester/Editor/include)
+        Quester/Editor/include
+        "C:\\local\\boost_1_75_0")

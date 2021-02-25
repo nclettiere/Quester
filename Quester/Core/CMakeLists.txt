@@ -16,15 +16,28 @@ add_library(QCore STATIC ${SOURCES})
 
 add_subdirectory(vendor/spdlog)
 
-find_package(Poco REQUIRED Foundation)
-
-if(Poco_FOUND)
-message(STATUS "Poco Found!")
+set(Poco_DIR C:\\msys64\\mingw64\\bin)
+find_package(Poco REQUIRED Foundation Util Data)
+if(${Poco_FOUND})
+    message(STATUS "Poco Library path found!")
+    if(NOT ${Poco_Foundation_FOUND})
+        message(FATAL_ERROR "Error: Poco library path is found, but it appears that the Poco::Foundation is missing. Please check your installation.")
+    endif()
 else()
-message(FATAL_ERROR "Could not find Poco C++ Libraries. Poco should be installed on the system.")
+    message(FATAL_ERROR "Could not find Poco C++ Libraries. Should be installed on the system.")
 endif()
 
-target_link_libraries(QCore PRIVATE d3d11 d3dcompiler dxgi spdlog::spdlog ${Poco_LIBRARIES})
+find_package(Boost REQUIRED Serialization)
+if(${Boost_FOUND})
+    message(STATUS "Boost Library path found!")
+    if(NOT ${Boost_Serialization_FOUND})
+        message(FATAL_ERROR "Error: Boost library path is found, but it appears that the Boost::Serialization is missing. Please check your installation.")
+    endif()
+else()
+    message(FATAL_ERROR "Could not find Boost C++ Libraries. Should be installed on the system.")
+endif()
+
+target_link_libraries(QCore PRIVATE d3d11 d3dcompiler dxgi spdlog::spdlog ${Poco_LIBRARIES} ${Boost_LIBRARIES})
 
 if(CMAKE_BUILD_TYPE MATCHES Debug)
     target_compile_definitions(QCore PUBLIC DEBUG=1)
@@ -37,7 +50,4 @@ target_include_directories(QCore
     include/
     src/
     vendor/
-    vendor/poco/Foundation/include/
-    vendor/poco/Data/include/
-    vendor/poco/Util/include/
-    vendor/poco/Zip/include/)
+    C:\\msys64\\mingw64\\include)
