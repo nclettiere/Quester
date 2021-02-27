@@ -14,9 +14,6 @@ set(SOURCES src/main.cxx ${Quester_SOURCE})
 
 add_executable(Quester ${SOURCES})
 
-set_target_properties(Quester PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/.. )
-set_target_properties(Quester PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/.. )
-
 if(CMAKE_BUILD_TYPE MATCHES Debug)
     target_compile_definitions(Quester PUBLIC DEBUG=1)
 elseif(CMAKE_BUILD_TYPE MATCHES Release)

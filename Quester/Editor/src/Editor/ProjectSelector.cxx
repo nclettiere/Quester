@@ -3,8 +3,17 @@
 //
 
 #include <Editor/ProjectSelector.hxx>
+#include <spdlog/spdlog.h>
+#include <Editor/QProjectButton.hxx>
 
 void ProjectSelector::OnFrame() {
+
+    auto io = ImGui::GetIO();
+
+    ImGuiWindowFlags popupFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoDecoration |
+                                  ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoBackground |
+                                  ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize |
+                                  ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar;
 
     if (ImGui::BeginMenuBar())
     {
@@ -110,13 +119,7 @@ void ProjectSelector::OnFrame() {
 
             ImGui::PopStyleColor(3);
 
-            //BufferingBar("##buffer_bar", 0.0f, ImVec2(400, 6), bg, col);
-            if (ImGui::BeginPopupModal("Loading", &savingProject,
-                                       ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoDecoration |
-                                       ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoBackground |
-                                       ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysAutoResize |
-                                       ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar)) {
-                //Spinner("##spinner", 10, 3, col);
+            if (ImGui::BeginPopupModal("Loading", &savingProject, popupFlags)) {
                 if(!savingProject) {
                     ImGui::EndPopup();
                 }
@@ -130,39 +133,44 @@ void ProjectSelector::OnFrame() {
     }
 
     ImGui::SameLine();
-
-    // Child 2: rounded border
     {
+
+        currentTime = SDL_GetTicks();
+        if (currentTime > lastTime + 1000) {
+            QProject::SearchForProjects(vProjects);
+            lastTime = currentTime;
+        }
+
         ImVec2 button_sz(175, 120);
         ImGuiWindowFlags window_flags = ImGuiWindowFlags_None;
         ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 0.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 0.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
         ImGui::BeginChild("FoundProjects", ImVec2(0, -FLT_MIN), true, window_flags);
-            for (int i = 0; i < 100; i++)
-            {
+            int n = 0;
+            for (std::string p  : vProjects) {
                 ImGuiStyle& style = ImGui::GetStyle();
                 int buttons_count = 20;
                 float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
-                for (int n = 0; n < buttons_count; n++)
-                {
-                    ImGui::PushID(n);
-                    ImGui::ImageButton(testTexture,ImVec2((ImGui::GetWindowContentRegionWidth() / 2.0f) - 10.0f, 120),ImVec2(0, 0), ImVec2(1.0f, 1.0f),2);
-                    float last_button_x2 = ImGui::GetItemRectMax().x;
-                    float next_button_x2 = last_button_x2 + style.ItemSpacing.x + ((ImGui::GetWindowContentRegionWidth() / 2.0f) - 10.0f); // Expected position if next button was on same line
-                    if (n + 1 < buttons_count && next_button_x2 < window_visible_x2)
-                        ImGui::SameLine();
-                    ImGui::PopID();
-                }
+                ImGui::PushID(n);
+                //ImGui::Button(p.c_str(), ImVec2((ImGui::GetWindowContentRegionWidth() / 2.0f) - 10.0f, 120));
+
+                ProjectButtonData data("Title", p);
+
+                QProjectButton("Id", ImVec2((ImGui::GetWindowContentRegionWidth() / 2.0f) - 10.0f, 120), data);
+                float last_button_x2 = ImGui::GetItemRectMax().x;
+                float next_button_x2 = last_button_x2 + style.ItemSpacing.x + ((ImGui::GetWindowContentRegionWidth() / 2.0f) - 10.0f); // Expected position if next button was on same line
+                if (n + 1 < buttons_count && next_button_x2 < window_visible_x2)
+                    ImGui::SameLine();
+                ImGui::PopID();
+
+                n++;
             }
         ImGui::EndChild();
         ImGui::PopStyleVar();
         ImGui::PopStyleVar();
         ImGui::PopStyleVar();
     }
-
-    //const ImU32 col = ImGui::GetColorU32(ImGuiCol_NavHighlight);
-    //const ImU32 bg = ImGui::GetColorU32(ImGuiCol_Button);
 
     ImGui::End();
 

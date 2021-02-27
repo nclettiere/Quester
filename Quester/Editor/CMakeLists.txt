@@ -17,6 +17,8 @@ file(GLOB QEditor_SOURCE
 set(SOURCES ${QEditor_SOURCE})
 
 add_library(QEditor SHARED ${SOURCES})
+set_target_properties(QEditor PROPERTIES RUNTIME_OUTPUT_DIRECTORY "../.." )
+set_target_properties(QEditor PROPERTIES LIBRARY_OUTPUT_DIRECTORY "../.." )
 set_target_properties(QEditor PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(QEditor PROPERTIES SOVERSION 1)
 

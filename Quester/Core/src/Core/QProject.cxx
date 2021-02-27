@@ -116,6 +116,7 @@ bool QProject::GenerateProjectStructure() {
 }
 
 void QProject::SearchForProjects(std::vector<std::string>& vProjects, const std::string& customPath) {
+    std::cout << "Exec\n";
     std::string path = ".";
 
     if(customPath.empty()) {

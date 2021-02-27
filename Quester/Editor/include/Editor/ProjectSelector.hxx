@@ -6,6 +6,7 @@
 #define QUESTER_PROJECTSELECTOR_HXX
 
 #include <Editor/IBase.h>
+#include <Editor/QProjectButton.hxx>
 #include <Graphics/QWindow.hxx>
 #include <Core/QGlobals.hxx>
 #include <Core/QProject.hxx>
@@ -44,6 +45,8 @@ private:
     float color[4] = { 0.4f, 0.7f, 0.0f, 0.5f };
 
     std::vector<std::string> vProjects;
+
+    unsigned int lastTime = 0, currentTime;
 
     bool
     BufferingBar(const char *label, float value, const ImVec2 &size_arg, const ImU32 &bg_col, const ImU32 &fg_col) {

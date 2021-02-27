@@ -41,8 +41,11 @@ file(GLOB imgui_SOURCE
 set(SOURCES ${QGraphics_SOURCE} ${SDL2_SOURCE} ${imgui_SOURCE})
 
 add_library(QGraphics SHARED ${SOURCES})
+set_target_properties(QGraphics PROPERTIES RUNTIME_OUTPUT_DIRECTORY "../.." )
+set_target_properties(QGraphics PROPERTIES LIBRARY_OUTPUT_DIRECTORY "../.." )
 set_target_properties(QGraphics PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(QGraphics PROPERTIES SOVERSION 1)
+
 
 if(CMAKE_BUILD_TYPE MATCHES Debug)
     target_compile_definitions(QGraphics PUBLIC DEBUG=1)

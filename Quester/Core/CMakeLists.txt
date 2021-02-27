@@ -14,6 +14,8 @@ file(GLOB QCore_SOURCE
 set(SOURCES ${QCore_SOURCE})
 
 add_library(QCore SHARED ${SOURCES})
+set_target_properties(QCore PROPERTIES RUNTIME_OUTPUT_DIRECTORY "../.." )
+set_target_properties(QCore PROPERTIES LIBRARY_OUTPUT_DIRECTORY "../.." )
 set_target_properties(QCore PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(QCore PROPERTIES SOVERSION 1)
 
