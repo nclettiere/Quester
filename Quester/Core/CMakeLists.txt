@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
-project(QCore)
+
+project(QCore VERSION 1.0.0 DESCRIPTION "Under-Layer library of Quester. It handles low level OpenGL and D3D and management of windows, file system and OS related code.")
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -12,7 +13,9 @@ file(GLOB QCore_SOURCE
 
 set(SOURCES ${QCore_SOURCE})
 
-add_library(QCore STATIC ${SOURCES})
+add_library(QCore SHARED ${SOURCES})
+set_target_properties(QCore PROPERTIES VERSION ${PROJECT_VERSION})
+set_target_properties(QCore PROPERTIES SOVERSION 1)
 
 add_subdirectory(vendor/spdlog)
 
@@ -37,7 +40,7 @@ else()
     message(FATAL_ERROR "Could not find Boost C++ Libraries. Should be installed on the system.")
 endif()
 
-target_link_libraries(QCore PRIVATE d3d11 d3dcompiler dxgi spdlog::spdlog ${Poco_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(QCore PUBLIC d3d11 d3dcompiler dxgi spdlog::spdlog ${Poco_LIBRARIES} ${Boost_LIBRARIES})
 
 if(CMAKE_BUILD_TYPE MATCHES Debug)
     target_compile_definitions(QCore PUBLIC DEBUG=1)

@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
-project(QEditor)
+
+project(QEditor VERSION 1.0.0 DESCRIPTION "Handles the editor windows and its contents. Works in conjuction of QGraphics library.")
 
 set(CMAKE_CXX_STANDARD 17)
 set(imgui_DIR ${CMAKE_CURRENT_LIST_DIR}/../../vendor/imgui/)
@@ -15,7 +16,9 @@ file(GLOB QEditor_SOURCE
 
 set(SOURCES ${QEditor_SOURCE})
 
-add_library(QEditor STATIC ${SOURCES})
+add_library(QEditor SHARED ${SOURCES})
+set_target_properties(QEditor PROPERTIES VERSION ${PROJECT_VERSION})
+set_target_properties(QEditor PROPERTIES SOVERSION 1)
 
 target_link_libraries(QEditor QGraphics)
 

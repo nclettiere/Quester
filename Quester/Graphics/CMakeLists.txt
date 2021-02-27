@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
-project(QGraphics)
+
+project(QGraphics VERSION 1.0.0 DESCRIPTION "Handles window creation (Requires QCore library to access low-level code) and all graphics specifics of OpenGL or D3D.")
 
 set(CMAKE_CXX_STANDARD 17)
 set(SDL2_VERSION 2.0.14)
@@ -39,7 +40,9 @@ file(GLOB imgui_SOURCE
 
 set(SOURCES ${QGraphics_SOURCE} ${SDL2_SOURCE} ${imgui_SOURCE})
 
-add_library(QGraphics STATIC ${SOURCES})
+add_library(QGraphics SHARED ${SOURCES})
+set_target_properties(QGraphics PROPERTIES VERSION ${PROJECT_VERSION})
+set_target_properties(QGraphics PROPERTIES SOVERSION 1)
 
 if(CMAKE_BUILD_TYPE MATCHES Debug)
     target_compile_definitions(QGraphics PUBLIC DEBUG=1)
