@@ -138,8 +138,6 @@ protected:
     int testW;
     int testH;
 
-    char *buffi = NULL;
-
     struct TextFilters
     {
         // Return 0 (pass) if no symbols are typed.

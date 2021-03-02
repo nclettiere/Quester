@@ -9,6 +9,7 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <spdlog/spdlog.h>
+#include <Graphics/QWindow.hxx>
 
 struct ProjectButtonData {
     ProjectButtonData() = default;
@@ -38,11 +39,24 @@ static inline ImVec4 operator-(const ImVec4& lhs, const ImVec4& rhs)            
 static inline ImVec4 operator*(const ImVec4& lhs, const ImVec4& rhs)            { return ImVec4(lhs.x * rhs.x, lhs.y * rhs.y, lhs.z * rhs.z, lhs.w * rhs.w); }
 
 namespace ImGui {
-    static IMGUI_API bool QProjectButton(const char* id, const ImVec2& size, const ProjectButtonData& data, int frame_padding = -1, const ImVec4& bg_col = ImVec4(0,0,0,0), const ImVec4& tint_col = ImVec4(1,1,1,1), ImGuiButtonFlags flags = ImGuiButtonFlags_None);
+    static IMGUI_API bool QProjectButton(const char* id, QWindow* qWindow, const ImVec2& size, const ProjectButtonData& data, int frame_padding = -1, const ImVec4& bg_col = ImVec4(0,0,0,0), const ImVec4& tint_col = ImVec4(1,1,1,1), ImGuiButtonFlags flags = ImGuiButtonFlags_None);
+    static void LoadUE4Logo(QWindow& qWindow);
+    static ID3D11ShaderResourceView* ue4Logo = NULL;
+    static int ue4LogoW;
+    static int ue4LogoH;
 }
 
 namespace ImGui {
-    IMGUI_API bool QProjectButton(const char* id_str, const ImVec2& size, const ProjectButtonData& data, int frame_padding, const ImVec4& bg_col, const ImVec4& tint_col, ImGuiButtonFlags flags) {
+    void LoadUE4Logo(QWindow& qWindow) {
+        qWindow.LoadTextureDX11(
+                qWindow.GetBackendData()->GetBackendSpecific()._device,
+                R"(assets\textures\ue4_24_blue.png)",
+                &ue4Logo,
+                &ue4LogoW,
+                &ue4LogoH);
+    }
+
+    IMGUI_API bool QProjectButton(const char* id_str, QWindow* qWindow, const ImVec2& size, const ProjectButtonData& data, int frame_padding, const ImVec4& bg_col, const ImVec4& tint_col, ImGuiButtonFlags flags) {
         ImGuiWindow* window = GetCurrentWindow();
         if (window->SkipItems)
             return false;
@@ -50,7 +64,8 @@ namespace ImGui {
         ImGuiContext& g = *GImGui;
         const ImGuiStyle& style = g.Style;
         const ImGuiID id = window->GetID(id_str);
-        const ImVec2 label_size = CalcTextSize(data.GetTitle(), NULL, true);
+        const ImVec2 title_size = CalcTextSize(data.GetTitle(), NULL, true);
+        const ImVec2 path_size = CalcTextSize(data.GetPath(), NULL, true);
 
         ImVec2 pos = window->DC.CursorPos;
         if ((flags & ImGuiButtonFlags_AlignTextBaseLine) && style.FramePadding.y < window->DC.CurrLineTextBaseOffset) // Try to vertically align buttons that are smaller/have no padding so that text baseline matches (bit hacky, since it shouldn't be a flag)
@@ -74,15 +89,21 @@ namespace ImGui {
 
         if (g.LogEnabled)
             LogSetNextTextDecoration("[", "]");
-        //RenderTextClipped(ImVec2(10.0f,10.0f), bb.Min, data.GetTitle(), NULL, &label_size, style.ButtonTextAlign, &bb);
-        RenderTextClipped(bb.Min * 2, bb.Max, data.GetTitle(), NULL, &label_size, style.ButtonTextAlign, &bb);
-        ImVec2 min = bb.Min + style.FramePadding;
-        ImVec2 max = bb.Max - style.FramePadding;
-        spdlog::debug("min.x: {0} -- min.y: {1}", min.x, min.y);
-        spdlog::debug("max.x: {0} -- max.y: {1}", max.x, max.y);
 
-        //RenderTextClipped()
-        //RenderTextClipped("%s", data.GetPath());
+        ImVec2 minTitle = bb.Min + style.FramePadding - size + ImVec2(50, 30);
+        ImVec2 minPath = bb.Min + style.FramePadding - size + ImVec2(50, 65);
+        ImVec2 max = bb.Max - style.FramePadding;
+
+        RenderTextClipped(minTitle, max, data.GetTitle(), NULL, &title_size, style.ButtonTextAlign, &bb);
+
+        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 1.0f, 0.4f));
+        RenderTextClipped(minPath, max, data.GetPath(), NULL, &title_size, style.ButtonTextAlign, &bb);
+        ImGui::PopStyleColor();
+
+        if(ue4Logo == nullptr)
+            LoadUE4Logo(*qWindow);
+
+        window->DrawList->AddImage(ue4Logo, bb.Min, bb.Max, ImVec2(0, 0), ImVec2(1.0f, 1.0f), GetColorU32(tint_col));
 
         // Automatically close popups
         //if (pressed && !(flags & ImGuiButtonFlags_DontClosePopups) && (window->Flags & ImGuiWindowFlags_Popup))

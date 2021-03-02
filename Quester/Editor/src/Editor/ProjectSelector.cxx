@@ -157,7 +157,7 @@ void ProjectSelector::OnFrame() {
 
                 ProjectButtonData data("Title", p);
 
-                QProjectButton("Id", ImVec2((ImGui::GetWindowContentRegionWidth() / 2.0f) - 10.0f, 120), data);
+                QProjectButton("Id", _window, ImVec2((ImGui::GetWindowContentRegionWidth() / 2.0f) - 10.0f, 120), data);
                 float last_button_x2 = ImGui::GetItemRectMax().x;
                 float next_button_x2 = last_button_x2 + style.ItemSpacing.x + ((ImGui::GetWindowContentRegionWidth() / 2.0f) - 10.0f); // Expected position if next button was on same line
                 if (n + 1 < buttons_count && next_button_x2 < window_visible_x2)
